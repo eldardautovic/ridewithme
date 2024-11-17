@@ -7,9 +7,10 @@ namespace ridewithme.Model
     public class Voznje
     {
         public int VoznjaId { get; set; }
-        public string Destinacija { get; set; }
 
-        public decimal Cijena { get; set; }
+        public DateTime DatumVrijemePocetka { get; set; }
+
+        public DateTime? DatumVrijemeZavrsetka { get; set; }
 
     }
 }

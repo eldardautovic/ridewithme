@@ -1,14 +1,24 @@
+using Mapster;
+using Microsoft.EntityFrameworkCore;
 using ridewithme.Service;
+using ridewithme.Service.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddTransient<IVoznjeService, VoznjeService>();
+builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("ridewithme");
+builder.Services.AddDbContext<RidewithmeContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddMapster();
 
 var app = builder.Build();
 

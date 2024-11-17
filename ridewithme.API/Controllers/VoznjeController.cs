@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ridewithme.Model;
+using ridewithme.Model.SearchObject;
 using ridewithme.Service;
 
 namespace ridewithme.API.Controllers
@@ -14,9 +15,9 @@ namespace ridewithme.API.Controllers
             _service = service;
         }
         [HttpGet]
-        public List<Voznje> GetList()
+        public List<Voznje> GetList([FromQuery] VoznjeSearchObject searchObject)
         {
-            return _service.GetList();
+            return _service.GetList(searchObject);
         }
     }
 }

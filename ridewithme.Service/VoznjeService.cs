@@ -1,4 +1,7 @@
-﻿using ridewithme.Model;
+﻿using MapsterMapper;
+using ridewithme.Model;
+using ridewithme.Model.SearchObject;
+using ridewithme.Service.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +12,43 @@ namespace ridewithme.Service
 {
     public class VoznjeService : IVoznjeService
     {
-        public List<Voznje> List = new List<Voznje>()
+        public RidewithmeContext Context { get; set; }
+
+        public IMapper Mapper { get; set; }
+
+        public VoznjeService(RidewithmeContext dbContext, IMapper mapper)
         {
-            new Voznje()
+            Context = dbContext;
+            Mapper = mapper;
+        }
+        public List<Model.Voznje> GetList(VoznjeSearchObject searchObject)
+        {
+            
+            List<Model.Voznje> result = new List<Model.Voznje>();
+
+            var query = Context.Voznjes.AsQueryable();
+
+            if(searchObject.VoznjaId != null)
             {
-                VoznjaId = 1,
-                Cijena = 10,
-                Destinacija = "Elce"
+                query = query.Where(x => x.VozacId == searchObject.VoznjaId);
             }
-        };
-        public List<Voznje> GetList()
-        {
-            return List;
+
+            if (searchObject.DatumVrijemePocetka != null)
+            {
+                query = query.Where(x => x.DatumVrijemePocetka == searchObject.DatumVrijemePocetka);
+            }
+
+            if (searchObject.DatumVrijemeZavrsetka != null)
+            {
+                query = query.Where(x => x.DatumVrijemeZavrsetka == searchObject.DatumVrijemeZavrsetka);
+            }
+
+            var list = query.ToList();
+
+            result = Mapper.Map(list, result);
+
+            return result;
+
         }
     }
 }
