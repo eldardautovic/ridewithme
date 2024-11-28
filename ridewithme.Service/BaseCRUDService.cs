@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public abstract class BaseCRUDService<TModel, TSearch, TDbEntity, TInsert, TUpdate> : BaseService<TModel, TSearch, TDbEntity> where TModel : class where TSearch : BaseSearchObject where TDbEntity : class, ICRUDService<TModel, TSearch, TInsert, TUpdate>
+    public abstract class BaseCRUDService<TModel, TSearch, TDbEntity, TInsert, TUpdate> : BaseService<TModel, TSearch, TDbEntity> where TModel : class where TSearch : BaseSearchObject where TDbEntity : class
     {
         public BaseCRUDService(RidewithmeContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
-        public TModel Insert(TInsert request)
+        public virtual TModel Insert(TInsert request)
         {
             //if (request.Lozinka != request.LozinkaPotvrda)
             //{
@@ -43,9 +43,9 @@ namespace ridewithme.Service
             return Mapper.Map<TModel>(entity);
         }
 
-        public void BeforeInsert(TInsert request, TDbEntity entity) { }
+        public virtual void BeforeInsert(TInsert request, TDbEntity entity) { }
 
-        public TModel Update(int id, TUpdate request)
+        public virtual TModel Update(int id, TUpdate request)
         {
             var set = Context.Set<TDbEntity>();
 
@@ -59,7 +59,7 @@ namespace ridewithme.Service
 
             return Mapper.Map<TModel>(entity);
         }
-        public void BeforeUpdate(TUpdate request, TDbEntity entity) { }
+        public virtual void BeforeUpdate(TUpdate request, TDbEntity entity) { }
 
     }
 }

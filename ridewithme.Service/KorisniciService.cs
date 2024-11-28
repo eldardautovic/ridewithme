@@ -15,23 +15,19 @@ using System.Linq.Dynamic.Core;
 
 namespace ridewithme.Service
 {
-    public class KorisniciService : IKorisniciService
+    public class KorisniciService : BaseCRUDService<Model.Korisnici, KorisniciSearchObject, Database.Korisnici, KorisniciInsertRequest, KorisniciUpdateRequest>, IKorisniciService
     {
-        public RidewithmeContext Context { get; set; }
-
-        public IMapper Mapper { get; set; }
-        public KorisniciService(RidewithmeContext dbContext, IMapper mapper )
+        public KorisniciService(RidewithmeContext dbContext, IMapper mapper ) : base(dbContext, mapper)
         {
-            Context = dbContext;
-            Mapper = mapper;
+            
         }
-        public Model.PagedResult<Model.Korisnici> GetList(KorisniciSearchObject searchObject)
+     
+        public override IQueryable<Database.Korisnici> AddFilter(KorisniciSearchObject searchObject, IQueryable<Database.Korisnici> query)
         {
-            List<Model.Korisnici> resultList = new List<Model.Korisnici>();
+            
+            query = base.AddFilter(searchObject, query);
 
-            var query = Context.Korisnicis.AsQueryable();
-
-            if(!string.IsNullOrWhiteSpace(searchObject?.ImeGTE))
+            if (!string.IsNullOrWhiteSpace(searchObject?.ImeGTE))
             {
                 query = query.Where(x => x.Ime.StartsWith(searchObject.ImeGTE));
             }
@@ -51,7 +47,7 @@ namespace ridewithme.Service
                 query = query.Where(x => x.KorisnickoIme == searchObject.KorisnickoIme);
             }
 
-            if(searchObject.IsKorisniciIncluded == true) 
+            if (searchObject.IsKorisniciIncluded == true)
             {
                 query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
             }
@@ -73,54 +69,19 @@ namespace ridewithme.Service
                 }
 
             }
-
-            int count = query.Count();
-
-            if (searchObject?.Page.HasValue == true && searchObject?.PageSize.HasValue == true)
-            {
-                query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
-            }
-
-            
-
-            var korisnici = query.ToList();
-
-            resultList = Mapper.Map(korisnici, resultList);
-
-            Model.PagedResult<Model.Korisnici> result = new Model.PagedResult<Model.Korisnici>();
-
-            result.Results = resultList;
-            result.Count = count;
-
-            return result;
-
+            return query;
         }
 
-        public Model.Korisnici Insert(KorisniciInsertRequest request)
+        public override void BeforeInsert(KorisniciInsertRequest request, Database.Korisnici entity)
         {
             if (request.Lozinka != request.LozinkaPotvrda)
             {
                 throw new Exception("Lozinka i LozinkaPotvrda se moraju podudarati.");
             }
 
-            Database.Korisnici entity = new Database.Korisnici();
-
-            Mapper.Map(request, entity);
-
             entity.LozinkaSalt = GenerateSalt();
             entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Lozinka);
-
-            var korisnikRole = Context.Uloges.FirstOrDefault(x => x.Naziv.Equals("Korisnik"))?.Id;
-
-            if (korisnikRole == null)
-            {
-                throw new Exception("Interna greska.");
-            }
-
-            Context.Add(entity);
-            Context.SaveChanges();
-
-            return Mapper.Map<Model.Korisnici>(entity);
+            base.BeforeInsert(request, entity);
         }
 
         public static string GenerateSalt()
@@ -143,6 +104,5 @@ namespace ridewithme.Service
             byte[] inArray = algorithm.ComputeHash(dst);
             return Convert.ToBase64String(inArray);
         }
-
     }
 }

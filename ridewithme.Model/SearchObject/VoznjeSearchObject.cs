@@ -8,6 +8,8 @@ namespace ridewithme.Model.SearchObject
     {
         public int? VoznjaId { get; set; }
 
+        public int? KlijentId { get; set; }
+
         public DateTime? DatumVrijemePocetka { get; set; }
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }

@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace ridewithme.Model
+namespace ridewithme.Model.Requests
 {
-    public class Voznje
+    public class VoznjeUpdateRequest
     {
-        public int VoznjaId { get; set; }
-
-        public int VozacId { get; set; }
-
         public int? KlijentId { get; set; }
 
         public DateTime DatumVrijemePocetka { get; set; }
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }
-
     }
 }

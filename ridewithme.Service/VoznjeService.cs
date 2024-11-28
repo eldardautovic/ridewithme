@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using ridewithme.Model;
+using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public class VoznjeService : BaseService<Model.Voznje, VoznjeSearchObject, Database.Voznje>, IVoznjeService
+    public class VoznjeService : BaseCRUDService<Model.Voznje, VoznjeSearchObject, Database.Voznje, VoznjeInsertRequest, VoznjeUpdateRequest>, IVoznjeService
     {
 
         public VoznjeService(RidewithmeContext dbContext, IMapper mapper) 
@@ -28,6 +29,12 @@ namespace ridewithme.Service
             }
 
             return filteredQuery;
+        }
+
+        public override void BeforeInsert(VoznjeInsertRequest request, Database.Voznje entity)
+        {
+            //TODO: throw exception if vozacId not existing
+            base.BeforeInsert(request, entity);
         }
 
     }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
 using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
@@ -10,9 +9,10 @@ namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KorisniciController : BaseCRUDController<Model.Korisnici, KorisniciSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>
+    public class UlogeController : BaseCRUDController<Model.Uloge, UlogeSearchObject, UlogeUpsertRequest, UlogeUpsertRequest>
     {
-        public KorisniciController(IKorisniciService service) : base(service) { }
-       
+        public UlogeController(IUlogeService service) : base(service)
+        {
+        }
     }
 }

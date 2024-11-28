@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-
-namespace ridewithme.Model
+namespace ridewithme.Model.Requests
 {
-    public class Uloge
+    public class UlogeUpsertRequest
     {
-        public int Id { get; set; }
-
         public string Naziv { get; set; } = null!;
     }
-
 }
-
