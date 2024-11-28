@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ridewithme.Model.SearchObject
 {
-    public class KorisniciSearchObject
+    public class KorisniciSearchObject : BaseSearchObject
     {
         public string? ImeGTE { get; set; }
         public string? PrezimeGTE { get; set; }
@@ -14,6 +14,6 @@ namespace ridewithme.Model.SearchObject
         public string? Email { get; set; }
 
         public bool? IsKorisniciIncluded { get; set; }
-
+        public string? OrderBy { get; set; }
     }
 }

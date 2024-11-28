@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public interface IVoznjeService
+    public interface IVoznjeService : IService<Voznje, VoznjeSearchObject>
     {
-        List<Voznje> GetList(VoznjeSearchObject searchObject);
+       
     }
 }

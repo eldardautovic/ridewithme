@@ -10,6 +10,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic;
+using System.Linq.Dynamic.Core;
 
 namespace ridewithme.Service
 {
@@ -23,9 +25,9 @@ namespace ridewithme.Service
             Context = dbContext;
             Mapper = mapper;
         }
-        public List<Model.Korisnici> GetList(KorisniciSearchObject searchObject)
+        public Model.PagedResult<Model.Korisnici> GetList(KorisniciSearchObject searchObject)
         {
-            List<Model.Korisnici> result = new List<Model.Korisnici>();
+            List<Model.Korisnici> resultList = new List<Model.Korisnici>();
 
             var query = Context.Korisnicis.AsQueryable();
 
@@ -54,9 +56,41 @@ namespace ridewithme.Service
                 query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
+            {
+                var items = searchObject.OrderBy.Split(' ');
+                if (items.Length > 2 || items.Length == 0)
+                {
+                    throw new ApplicationException("Mozete sortirati samo po dva polja.");
+                }
+                if (items.Length == 1)
+                {
+                    query = query.OrderBy("@0", searchObject.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(string.Format("{0} {1}", items[0], items[1]));
+                }
+
+            }
+
+            int count = query.Count();
+
+            if (searchObject?.Page.HasValue == true && searchObject?.PageSize.HasValue == true)
+            {
+                query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
+            }
+
+            
+
             var korisnici = query.ToList();
 
-            result = Mapper.Map(korisnici, result);
+            resultList = Mapper.Map(korisnici, resultList);
+
+            Model.PagedResult<Model.Korisnici> result = new Model.PagedResult<Model.Korisnici>();
+
+            result.Results = resultList;
+            result.Count = count;
 
             return result;
 

@@ -1,6 +1,5 @@
 ﻿using ridewithme.Model;
 using ridewithme.Model.SearchObject;
-using ridewithme.Model.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public interface IKorisniciService
+    public interface IService<TModel, TSearch> where TSearch : BaseSearchObject
     {
-        PagedResult<Korisnici> GetList(KorisniciSearchObject searchObject);
+        public PagedResult<TModel> GetPaged(TSearch search);
 
-        Korisnici Insert(KorisniciInsertRequest request);
+        public TModel GetById(int id);
     }
 }

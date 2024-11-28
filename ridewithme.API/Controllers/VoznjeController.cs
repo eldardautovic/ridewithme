@@ -8,16 +8,11 @@ namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VoznjeController : ControllerBase
+    public class VoznjeController : BaseController<Voznje, VoznjeSearchObject>
     {
         protected IVoznjeService _service;
-        public VoznjeController(IVoznjeService service) {
+        public VoznjeController(IVoznjeService service) : base(service) {
             _service = service;
-        }
-        [HttpGet]
-        public List<Voznje> GetList([FromQuery] VoznjeSearchObject searchObject)
-        {
-            return _service.GetList(searchObject);
         }
     }
 }

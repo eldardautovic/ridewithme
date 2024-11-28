@@ -17,13 +17,13 @@ namespace ridewithme.API.Controllers
             _service = service;
         }
         [HttpGet]
-        public List<Model.Korisnici> GetList([FromQuery] KorisniciSearchObject searchObject)
+        public PagedResult<Korisnici> GetList([FromQuery] KorisniciSearchObject searchObject)
         {
             return _service.GetList(searchObject);
         }
 
         [HttpPost]
-        public Model.Korisnici Insert(KorisniciInsertRequest request)
+        public Korisnici Insert(KorisniciInsertRequest request)
         {
             return _service.Insert(request);
         }

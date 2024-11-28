@@ -10,45 +10,25 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public class VoznjeService : IVoznjeService
+    public class VoznjeService : BaseService<Model.Voznje, VoznjeSearchObject, Database.Voznje>, IVoznjeService
     {
-        public RidewithmeContext Context { get; set; }
 
-        public IMapper Mapper { get; set; }
-
-        public VoznjeService(RidewithmeContext dbContext, IMapper mapper)
-        {
-            Context = dbContext;
-            Mapper = mapper;
+        public VoznjeService(RidewithmeContext dbContext, IMapper mapper) 
+            : base(dbContext, mapper) { 
         }
-        public List<Model.Voznje> GetList(VoznjeSearchObject searchObject)
+
+        public override IQueryable<Database.Voznje> AddFilter(VoznjeSearchObject searchObject, IQueryable<Database.Voznje> query)
         {
-            
-            List<Model.Voznje> result = new List<Model.Voznje>();
 
-            var query = Context.Voznjes.AsQueryable();
+            var filteredQuery = base.AddFilter(searchObject, query);
 
-            if(searchObject.VoznjaId != null)
+            if (searchObject?.VoznjaId.HasValue == true)
             {
-                query = query.Where(x => x.VozacId == searchObject.VoznjaId);
+                filteredQuery = filteredQuery.Where(x => x.Id == searchObject.VoznjaId.Value);
             }
 
-            if (searchObject.DatumVrijemePocetka != null)
-            {
-                query = query.Where(x => x.DatumVrijemePocetka == searchObject.DatumVrijemePocetka);
-            }
-
-            if (searchObject.DatumVrijemeZavrsetka != null)
-            {
-                query = query.Where(x => x.DatumVrijemeZavrsetka == searchObject.DatumVrijemeZavrsetka);
-            }
-
-            var list = query.ToList();
-
-            result = Mapper.Map(list, result);
-
-            return result;
-
+            return filteredQuery;
         }
+
     }
 }
