@@ -14,5 +14,26 @@ namespace ridewithme.API.Controllers
         public VoznjeController(IVoznjeService service) : base(service) {
             _service = service;
         }
+
+        [HttpPut("{id}/activate")]
+
+        public Model.Voznje Activate(int id)
+        {
+            return (_service as IVoznjeService).Activate(id);
+        }
+
+        [HttpPut("{id}/edit")]
+
+        public Model.Voznje Edit(int id)
+        {
+            return (_service as IVoznjeService).Edit(id);
+        }
+
+        [HttpPut("{id}/hide")]
+
+        public Model.Voznje Hide(int id)
+        {
+            return (_service as IVoznjeService).Hide(id);
+        }
     }
 }

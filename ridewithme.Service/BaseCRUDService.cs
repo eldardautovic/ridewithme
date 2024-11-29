@@ -18,22 +18,7 @@ namespace ridewithme.Service
 
         public virtual TModel Insert(TInsert request)
         {
-            //if (request.Lozinka != request.LozinkaPotvrda)
-            //{
-            //    throw new Exception("Lozinka i LozinkaPotvrda se moraju podudarati.");
-            //}
-
             TDbEntity entity = Mapper.Map<TDbEntity>(request);
-
-            //entity.LozinkaSalt = GenerateSalt();
-            //entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Lozinka);
-
-            //var korisnikRole = Context.Uloges.FirstOrDefault(x => x.Naziv.Equals("Korisnik"))?.Id;
-
-            //if (korisnikRole == null)
-            //{
-            //    throw new Exception("Interna greska.");
-            //}
 
             BeforeInsert(request, entity);
 

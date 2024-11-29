@@ -11,6 +11,11 @@ namespace ridewithme.Service
 {
     public interface IVoznjeService : ICRUDService<Voznje, VoznjeSearchObject, VoznjeInsertRequest, VoznjeUpdateRequest>
     {
+
+        public Voznje Activate(int id);
+
+        public Voznje Hide(int id);
+        public Voznje Edit(int id);
        
     }
 }

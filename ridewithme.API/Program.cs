@@ -2,6 +2,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using ridewithme.Service;
 using ridewithme.Service.Database;
+using ridewithme.Service.VoznjeStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IVoznjeService, VoznjeService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IUlogeService, UlogeService>();
+
+builder.Services.AddTransient<BaseVoznjeState>();
+builder.Services.AddTransient<InitialVoznjeState>();
+builder.Services.AddTransient<DraftVoznjeState>();
+builder.Services.AddTransient<ActiveVoznjeState>();
+builder.Services.AddTransient<HiddenVoznjeState>();
 
 
 builder.Services.AddControllers();

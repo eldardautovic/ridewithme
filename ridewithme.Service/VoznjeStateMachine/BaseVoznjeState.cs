@@ -38,6 +38,10 @@ namespace ridewithme.Service.VoznjeStateMachine
         {
             throw new Exception("Method not allowed");
         }
+        public virtual Model.Voznje Edit(int id)
+        {
+            throw new Exception("Method not allowed");
+        }
 
         public BaseVoznjeState CreateState(string stateName)
         {
@@ -45,6 +49,15 @@ namespace ridewithme.Service.VoznjeStateMachine
             {
                 case "initial":
                     return ServiceProvider.GetService<InitialVoznjeState>();
+
+                case "draft":
+                    return ServiceProvider.GetService<DraftVoznjeState>();
+
+                case "active":
+                    return ServiceProvider.GetService<ActiveVoznjeState>();
+
+                case "hidden":
+                    return ServiceProvider.GetService<HiddenVoznjeState>();
 
                 default: throw new Exception("State not recognized.");
             }

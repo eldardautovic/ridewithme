@@ -6,7 +6,7 @@ namespace ridewithme.Model
 {
     public class Voznje
     {
-        public int VoznjaId { get; set; }
+        public int Id { get; set; }
 
         public int VozacId { get; set; }
 
@@ -15,6 +15,8 @@ namespace ridewithme.Model
         public DateTime DatumVrijemePocetka { get; set; }
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }
+
+        public string? StateMachine  { get; set; }
 
     }
 }
