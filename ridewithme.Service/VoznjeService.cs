@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
@@ -78,6 +79,19 @@ namespace ridewithme.Service
             return state.Edit(id);
         }
 
-
+        public List<string> AllowedActions(int id)
+        {
+            if(id <= 0)
+            {
+                var state = BaseVoznjeState.CreateState("initial");
+                return state.AllowedActions(null);
+            }
+            else
+            {
+                var entity = Context.Voznjes.Find(id);
+                var state = BaseVoznjeState.CreateState(entity.StateMachine);
+                return state.AllowedActions(entity);
+            }
+        }
     }
 }

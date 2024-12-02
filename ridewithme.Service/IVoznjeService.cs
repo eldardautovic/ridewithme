@@ -16,6 +16,8 @@ namespace ridewithme.Service
 
         public Voznje Hide(int id);
         public Voznje Edit(int id);
+
+        public List<string> AllowedActions(int id);
        
     }
 }

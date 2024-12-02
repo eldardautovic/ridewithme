@@ -35,5 +35,12 @@ namespace ridewithme.API.Controllers
         {
             return (_service as IVoznjeService).Hide(id);
         }
+
+        [HttpGet("{id}/allowedActions")]
+
+        public List<string> AllowedActions(int id)
+        {
+            return (_service as IVoznjeService).AllowedActions(id);
+        }
     }
 }

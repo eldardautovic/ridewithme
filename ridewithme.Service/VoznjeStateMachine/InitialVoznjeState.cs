@@ -15,6 +15,7 @@ namespace ridewithme.Service.VoznjeStateMachine
         {
         }
 
+
         public override Voznje Insert(VoznjeInsertRequest request)
         {
             var set = Context.Set<Database.Voznje>();
@@ -28,6 +29,11 @@ namespace ridewithme.Service.VoznjeStateMachine
             Context.SaveChanges();
 
             return Mapper.Map<Voznje>(entity);
+        }
+
+        public override List<string> AllowedActions(Database.Voznje entity)
+        {
+            return new List<string>() { nameof(Insert) };
         }
     }
 }

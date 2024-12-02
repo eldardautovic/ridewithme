@@ -43,6 +43,11 @@ namespace ridewithme.Service.VoznjeStateMachine
             throw new Exception("Method not allowed");
         }
 
+        public virtual List<string> AllowedActions(Database.Voznje entity)
+        {
+            throw new Exception("Method not allowed");
+        }
+
         public BaseVoznjeState CreateState(string stateName)
         {
             switch (stateName)

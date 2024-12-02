@@ -54,5 +54,10 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             return Mapper.Map<Model.Voznje>(entity);
         }
+
+        public override List<string> AllowedActions(Voznje entity)
+        {
+            return new List<string>() { nameof(Activate), nameof(Hide), nameof(Update) };
+        }
     }
 }
