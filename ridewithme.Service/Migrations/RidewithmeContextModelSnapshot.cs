@@ -67,43 +67,38 @@ namespace ridewithme.Service.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("UlogeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UlogeId");
 
                     b.ToTable("Korisnici", (string)null);
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.KorisniciUloge", b =>
                 {
-                    b.Property<int>("KorisniciUlogeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KorisniciUlogeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DatumIzmjene")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("KorisniciId")
-                        .HasColumnType("int");
+                        .HasColumnType("datetime");
 
                     b.Property<int>("KorisnikId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("KorisnikId");
 
                     b.Property<int>("UlogaId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("UlogaId");
 
-                    b.HasKey("KorisniciUlogeId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("KorisniciId");
+                    b.HasIndex("KorisnikId");
 
                     b.HasIndex("UlogaId");
 
-                    b.ToTable("KorisniciUloges");
+                    b.ToTable("KorisniciUloge", (string)null);
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Uloge", b =>
@@ -158,24 +153,21 @@ namespace ridewithme.Service.Migrations
                     b.ToTable("Voznje", (string)null);
                 });
 
-            modelBuilder.Entity("ridewithme.Service.Database.Korisnici", b =>
-                {
-                    b.HasOne("ridewithme.Service.Database.Uloge", null)
-                        .WithMany("Korisnicis")
-                        .HasForeignKey("UlogeId");
-                });
-
             modelBuilder.Entity("ridewithme.Service.Database.KorisniciUloge", b =>
                 {
-                    b.HasOne("ridewithme.Service.Database.Korisnici", null)
+                    b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
                         .WithMany("KorisniciUloge")
-                        .HasForeignKey("KorisniciId");
+                        .HasForeignKey("KorisnikId")
+                        .IsRequired()
+                        .HasConstraintName("FK_KorisniciUloge_Korisnici");
 
                     b.HasOne("ridewithme.Service.Database.Uloge", "Uloga")
-                        .WithMany()
+                        .WithMany("Korisnicis")
                         .HasForeignKey("UlogaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_KorisniciUloge_Uloge");
+
+                    b.Navigation("Korisnik");
 
                     b.Navigation("Uloga");
                 });

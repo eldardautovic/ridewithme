@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public interface IUlogeService : ICRUDService<Uloge, UlogeSearchObject, UlogeUpsertRequest, UlogeUpsertRequest>
+    public interface IUlogeervice : ICRUDService<Uloge, UlogeearchObject, UlogeUpsertRequest, UlogeUpsertRequest>
     {
     }
 }

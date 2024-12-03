@@ -18,12 +18,12 @@ namespace ridewithme.API.Controllers
         }
 
         [HttpPost]
-        public TModel Insert(TInsert request)
+        public virtual TModel Insert(TInsert request)
         {
             return _service.Insert(request);
         }
         [HttpPut]
-        public TModel Update(int id, TUpdate request)
+        public virtual TModel Update(int id, TUpdate request)
         {
             return _service.Update(id, request);
         }

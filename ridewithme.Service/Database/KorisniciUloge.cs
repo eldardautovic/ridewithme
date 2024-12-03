@@ -8,7 +8,7 @@ namespace ridewithme.Service.Database
 {
     public partial class KorisniciUloge
     {
-        public int KorisniciUlogeId { get; set; }
+        public int Id { get; set; }
 
         public int KorisnikId { get; set; }
 
@@ -16,7 +16,9 @@ namespace ridewithme.Service.Database
 
         public DateTime DatumIzmjene { get; set; }
 
-        public virtual Uloge Uloga { get; set; }
+        public virtual Uloge Uloga { get; set; } = null!;
+
+        public virtual Korisnici Korisnik { get; set; } = null!;
 
     }
 }

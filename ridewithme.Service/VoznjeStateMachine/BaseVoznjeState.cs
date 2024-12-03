@@ -3,6 +3,7 @@ using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
 
 using Microsoft.Extensions.DependencyInjection;
+using ridewithme.Model;
 
 
 namespace ridewithme.Service.VoznjeStateMachine
@@ -22,30 +23,30 @@ namespace ridewithme.Service.VoznjeStateMachine
         }
         public virtual Model.Voznje Insert(VoznjeInsertRequest request)
         {
-            throw new Exception("Method not allowed");
+            throw new UserException("Metoda nije dozvoljena.");
         }
 
         public virtual Model.Voznje Update(int id, VoznjeUpdateRequest request)
         { 
-            throw new Exception("Method not allowed");
+            throw new UserException("Metoda nije dozvoljena.");
         }
 
         public virtual Model.Voznje Activate(int id)
         {
-            throw new Exception("Method not allowed");
-        }
+            throw new UserException("Metoda nije dozvoljena.");
+        } 
         public virtual Model.Voznje Hide(int id)
         {
-            throw new Exception("Method not allowed");
+            throw new UserException("Metoda nije dozvoljena.");
         }
         public virtual Model.Voznje Edit(int id)
         {
-            throw new Exception("Method not allowed");
+            throw new UserException("Metoda nije dozvoljena.");
         }
 
         public virtual List<string> AllowedActions(Database.Voznje entity)
         {
-            throw new Exception("Method not allowed");
+            throw new UserException("Metoda nije dozvoljena.");
         }
 
         public BaseVoznjeState CreateState(string stateName)

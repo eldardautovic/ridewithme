@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ridewithme.Model.SearchObject
 {
-    public class UlogeSearchObject : BaseSearchObject
+    public class UlogeearchObject : BaseSearchObject
     {
         public string? NazivGTE { get; set; }
 

@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public class UlogeService : BaseCRUDService<Model.Uloge, UlogeSearchObject, Database.Uloge, UlogeUpsertRequest, UlogeUpsertRequest>, IUlogeService
+    public class Ulogeervice : BaseCRUDService<Model.Uloge, UlogeearchObject, Database.Uloge, UlogeUpsertRequest, UlogeUpsertRequest>, IUlogeervice
     {
-        public UlogeService(RidewithmeContext dbContext, IMapper mapper) : base(dbContext, mapper)
+        public Ulogeervice(RidewithmeContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 

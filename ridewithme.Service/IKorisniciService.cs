@@ -11,5 +11,6 @@ namespace ridewithme.Service
 {
     public interface IKorisniciService : ICRUDService<Korisnici, KorisniciSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>
     {
+        Model.Korisnici Login(string username,  string password);
     }
 }

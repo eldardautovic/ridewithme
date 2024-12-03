@@ -12,14 +12,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Dynamic;
 using System.Linq.Dynamic.Core;
+using Microsoft.Extensions.Logging;
 
 namespace ridewithme.Service
 {
     public class KorisniciService : BaseCRUDService<Model.Korisnici, KorisniciSearchObject, Database.Korisnici, KorisniciInsertRequest, KorisniciUpdateRequest>, IKorisniciService
     {
-        public KorisniciService(RidewithmeContext dbContext, IMapper mapper ) : base(dbContext, mapper)
+        ILogger<KorisniciService> _logger;
+        public KorisniciService(RidewithmeContext dbContext, IMapper mapper, ILogger<KorisniciService> logger ) : base(dbContext, mapper)
         {
-            
+            _logger = logger;
         }
      
         public override IQueryable<Database.Korisnici> AddFilter(KorisniciSearchObject searchObject, IQueryable<Database.Korisnici> query)
@@ -47,7 +49,7 @@ namespace ridewithme.Service
                 query = query.Where(x => x.KorisnickoIme == searchObject.KorisnickoIme);
             }
 
-            if (searchObject.IsKorisniciIncluded == true)
+            if (searchObject.IsKorisniciIncluded != null && searchObject.IsKorisniciIncluded == true)
             {
                 query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
             }
@@ -74,6 +76,8 @@ namespace ridewithme.Service
 
         public override void BeforeInsert(KorisniciInsertRequest request, Database.Korisnici entity)
         {
+            _logger.LogInformation($"Adding User: {entity.KorisnickoIme}");
+
             if (request.Lozinka != request.LozinkaPotvrda)
             {
                 throw new Exception("Lozinka i LozinkaPotvrda se moraju podudarati.");
@@ -84,10 +88,28 @@ namespace ridewithme.Service
             base.BeforeInsert(request, entity);
         }
 
+        public override void AfterInsert(Database.Korisnici entity)
+        {
+            var korisnikRole = Context.Uloge.FirstOrDefault(x => x.Naziv == "Korisnik");
+
+            var roleEntity = new Database.KorisniciUloge()
+            {
+                DatumIzmjene = DateTime.Now,
+                Korisnik = entity,
+                KorisnikId = entity.Id,
+                Uloga = korisnikRole,
+                UlogaId = korisnikRole.Id
+            };
+
+            Context.Add(roleEntity);
+            Context.SaveChanges();
+
+            base.AfterInsert(entity);
+        }
+
         public static string GenerateSalt()
         {
             var byteArray = RandomNumberGenerator.GetBytes(16);
-
 
             return Convert.ToBase64String(byteArray);
         }
@@ -103,6 +125,25 @@ namespace ridewithme.Service
             HashAlgorithm algorithm = HashAlgorithm.Create("SHA1");
             byte[] inArray = algorithm.ComputeHash(dst);
             return Convert.ToBase64String(inArray);
+        }
+
+        public Model.Korisnici Login(string username, string password)
+        {
+            var entity = Context.Korisnicis.Include(x => x.KorisniciUloge).ThenInclude(y => y.Uloga).FirstOrDefault(x => x.KorisnickoIme == username);
+
+            if(entity == null)
+            {
+                return null;
+            }
+
+            var hash = GenerateHash(entity.LozinkaSalt, password);
+
+            if(hash != entity.LozinkaHash)
+            {
+                return null;
+            }
+
+            return Mapper.Map<Model.Korisnici>(entity);
         }
     }
 }
