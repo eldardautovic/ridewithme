@@ -1,5 +1,7 @@
 ﻿using Azure.Core;
+using EasyNetQ;
 using MapsterMapper;
+using ridewithme.Model.Messages;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
 using System;
@@ -37,9 +39,17 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "active";
 
+            var bus = RabbitHutch.CreateBus("host=localhost");
+
+            var mappedEntity = Mapper.Map<Model.Voznje>(entity);
+
+            VoznjeActivated message = new VoznjeActivated{ Voznja = mappedEntity };
+
+            bus.PubSub.Publish(message);
+
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return mappedEntity;
         }
 
         public override Model.Voznje Hide(int id)

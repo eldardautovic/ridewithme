@@ -1,0 +1,37 @@
+version: '3'
+services:
+#mssql docker
+  ridewithme-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password_123!
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    expose:
+      - 1433
+    networks:
+      - ridewithmenet
+
+  ridewithme-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:ridewithme=Server=ridewithme-sql,1433;Database=ridewithme_2024;User=sa;Password=Password_123!;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 5284:5284
+    networks:
+      - ridewithmenet
+    links:
+      - ridewithme-sql
+    depends_on:
+      - ridewithme-sql
+    
+      
+networks:
+  ridewithmenet:
+    driver: bridge      

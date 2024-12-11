@@ -29,6 +29,11 @@ namespace ridewithme.Service
             
             query = base.AddFilter(searchObject, query);
 
+            if (searchObject.IsKorisniciIncluded != null && searchObject.IsKorisniciIncluded == true)
+            {
+                query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
+            }
+
             if (!string.IsNullOrWhiteSpace(searchObject?.ImeGTE))
             {
                 query = query.Where(x => x.Ime.StartsWith(searchObject.ImeGTE));
@@ -47,11 +52,6 @@ namespace ridewithme.Service
             if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoIme))
             {
                 query = query.Where(x => x.KorisnickoIme == searchObject.KorisnickoIme);
-            }
-
-            if (searchObject.IsKorisniciIncluded != null && searchObject.IsKorisniciIncluded == true)
-            {
-                query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
             }
 
             if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
