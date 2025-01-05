@@ -16,7 +16,8 @@ namespace ridewithme.API.Controllers
         {
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
+        [AllowAnonymous]
         public override Uloge Insert(UlogeUpsertRequest request)
         {
             return base.Insert(request);

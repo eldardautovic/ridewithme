@@ -21,5 +21,13 @@ namespace ridewithme.API.Controllers
         {
             return (_service as IKorisniciService).Login(username, password);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public override Korisnici Insert(KorisniciInsertRequest request)
+        {
+            return base.Insert(request);
+        }
+
     }
 }

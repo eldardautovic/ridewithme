@@ -83,6 +83,13 @@ namespace ridewithme.Service
                 throw new Exception("Lozinka i LozinkaPotvrda se moraju podudarati.");
             }
 
+            var existingUsername = Context.Korisnicis.FirstOrDefault(x => x.KorisnickoIme == request.KorisnickoIme);
+
+            if (existingUsername != null)
+            {
+                throw new UserException("Korisnicko ime je zauzeto.");
+            }
+
             entity.LozinkaSalt = GenerateSalt();
             entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Lozinka);
             base.BeforeInsert(request, entity);
