@@ -158,10 +158,10 @@ namespace ridewithme.Service.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DatumVrijemePocetka")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DatumVrijemeZavrsetka")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("StateMachine")
                         .IsRequired()
@@ -169,7 +169,7 @@ namespace ridewithme.Service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Voznje", (string)null);
+                    b.ToTable("Voznje");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.KorisniciUloge", b =>
@@ -181,7 +181,7 @@ namespace ridewithme.Service.Migrations
                         .HasConstraintName("FK_KorisniciUloge_Korisnici");
 
                     b.HasOne("ridewithme.Service.Database.Uloge", "Uloga")
-                        .WithMany("Korisnicis")
+                        .WithMany("KorisniciUloge")
                         .HasForeignKey("UlogaId")
                         .IsRequired()
                         .HasConstraintName("FK_KorisniciUloge_Uloge");
@@ -196,13 +196,13 @@ namespace ridewithme.Service.Migrations
                     b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
                         .WithMany("KorisniciVoznje")
                         .HasForeignKey("KorisnikId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ridewithme.Service.Database.Voznje", "Voznja")
                         .WithMany("KorisniciVoznje")
                         .HasForeignKey("VoznjaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Korisnik");
@@ -219,7 +219,7 @@ namespace ridewithme.Service.Migrations
 
             modelBuilder.Entity("ridewithme.Service.Database.Uloge", b =>
                 {
-                    b.Navigation("Korisnicis");
+                    b.Navigation("KorisniciUloge");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Voznje", b =>

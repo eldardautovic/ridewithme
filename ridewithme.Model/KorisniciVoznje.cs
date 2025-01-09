@@ -11,8 +11,5 @@ namespace ridewithme.Model
         public int VoznjaId { get; set; }
         public bool Klijent { get; set; }
         public bool Vozac { get; set; }
-
-        public Korisnici Korisnik { get; set; }
-        public Voznje Voznja { get; set; }
     }
 }

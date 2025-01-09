@@ -9,7 +9,6 @@ namespace ridewithme.Service.Database
 {
     public partial class KorisniciUloge
     {
-        [Key]
         public int Id { get; set; }
 
         public int KorisnikId { get; set; }

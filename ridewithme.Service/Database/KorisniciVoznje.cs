@@ -1,5 +1,4 @@
 ﻿using ridewithme.Model;
-using ridewithme.Service.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace ridewithme.Service.Database
         public bool Klijent { get; set; } 
         public bool Vozac { get; set; } 
 
-        public Korisnici Korisnik { get; set; }
-        public Voznje Voznja { get; set; }
+        public virtual Korisnici Korisnik { get; set; } = null!;
+        public virtual Voznje Voznja { get; set; } = null!;
     }
 }

@@ -13,5 +13,5 @@ public partial class Voznje
 
     public DateTime? DatumVrijemeZavrsetka { get; set; }
 
-    public ICollection<KorisniciVoznje> KorisniciVoznje { get; set; }
+    public virtual ICollection<KorisniciVoznje> KorisniciVoznje { get; set; } 
 }

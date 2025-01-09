@@ -12,8 +12,8 @@ using ridewithme.Service.Database;
 namespace ridewithme.Service.Migrations
 {
     [DbContext(typeof(RidewithmeContext))]
-    [Migration("20241210122326_Initial")]
-    partial class Initial
+    [Migration("20250109160753_TransferPodataka3")]
+    partial class TransferPodataka3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,6 +104,35 @@ namespace ridewithme.Service.Migrations
                     b.ToTable("KorisniciUloge", (string)null);
                 });
 
+            modelBuilder.Entity("ridewithme.Service.Database.KorisniciVoznje", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Klijent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("KorisnikId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Vozac")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("VoznjaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KorisnikId");
+
+                    b.HasIndex("VoznjaId");
+
+                    b.ToTable("KorisniciVoznje");
+                });
+
             modelBuilder.Entity("ridewithme.Service.Database.Uloge", b =>
                 {
                     b.Property<int>("Id")
@@ -132,28 +161,18 @@ namespace ridewithme.Service.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DatumVrijemePocetka")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DatumVrijemeZavrsetka")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("KlijentId")
-                        .HasColumnType("int");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("StateMachine")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VozacId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("KlijentId");
-
-                    b.HasIndex("VozacId");
-
-                    b.ToTable("Voznje", (string)null);
+                    b.ToTable("Voznje");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.KorisniciUloge", b =>
@@ -165,7 +184,7 @@ namespace ridewithme.Service.Migrations
                         .HasConstraintName("FK_KorisniciUloge_Korisnici");
 
                     b.HasOne("ridewithme.Service.Database.Uloge", "Uloga")
-                        .WithMany("Korisnicis")
+                        .WithMany("KorisniciUloge")
                         .HasForeignKey("UlogaId")
                         .IsRequired()
                         .HasConstraintName("FK_KorisniciUloge_Uloge");
@@ -175,36 +194,40 @@ namespace ridewithme.Service.Migrations
                     b.Navigation("Uloga");
                 });
 
-            modelBuilder.Entity("ridewithme.Service.Database.Voznje", b =>
+            modelBuilder.Entity("ridewithme.Service.Database.KorisniciVoznje", b =>
                 {
-                    b.HasOne("ridewithme.Service.Database.Korisnici", "Klijent")
-                        .WithMany("VoznjeKlijents")
-                        .HasForeignKey("KlijentId")
-                        .HasConstraintName("FK_Klijent_Korisnik");
+                    b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
+                        .WithMany("KorisniciVoznje")
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.HasOne("ridewithme.Service.Database.Korisnici", "Vozac")
-                        .WithMany("VoznjeVozacs")
-                        .HasForeignKey("VozacId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Vozac_Korisnik");
+                    b.HasOne("ridewithme.Service.Database.Voznje", "Voznja")
+                        .WithMany("KorisniciVoznje")
+                        .HasForeignKey("VoznjaId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("Klijent");
+                    b.Navigation("Korisnik");
 
-                    b.Navigation("Vozac");
+                    b.Navigation("Voznja");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Korisnici", b =>
                 {
                     b.Navigation("KorisniciUloge");
 
-                    b.Navigation("VoznjeKlijents");
-
-                    b.Navigation("VoznjeVozacs");
+                    b.Navigation("KorisniciVoznje");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Uloge", b =>
                 {
-                    b.Navigation("Korisnicis");
+                    b.Navigation("KorisniciUloge");
+                });
+
+            modelBuilder.Entity("ridewithme.Service.Database.Voznje", b =>
+                {
+                    b.Navigation("KorisniciVoznje");
                 });
 #pragma warning restore 612, 618
         }

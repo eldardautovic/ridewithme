@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ridewithme.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class Korisnik : Migration
+    public partial class TransferPodataka3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,25 +49,13 @@ namespace ridewithme.Service.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VozacId = table.Column<int>(type: "int", nullable: false),
-                    KlijentId = table.Column<int>(type: "int", nullable: true),
                     StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatumVrijemePocetka = table.Column<DateTime>(type: "datetime", nullable: false),
-                    DatumVrijemeZavrsetka = table.Column<DateTime>(type: "datetime", nullable: true)
+                    DatumVrijemePocetka = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DatumVrijemeZavrsetka = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Voznje", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Klijent_Korisnik",
-                        column: x => x.KlijentId,
-                        principalTable: "Korisnici",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Vozac_Korisnik",
-                        column: x => x.VozacId,
-                        principalTable: "Korisnici",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -95,6 +83,32 @@ namespace ridewithme.Service.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "KorisniciVoznje",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    KorisnikId = table.Column<int>(type: "int", nullable: false),
+                    VoznjaId = table.Column<int>(type: "int", nullable: false),
+                    Klijent = table.Column<bool>(type: "bit", nullable: false),
+                    Vozac = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KorisniciVoznje", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_KorisniciVoznje_Korisnici_KorisnikId",
+                        column: x => x.KorisnikId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_KorisniciVoznje_Voznje_VoznjaId",
+                        column: x => x.VoznjaId,
+                        principalTable: "Voznje",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_KorisniciUloge_KorisnikId",
                 table: "KorisniciUloge",
@@ -106,14 +120,14 @@ namespace ridewithme.Service.Migrations
                 column: "UlogaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voznje_KlijentId",
-                table: "Voznje",
-                column: "KlijentId");
+                name: "IX_KorisniciVoznje_KorisnikId",
+                table: "KorisniciVoznje",
+                column: "KorisnikId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voznje_VozacId",
-                table: "Voznje",
-                column: "VozacId");
+                name: "IX_KorisniciVoznje_VoznjaId",
+                table: "KorisniciVoznje",
+                column: "VoznjaId");
         }
 
         /// <inheritdoc />
@@ -123,13 +137,16 @@ namespace ridewithme.Service.Migrations
                 name: "KorisniciUloge");
 
             migrationBuilder.DropTable(
-                name: "Voznje");
+                name: "KorisniciVoznje");
 
             migrationBuilder.DropTable(
                 name: "Uloge");
 
             migrationBuilder.DropTable(
                 name: "Korisnici");
+
+            migrationBuilder.DropTable(
+                name: "Voznje");
         }
     }
 }
