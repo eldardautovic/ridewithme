@@ -29,9 +29,9 @@ namespace ridewithme.Service
             
             query = base.AddFilter(searchObject, query);
 
-            if (searchObject.IsKorisniciIncluded != null && searchObject.IsKorisniciIncluded == true)
+            if (searchObject.IsKorisniciIncluded == true)
             {
-                query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
+                query = query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
             }
 
             if (!string.IsNullOrWhiteSpace(searchObject?.ImeGTE))
@@ -71,6 +71,13 @@ namespace ridewithme.Service
                 }
 
             }
+
+            if (searchObject.IsVoznjeVozacIncluded == true)
+            {
+                query = query.Include(x => x.KorisniciVoznje);
+
+            }
+
             return query;
         }
 
@@ -95,7 +102,7 @@ namespace ridewithme.Service
             base.BeforeInsert(request, entity);
         }
 
-        public override void AfterInsert(Database.Korisnici entity)
+        public override void AfterInsert(Database.Korisnici entity, KorisniciInsertRequest request)
         {
             var korisnikRole = Context.Uloge.FirstOrDefault(x => x.Naziv == "Korisnik");
 
@@ -111,7 +118,7 @@ namespace ridewithme.Service
             Context.Add(roleEntity);
             Context.SaveChanges();
 
-            base.AfterInsert(entity);
+            base.AfterInsert(entity, request);
         }
 
         public static string GenerateSalt()

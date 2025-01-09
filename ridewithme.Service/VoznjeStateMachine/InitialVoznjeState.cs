@@ -18,15 +18,27 @@ namespace ridewithme.Service.VoznjeStateMachine
 
         public override Voznje Insert(VoznjeInsertRequest request)
         {
-            var set = Context.Set<Database.Voznje>();
+            var voznjeSet = Context.Set<Database.Voznje>();
+            var korisniciVoznjeSet = Context.Set<Database.KorisniciVoznje>();
 
             var entity = Mapper.Map<Database.Voznje>(request);
 
             entity.StateMachine = "draft";
 
-            set.Add(entity);
+            voznjeSet.Add(entity);
 
             Context.SaveChanges();
+
+            //var tempKorisniciUlogeObject = new Database.KorisniciVoznje()
+            //{
+            //    VoznjaId = entity.Id,
+            //    KorisnikId = request.VozacId,
+            //    Vozac = true
+            //};
+
+            //korisniciVoznjeSet.Add(tempKorisniciUlogeObject);
+
+            //Context.SaveChanges();
 
             return Mapper.Map<Voznje>(entity);
         }

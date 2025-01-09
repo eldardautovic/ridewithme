@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ridewithme.Model;
 using ridewithme.Model.Requests;
@@ -33,6 +34,8 @@ namespace ridewithme.Service
                 filteredQuery = filteredQuery.Where(x => x.Id == searchObject.VoznjaId.Value);
             }
 
+            filteredQuery = filteredQuery.Include(x => x.KorisniciVoznje).ThenInclude(x => x.Korisnik);
+
             return filteredQuery;
         }
 
@@ -40,6 +43,21 @@ namespace ridewithme.Service
         {
             //TODO: throw exception if vozacId not existing
             base.BeforeInsert(request, entity);
+        }
+
+        public override void AfterInsert(Database.Voznje entity, VoznjeInsertRequest request)
+        {
+            var tempKorisniciUlogeObject = new Database.KorisniciVoznje()
+            {
+                VoznjaId = entity.Id,
+                KorisnikId = request.VozacId,
+                Vozac = true
+            };
+
+            Context.Add(tempKorisniciUlogeObject);
+            Context.SaveChanges();
+
+            base.AfterInsert(entity, request);
         }
 
         public override Model.Voznje Insert(VoznjeInsertRequest request)
@@ -88,7 +106,7 @@ namespace ridewithme.Service
             }
             else
             {
-                var entity = Context.Voznjes.Find(id);
+                var entity = Context.Voznje.Find(id);
                 var state = BaseVoznjeState.CreateState(entity.StateMachine);
                 return state.AllowedActions(entity);
             }

@@ -7,8 +7,6 @@ namespace ridewithme.Model.Requests
     {
         public int VozacId { get; set; }
 
-        public int? KlijentId { get; set; }
-
         public DateTime DatumVrijemePocetka { get; set; }
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }

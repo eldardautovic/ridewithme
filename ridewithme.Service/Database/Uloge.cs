@@ -9,5 +9,5 @@ public partial class Uloge
 
     public string Naziv { get; set; } = null!;
 
-    public virtual ICollection<KorisniciUloge> Korisnicis { get; set; } = new List<KorisniciUloge>();
+    public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 }

@@ -8,15 +8,13 @@ namespace ridewithme.Model
     {
         public int Id { get; set; }
 
-        public int VozacId { get; set; }
-
-        public int? KlijentId { get; set; }
+        public string StateMachine { get; set; }
 
         public DateTime DatumVrijemePocetka { get; set; }
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }
 
-        public string? StateMachine  { get; set; }
+        public ICollection<KorisniciVoznje> KorisniciVoznje { get; set; }
 
     }
 }

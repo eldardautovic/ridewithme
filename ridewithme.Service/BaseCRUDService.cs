@@ -25,14 +25,14 @@ namespace ridewithme.Service
             Context.Add(entity);
             Context.SaveChanges();
 
-            AfterInsert(entity);
+            AfterInsert(entity, request);
 
             return Mapper.Map<TModel>(entity);
         }
 
         public virtual void BeforeInsert(TInsert request, TDbEntity entity) { }
 
-        public virtual void AfterInsert(TDbEntity entity) { }
+        public virtual void AfterInsert(TDbEntity entity, TInsert request) { }
 
         public virtual TModel Update(int id, TUpdate request)
         {

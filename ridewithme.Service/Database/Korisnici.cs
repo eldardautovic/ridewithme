@@ -21,9 +21,8 @@ public partial class Korisnici
 
     public DateTime? DatumKreiranja { get; set; }
 
-    public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; } = new List<KorisniciUloge>();
+    public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 
-    public virtual ICollection<Voznje> VoznjeKlijents { get; set; } = new List<Voznje>();
+    public ICollection<KorisniciVoznje> KorisniciVoznje { get; set; }
 
-    public virtual ICollection<Voznje> VoznjeVozacs { get; set; } = new List<Voznje>();
 }

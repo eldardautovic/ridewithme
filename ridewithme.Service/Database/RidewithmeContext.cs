@@ -19,9 +19,11 @@ public partial class RidewithmeContext : DbContext
 
     public virtual DbSet<Uloge> Uloge { get; set; }
 
-    public virtual DbSet<Voznje> Voznjes { get; set; }
+    public virtual DbSet<Voznje> Voznje { get; set; }
 
     public virtual DbSet<KorisniciUloge> KorisniciUloge { get; set; }
+    public virtual DbSet<KorisniciVoznje> KorisniciVoznje { get; set; }
+
 
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -79,28 +81,12 @@ public partial class RidewithmeContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_KorisniciUloge_Korisnici");
 
-            entity.HasOne(d => d.Uloga).WithMany(p => p.Korisnicis)
+            entity.HasOne(d => d.Uloga).WithMany(p => p.KorisniciUloge)
                 .HasForeignKey(d => d.UlogaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_KorisniciUloge_Uloge");
         });
 
-        modelBuilder.Entity<Voznje>(entity =>
-        {
-            entity.ToTable("Voznje");
-
-            entity.Property(e => e.DatumVrijemePocetka).HasColumnType("datetime");
-            entity.Property(e => e.DatumVrijemeZavrsetka).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Klijent).WithMany(p => p.VoznjeKlijents)
-                .HasForeignKey(d => d.KlijentId)
-                .HasConstraintName("FK_Klijent_Korisnik");
-
-            entity.HasOne(d => d.Vozac).WithMany(p => p.VoznjeVozacs)
-                .HasForeignKey(d => d.VozacId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Vozac_Korisnik");
-        });
 
         OnModelCreatingPartial(modelBuilder);
     }

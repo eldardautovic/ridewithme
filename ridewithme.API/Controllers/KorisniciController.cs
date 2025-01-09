@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service;
+using ridewithme.Service.Database;
 
 namespace ridewithme.API.Controllers
 {
@@ -13,7 +15,10 @@ namespace ridewithme.API.Controllers
     [ApiController]
     public class KorisniciController : BaseCRUDController<Model.Korisnici, KorisniciSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>
     {
-        public KorisniciController(IKorisniciService service) : base(service) { }
+        public RidewithmeContext context { get; set; }
+        public KorisniciController(IKorisniciService service, RidewithmeContext ridewithmecontext) : base(service) {
+            context = ridewithmecontext;
+        }
 
         [HttpPost("login")]
         [AllowAnonymous]
@@ -24,9 +29,15 @@ namespace ridewithme.API.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public override Korisnici Insert(KorisniciInsertRequest request)
+        public override Model.Korisnici Insert(KorisniciInsertRequest request)
         {
             return base.Insert(request);
+        }
+
+        [AllowAnonymous]
+        public override PagedResult<Model.Korisnici> GetList([FromQuery] KorisniciSearchObject searchObject)
+        {
+            return base.GetList(searchObject);
         }
 
     }

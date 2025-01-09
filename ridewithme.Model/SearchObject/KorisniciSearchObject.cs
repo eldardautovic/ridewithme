@@ -14,6 +14,7 @@ namespace ridewithme.Model.SearchObject
         public string? Email { get; set; }
 
         public bool? IsKorisniciIncluded { get; set; }
+        public bool? IsVoznjeVozacIncluded { get; set; }
         public string? OrderBy { get; set; }
     }
 }
