@@ -14,7 +14,5 @@ namespace ridewithme.Model
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }
 
-        public virtual ICollection<KorisniciVoznje> KorisniciVoznje { get; set; }
-
     }
 }

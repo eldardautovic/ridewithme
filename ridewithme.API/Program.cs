@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var connectionString = builder.Configuration.GetConnectionString("ridewithme");
 builder.Services.AddDbContext<RidewithmeContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString).EnableDetailedErrors().EnableSensitiveDataLogging());
 
 builder.Services.AddMapster();
 builder.Services.AddAuthentication("BasicAuthentication")

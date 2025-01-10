@@ -109,9 +109,6 @@ namespace ridewithme.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Klijent")
-                        .HasColumnType("bit");
-
                     b.Property<int>("KorisnikId")
                         .HasColumnType("int");
 

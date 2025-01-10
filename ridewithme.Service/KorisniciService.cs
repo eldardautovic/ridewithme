@@ -74,7 +74,7 @@ namespace ridewithme.Service
 
             if (searchObject.IsVoznjeVozacIncluded == true)
             {
-                query = query.Include(x => x.KorisniciVoznje).ThenInclude(x=> x.Voznja);
+                query = query.Include(x => x.KorisniciVoznje).ThenInclude(x => x.Voznja);
 
             }
 

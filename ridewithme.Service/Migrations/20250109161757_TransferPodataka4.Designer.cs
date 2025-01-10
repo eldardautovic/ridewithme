@@ -12,8 +12,8 @@ using ridewithme.Service.Database;
 namespace ridewithme.Service.Migrations
 {
     [DbContext(typeof(RidewithmeContext))]
-    [Migration("20250109160753_TransferPodataka3")]
-    partial class TransferPodataka3
+    [Migration("20250109161757_TransferPodataka4")]
+    partial class TransferPodataka4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,9 +111,6 @@ namespace ridewithme.Service.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Klijent")
-                        .HasColumnType("bit");
 
                     b.Property<int>("KorisnikId")
                         .HasColumnType("int");

@@ -45,21 +45,6 @@ namespace ridewithme.Service
             base.BeforeInsert(request, entity);
         }
 
-        public override void AfterInsert(Database.Voznje entity, VoznjeInsertRequest request)
-        {
-            var tempKorisniciUlogeObject = new Database.KorisniciVoznje()
-            {
-                VoznjaId = entity.Id,
-                KorisnikId = request.VozacId,
-                Vozac = true
-            };
-
-            Context.Add(tempKorisniciUlogeObject);
-            Context.SaveChanges();
-
-            base.AfterInsert(entity, request);
-        }
-
         public override Model.Voznje Insert(VoznjeInsertRequest request)
         {
             var state = BaseVoznjeState.CreateState("initial");
@@ -110,6 +95,15 @@ namespace ridewithme.Service
                 var state = BaseVoznjeState.CreateState(entity.StateMachine);
                 return state.AllowedActions(entity);
             }
+        }
+
+        public List<Model.Korisnici> GetParticipants(int id)
+        {
+            return Context.KorisniciVoznje
+                .Where(x => x.VoznjaId == id)
+                .Include(x => x.Korisnik)
+                .Select(x => Mapper.Map<Model.Korisnici>(x.Korisnik))
+                .ToList();
         }
     }
 }

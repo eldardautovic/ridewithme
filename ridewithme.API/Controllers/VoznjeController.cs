@@ -42,5 +42,12 @@ namespace ridewithme.API.Controllers
         {
             return (_service as IVoznjeService).AllowedActions(id);
         }
+
+        [HttpGet("{id}/getParticipants")]
+
+        public List<Korisnici> GetParticipants(int id)
+        {
+            return (_service as IVoznjeService).GetParticipants(id);
+        }
     }
 }

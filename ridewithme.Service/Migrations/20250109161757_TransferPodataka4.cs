@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ridewithme.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class TransferPodataka3 : Migration
+    public partial class TransferPodataka4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,7 +91,6 @@ namespace ridewithme.Service.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     KorisnikId = table.Column<int>(type: "int", nullable: false),
                     VoznjaId = table.Column<int>(type: "int", nullable: false),
-                    Klijent = table.Column<bool>(type: "bit", nullable: false),
                     Vozac = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
