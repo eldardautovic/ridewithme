@@ -1,9 +1,11 @@
 using Mapster;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.OpenApi.Models;
 using ridewithme.API;
 using ridewithme.API.Filters;
+using ridewithme.Model.Requests;
 using ridewithme.Service;
 using ridewithme.Service.Database;
 using ridewithme.Service.VoznjeStateMachine;
@@ -14,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IVoznjeService, VoznjeService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IUlogeervice, Ulogeervice>();
+builder.Services.AddTransient<IGradoviService, GradoviService>();
+
 
 builder.Services.AddTransient<BaseVoznjeState>();
 builder.Services.AddTransient<InitialVoznjeState>();

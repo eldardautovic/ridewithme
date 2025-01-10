@@ -23,6 +23,4 @@ public partial class Korisnici
 
     public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 
-    public virtual ICollection<KorisniciVoznje> KorisniciVoznje { get; set; }
-
 }

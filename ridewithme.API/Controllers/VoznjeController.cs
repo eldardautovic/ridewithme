@@ -43,6 +43,20 @@ namespace ridewithme.API.Controllers
             return (_service as IVoznjeService).AllowedActions(id);
         }
 
+        [HttpDelete("{id}/delete")]
+
+        public string Delete (int id)
+        {
+            return (_service as IVoznjeService).Delete(id);
+        }
+
+        [HttpPut("{id}/rate")]
+
+        public Model.Voznje Rate(int id, int ocjena)
+        {
+            return (_service as IVoznjeService).Rate(id, ocjena);
+        }
+
         [HttpGet("{id}/getParticipants")]
 
         public List<Korisnici> GetParticipants(int id)

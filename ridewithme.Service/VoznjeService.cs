@@ -34,7 +34,35 @@ namespace ridewithme.Service
                 filteredQuery = filteredQuery.Where(x => x.Id == searchObject.VoznjaId.Value);
             }
 
-            filteredQuery = filteredQuery.Include(x => x.KorisniciVoznje).ThenInclude(x => x.Korisnik);
+            if(searchObject?.IsVoznjaActivated == true)
+            {
+                filteredQuery = filteredQuery.Where(x => x.StateMachine == "active");
+            }
+
+            if (searchObject?.IsKorisniciIncluded == true)
+            {
+                filteredQuery = filteredQuery.Include(x => x.Klijent);
+
+                filteredQuery = filteredQuery.Include(x => x.Vozac);
+
+            }
+
+            if (searchObject?.IsGradoviIncluded == true)
+            {
+                filteredQuery = filteredQuery.Include(x => x.GradOd);
+
+                filteredQuery = filteredQuery.Include(x => x.GradDo);
+            }
+
+            if(searchObject?.GradDoId.HasValue == true)
+            {
+                filteredQuery = filteredQuery.Where(x => x.GradDoId == searchObject.GradDoId.Value);
+            }
+
+            if (searchObject?.GradOdId.HasValue == true)
+            {
+                filteredQuery = filteredQuery.Where(x => x.GradOdId == searchObject.GradOdId.Value);
+            }
 
             return filteredQuery;
         }
@@ -82,6 +110,22 @@ namespace ridewithme.Service
             return state.Edit(id);
         }
 
+        public string Delete(int id)
+        {
+            var entity = GetById(id);
+            var state = BaseVoznjeState.CreateState(entity.StateMachine);
+
+            return state.Delete(id);
+        }
+
+        public Model.Voznje Rate(int id, int ocjena)
+        {
+            var entity = GetById(id);
+            var state = BaseVoznjeState.CreateState(entity.StateMachine);
+
+            return state.Rate(id, ocjena);
+        }
+
         public List<string> AllowedActions(int id)
         {
             if(id <= 0)
@@ -99,11 +143,7 @@ namespace ridewithme.Service
 
         public List<Model.Korisnici> GetParticipants(int id)
         {
-            return Context.KorisniciVoznje
-                .Where(x => x.VoznjaId == id)
-                .Include(x => x.Korisnik)
-                .Select(x => Mapper.Map<Model.Korisnici>(x.Korisnik))
-                .ToList();
+            return new List<Model.Korisnici>();
         }
     }
 }

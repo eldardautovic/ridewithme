@@ -1,6 +1,8 @@
 ﻿using Azure.Core;
 using EasyNetQ;
+using Mapster;
 using MapsterMapper;
+using ridewithme.Model;
 using ridewithme.Model.Messages;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
@@ -24,9 +26,38 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             var entity = set.Find(id);
 
+            if (entity == null)
+            {
+                throw new UserException("Voznja sa tim ID-om ne postoji.");
+            }
+
+            if(request.GradOdId != null && Context.Gradovi.Find(request.GradOdId) == null)
+            {
+                throw new UserException("GradOd ne postoji.");
+            }
+
+            if (request.GradDoId != null && Context.Gradovi.Find(request.GradDoId) == null)
+            {
+                throw new UserException("GradDo ne postoji.");
+            }
+
+            if (request.GradDoId != null && request.GradOdId != null && request.GradOdId == request.GradDoId)
+            {
+                throw new UserException("Grad polaska ne moze biti jednak Gradu dolaska.");
+            }
+
+            if(request.Cijena != null && request.Cijena <= 0)
+            {
+                throw new UserException("Cijena ne moze biti manja ili jednaka 0.");
+            }
+
+            Mapper.Config.Default.IgnoreNullValues(true);
+
             Mapper.Map(request, entity);
 
             Context.SaveChanges();
+
+            Mapper.Config.Default.IgnoreNullValues(false);
 
             return Mapper.Map<Model.Voznje>(entity);
         }
@@ -65,7 +96,20 @@ namespace ridewithme.Service.VoznjeStateMachine
             return Mapper.Map<Model.Voznje>(entity);
         }
 
-        public override List<string> AllowedActions(Voznje entity)
+        public override string Delete(int id)
+        {
+            var set = Context.Set<Database.Voznje>();
+
+            var entity = set.Find(id);
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return "Voznja je uspjesno obrisana.";
+        }
+
+        public override List<string> AllowedActions(Database.Voznje entity)
         {
             return new List<string>() { nameof(Activate), nameof(Hide), nameof(Update) };
         }

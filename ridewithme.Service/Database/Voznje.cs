@@ -6,12 +6,20 @@ namespace ridewithme.Service.Database;
 public partial class Voznje
 {
     public int Id { get; set; }
-
     public string StateMachine { get; set; }
-
-    public DateTime DatumVrijemePocetka { get; set; }
-
+    public DateTime? DatumVrijemePocetka { get; set; }
     public DateTime? DatumVrijemeZavrsetka { get; set; }
+    public string? Napomena { get; set; }
+    public int? Ocjena { get; set; }
+    public double Cijena { get; set; }
+    public int GradOdId { get; set; }
+    public int GradDoId { get; set; }
+    public virtual Gradovi GradOd { get; set; }
+    public virtual Gradovi GradDo { get; set; }
 
-    public virtual ICollection<KorisniciVoznje> KorisniciVoznje { get; set; } 
+    public int VozacId { get; set; }
+    public int? KlijentId { get; set; }
+
+    public virtual Korisnici Vozac { get; set; }
+    public virtual Korisnici? Klijent { get; set; }
 }

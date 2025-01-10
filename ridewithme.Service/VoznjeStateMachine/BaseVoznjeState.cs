@@ -44,6 +44,16 @@ namespace ridewithme.Service.VoznjeStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
+        public virtual string Delete(int id)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+
+        public virtual Model.Voznje Rate(int id, int ocjena)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+
         public virtual List<string> AllowedActions(Database.Voznje entity)
         {
             throw new UserException("Metoda nije dozvoljena.");
