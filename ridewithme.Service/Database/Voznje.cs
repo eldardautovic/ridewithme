@@ -16,12 +16,9 @@ public partial class Voznje
     public int GradDoId { get; set; }
     public virtual Gradovi GradOd { get; set; }
     public virtual Gradovi GradDo { get; set; }
-
     public int VozacId { get; set; }
     public int? KlijentId { get; set; }
-
     public int? KuponId { get; set; }
-
     public virtual Korisnici Vozac { get; set; }
     public virtual Korisnici? Klijent { get; set; }
     public virtual Kuponi? Kupon { get; set; }

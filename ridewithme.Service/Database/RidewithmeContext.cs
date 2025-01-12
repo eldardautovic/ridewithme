@@ -29,6 +29,8 @@ public partial class RidewithmeContext : DbContext
 
     public virtual DbSet<Kuponi> Kuponi { get; set; }
 
+    public virtual DbSet<VrstaZalbe> VrstaZalbe { get; set; }
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -126,7 +128,7 @@ public partial class RidewithmeContext : DbContext
                 new Gradovi { Id = 19, Latitude = 44.1249, Longitude = 18.1232, Naziv = "Visoko" },
                 new Gradovi { Id = 20, Latitude = 44.7752, Longitude = 17.1924, Naziv = "Doboj" }
             );
-
+        });
             modelBuilder.Entity<Voznje>(entity =>
             {
                 entity.HasKey(v => v.Id);
@@ -153,11 +155,39 @@ public partial class RidewithmeContext : DbContext
 
             });
 
-            
+            modelBuilder.Entity<Zalbe>(entity =>
+            {
+                entity.HasKey(v => v.Id);
 
-        });
+                entity.HasOne(v => v.Administrator)
+                      .WithMany()
+                      .HasForeignKey(v => v.AdministratorId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(v => v.Korisnik)
+                      .WithMany()
+                      .HasForeignKey(v => v.KorisnikId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+            });
+
+            modelBuilder.Entity<VrstaZalbe>(entity =>
+            {
+                entity.HasData(
+                    new VrstaZalbe { Id = 1, Naziv = "Na vožnju", KorisnikId = 1, DatumIzmjene = DateTime.Now },
+                    new VrstaZalbe { Id = 2, Naziv = "Na vozača", KorisnikId = 1, DatumIzmjene = DateTime.Now },
+                    new VrstaZalbe { Id = 3, Naziv = "Ostalo", KorisnikId = 1, DatumIzmjene = DateTime.Now }
+                );
+            });
+
+            modelBuilder.Entity<Kuponi>(entity =>
+            {
+                entity.HasData(
+                    new Kuponi { Id = 1, Naziv = "Testni kod", KorisnikId = 1, DatumIzmjene = DateTime.Now, BrojIskoristivosti = 5, DatumPocetka = DateTime.Now, Popust = 0.1, Kod = "TESTNI-KOD", StateMachine = "draft" },
+                    new Kuponi { Id = 2, Naziv = "Popust dobrodošlice", KorisnikId = 1, DatumIzmjene = DateTime.Now, BrojIskoristivosti = 10, DatumPocetka = DateTime.Now, Popust = 0.5, Kod = "WELCOME", StateMachine = "active" }
+                );
+            });
 
         OnModelCreatingPartial(modelBuilder);
     }
-
 }

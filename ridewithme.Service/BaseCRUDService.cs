@@ -22,6 +22,11 @@ namespace ridewithme.Service
 
             BeforeInsert(request, entity);
 
+            if(typeof(TDbEntity).GetProperty("DatumIzmjene") != null)
+            {
+                typeof(TDbEntity)?.GetProperty("DatumIzmjene")?.SetValue(entity, DateTime.Now);
+            }
+            
             Context.Add(entity);
             Context.SaveChanges();
 
@@ -43,6 +48,11 @@ namespace ridewithme.Service
             Mapper.Map(request, entity);
 
             BeforeUpdate(request, entity);
+
+            if (typeof(TDbEntity).GetProperty("DatumIzmjene") != null)
+            {
+                typeof(TDbEntity)?.GetProperty("DatumIzmjene")?.SetValue(entity, DateTime.Now);
+            }
 
             Context.SaveChanges();
 

@@ -19,6 +19,7 @@ builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IUlogeervice, Ulogeervice>();
 builder.Services.AddTransient<IGradoviService, GradoviService>();
 builder.Services.AddTransient<IKuponiService, KuponiService>();
+builder.Services.AddTransient<IVrstaZalbeService, VrstaZalbeService>();
 
 builder.Services.AddTransient<BaseVoznjeState>();
 builder.Services.AddTransient<InitialVoznjeState>();
