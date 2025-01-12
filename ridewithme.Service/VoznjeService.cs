@@ -126,6 +126,14 @@ namespace ridewithme.Service
             return state.Rate(id, ocjena);
         }
 
+        public Model.Voznje Book(int id)
+        {
+            var entity = GetById(id);
+            var state = BaseVoznjeState.CreateState(entity.StateMachine);
+
+            return state.Book(id);
+        }
+
         public List<string> AllowedActions(int id)
         {
             if(id <= 0)

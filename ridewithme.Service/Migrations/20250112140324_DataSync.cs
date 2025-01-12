@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ridewithme.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class VozacKlijent : Migration
+    public partial class DataSync : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -157,7 +157,7 @@ namespace ridewithme.Service.Migrations
             migrationBuilder.InsertData(
                 table: "Korisnici",
                 columns: new[] { "Id", "DatumKreiranja", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "Prezime" },
-                values: new object[] { 1, new DateTime(2025, 1, 10, 14, 52, 26, 486, DateTimeKind.Local).AddTicks(3711), "test@gmail.com", "Test", "test", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" });
+                values: new object[] { 1, new DateTime(2025, 1, 12, 15, 3, 24, 427, DateTimeKind.Local).AddTicks(5531), "test@gmail.com", "Test", "test", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" });
 
             migrationBuilder.InsertData(
                 table: "Uloge",
@@ -171,7 +171,7 @@ namespace ridewithme.Service.Migrations
             migrationBuilder.InsertData(
                 table: "KorisniciUloge",
                 columns: new[] { "Id", "DatumIzmjene", "KorisnikId", "UlogaId" },
-                values: new object[] { 1, new DateTime(2025, 1, 10, 14, 52, 26, 486, DateTimeKind.Local).AddTicks(9352), 1, 1 });
+                values: new object[] { 1, new DateTime(2025, 1, 12, 15, 3, 24, 427, DateTimeKind.Local).AddTicks(8091), 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_KorisniciUloge_KorisnikId",

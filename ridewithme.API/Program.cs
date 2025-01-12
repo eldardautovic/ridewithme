@@ -8,6 +8,7 @@ using ridewithme.API.Filters;
 using ridewithme.Model.Requests;
 using ridewithme.Service;
 using ridewithme.Service.Database;
+using ridewithme.Service.KuponiStateMachine;
 using ridewithme.Service.VoznjeStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,13 +18,22 @@ builder.Services.AddTransient<IVoznjeService, VoznjeService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IUlogeervice, Ulogeervice>();
 builder.Services.AddTransient<IGradoviService, GradoviService>();
-
+builder.Services.AddTransient<IKuponiService, KuponiService>();
 
 builder.Services.AddTransient<BaseVoznjeState>();
 builder.Services.AddTransient<InitialVoznjeState>();
 builder.Services.AddTransient<DraftVoznjeState>();
 builder.Services.AddTransient<ActiveVoznjeState>();
 builder.Services.AddTransient<HiddenVoznjeState>();
+builder.Services.AddTransient<BookedVoznjeState>();
+
+builder.Services.AddTransient<BaseKuponiState>();
+builder.Services.AddTransient<InitialKuponiState>();
+builder.Services.AddTransient<DraftKuponiState>();
+builder.Services.AddTransient<HiddenKuponiState>();
+builder.Services.AddTransient<ActiveKuponiState>();
+
+
 
 
 builder.Services.AddControllers(x=> x.Filters.Add<ExceptionFilter>());

@@ -59,6 +59,11 @@ namespace ridewithme.Service.VoznjeStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
+        public virtual Model.Voznje Book(int id)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+
         public BaseVoznjeState CreateState(string stateName)
         {
             switch (stateName)
@@ -75,10 +80,13 @@ namespace ridewithme.Service.VoznjeStateMachine
                 case "hidden":
                     return ServiceProvider.GetService<HiddenVoznjeState>();
 
+                case "booked":
+                    return ServiceProvider.GetService<BookedVoznjeState>();
+
                 default: throw new Exception("State not recognized.");
             }
         }
     }
 }
 
-//Initial, draft, active, hidden -> active
+//Initial, draft, active, hidden -> active -> booked -> in progress -> completed

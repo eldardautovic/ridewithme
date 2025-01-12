@@ -60,7 +60,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             voznjeSet.Add(entity);
 
-            Context.SaveChanges(); //Insert nove voznje
+            Context.SaveChanges();
 
             _logger.LogInformation($"[+] Kreirana je nova Voznja ID: {entity.Id} | Vozac ID: {request.VozacId}");
 

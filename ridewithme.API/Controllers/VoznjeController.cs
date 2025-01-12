@@ -22,6 +22,13 @@ namespace ridewithme.API.Controllers
             return (_service as IVoznjeService).Activate(id);
         }
 
+        [HttpPut("{id}/book")]
+
+        public Model.Voznje Book(int id)
+        {
+            return (_service as IVoznjeService).Book(id);
+        }
+
         [HttpPut("{id}/edit")]
 
         public Model.Voznje Edit(int id)

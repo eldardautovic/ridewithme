@@ -24,5 +24,7 @@ namespace ridewithme.Service
         public List<string> AllowedActions(int id);
 
         public List<Korisnici> GetParticipants(int id);
+        public Voznje Book(int id);
+
     }
 }

@@ -70,13 +70,13 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "active";
 
-            var bus = RabbitHutch.CreateBus("host=localhost");
+            //var bus = RabbitHutch.CreateBus("host=localhost");
 
             var mappedEntity = Mapper.Map<Model.Voznje>(entity);
 
-            VoznjeActivated message = new VoznjeActivated{ Voznja = mappedEntity };
+            //VoznjeActivated message = new VoznjeActivated{ Voznja = mappedEntity };
 
-            bus.PubSub.Publish(message);
+            //bus.PubSub.Publish(message);
 
             Context.SaveChanges();
 

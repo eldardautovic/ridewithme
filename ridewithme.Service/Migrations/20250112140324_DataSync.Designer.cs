@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ridewithme.Service.Database;
 
@@ -11,9 +12,11 @@ using ridewithme.Service.Database;
 namespace ridewithme.Service.Migrations
 {
     [DbContext(typeof(RidewithmeContext))]
-    partial class RidewithmeContextModelSnapshot : ModelSnapshot
+    [Migration("20250112140324_DataSync")]
+    partial class DataSync
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,7 +243,7 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumKreiranja = new DateTime(2025, 1, 12, 17, 0, 31, 841, DateTimeKind.Local).AddTicks(9670),
+                            DatumKreiranja = new DateTime(2025, 1, 12, 15, 3, 24, 427, DateTimeKind.Local).AddTicks(5531),
                             Email = "test@gmail.com",
                             Ime = "Test",
                             KorisnickoIme = "test",
@@ -282,52 +285,10 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumIzmjene = new DateTime(2025, 1, 12, 17, 0, 31, 842, DateTimeKind.Local).AddTicks(2363),
+                            DatumIzmjene = new DateTime(2025, 1, 12, 15, 3, 24, 427, DateTimeKind.Local).AddTicks(8091),
                             KorisnikId = 1,
                             UlogaId = 1
                         });
-                });
-
-            modelBuilder.Entity("ridewithme.Service.Database.Kuponi", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BrojIskoristivosti")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DatumIzmjene")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DatumPocetka")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Kod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("KorisnikId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Naziv")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Popust")
-                        .HasColumnType("float");
-
-                    b.Property<string>("StateMachine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KorisnikId");
-
-                    b.ToTable("Kuponi");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Uloge", b =>
@@ -387,9 +348,6 @@ namespace ridewithme.Service.Migrations
                     b.Property<int?>("KlijentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("KuponId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Napomena")
                         .HasColumnType("nvarchar(max)");
 
@@ -410,8 +368,6 @@ namespace ridewithme.Service.Migrations
                     b.HasIndex("GradOdId");
 
                     b.HasIndex("KlijentId");
-
-                    b.HasIndex("KuponId");
 
                     b.HasIndex("VozacId");
 
@@ -437,17 +393,6 @@ namespace ridewithme.Service.Migrations
                     b.Navigation("Uloga");
                 });
 
-            modelBuilder.Entity("ridewithme.Service.Database.Kuponi", b =>
-                {
-                    b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
-                        .WithMany()
-                        .HasForeignKey("KorisnikId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Korisnik");
-                });
-
             modelBuilder.Entity("ridewithme.Service.Database.Voznje", b =>
                 {
                     b.HasOne("ridewithme.Service.Database.Gradovi", "GradDo")
@@ -467,10 +412,6 @@ namespace ridewithme.Service.Migrations
                         .HasForeignKey("KlijentId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("ridewithme.Service.Database.Kuponi", "Kupon")
-                        .WithMany()
-                        .HasForeignKey("KuponId");
-
                     b.HasOne("ridewithme.Service.Database.Korisnici", "Vozac")
                         .WithMany()
                         .HasForeignKey("VozacId")
@@ -482,8 +423,6 @@ namespace ridewithme.Service.Migrations
                     b.Navigation("GradOd");
 
                     b.Navigation("Klijent");
-
-                    b.Navigation("Kupon");
 
                     b.Navigation("Vozac");
                 });
