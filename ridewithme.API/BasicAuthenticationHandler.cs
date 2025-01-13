@@ -19,7 +19,7 @@ namespace ridewithme.API
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if(!Request.Headers.ContainsKey("Authorization"))
+            if (!Request.Headers.ContainsKey("Authorization"))
             {
                 return AuthenticateResult.Fail("Missing header");
             }
@@ -42,10 +42,10 @@ namespace ridewithme.API
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.Ime),
-                    new Claim(ClaimTypes.NameIdentifier, user.KorisnickoIme)
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 };
 
-                foreach(var role in user.KorisniciUloge)
+                foreach (var role in user.KorisniciUloge)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role.Uloga.Naziv));
                 }

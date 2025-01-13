@@ -15,20 +15,21 @@ using System.Linq.Dynamic.Core;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Net.Http.Headers;
 
 namespace ridewithme.Service
 {
     public class KorisniciService : BaseCRUDService<Model.Korisnici, KorisniciSearchObject, Database.Korisnici, KorisniciInsertRequest, KorisniciUpdateRequest>, IKorisniciService
     {
         ILogger<KorisniciService> _logger;
-        public KorisniciService(RidewithmeContext dbContext, IMapper mapper, ILogger<KorisniciService> logger ) : base(dbContext, mapper)
+        public KorisniciService(RidewithmeContext dbContext, IMapper mapper, ILogger<KorisniciService> logger) : base(dbContext, mapper)
         {
             _logger = logger;
         }
-     
+
         public override IQueryable<Database.Korisnici> AddFilter(KorisniciSearchObject searchObject, IQueryable<Database.Korisnici> query)
         {
-            
+
             query = base.AddFilter(searchObject, query);
 
             if (searchObject.IsKorisniciIncluded == true)
@@ -91,7 +92,7 @@ namespace ridewithme.Service
                 throw new UserException("Korisnicko ime je zauzeto.");
             }
 
-            if(!IsValidEmail(request.Email))
+            if (!IsValidEmail(request.Email))
             {
                 throw new UserException("E-mail adresa nije u validnom formatu.");
             }
@@ -186,14 +187,27 @@ namespace ridewithme.Service
         {
             var entity = Context.Korisnicis.Include(x => x.KorisniciUloge).ThenInclude(y => y.Uloga).FirstOrDefault(x => x.KorisnickoIme == username);
 
-            if(entity == null)
+            if (entity == null)
             {
                 return null;
             }
 
             var hash = GenerateHash(entity.LozinkaSalt, password);
 
-            if(hash != entity.LozinkaHash)
+            if (hash != entity.LozinkaHash)
+            {
+                return null;
+            }
+
+            return Mapper.Map<Model.Korisnici>(entity);
+        }
+
+        public Model.Korisnici GetLoggedInUser(string username)
+       {
+
+            var entity = Context.Korisnicis.Include(x => x.KorisniciUloge).ThenInclude(y => y.Uloga).FirstOrDefault(x => x.KorisnickoIme == username);
+
+            if (entity == null)
             {
                 return null;
             }

@@ -13,5 +13,7 @@ namespace ridewithme.Service
     {
         Model.Korisnici Login(string username,  string password);
 
+        Model.Korisnici GetLoggedInUser(string username);
+
     }
 }

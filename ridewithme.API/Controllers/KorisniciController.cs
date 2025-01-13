@@ -8,6 +8,8 @@ using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service;
 using ridewithme.Service.Database;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace ridewithme.API.Controllers
 {

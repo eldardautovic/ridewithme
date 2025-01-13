@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service;
+using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
 {
@@ -14,11 +15,13 @@ namespace ridewithme.API.Controllers
         {
         }
 
-        [HttpPut("{id}/process/{administratorId}")]
+        [HttpPut("{id}/process")]
 
-        public Model.Zalbe Processing(int id, int administratorId)
+        public Model.Zalbe Processing(int id)
         {
-            return (_service as IZalbeService).Processing(id, administratorId);
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            return (_service as IZalbeService).Processing(id, userId);
         }
 
         [HttpPut("{id}/activate")]
