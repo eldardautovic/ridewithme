@@ -12,6 +12,8 @@ namespace ridewithme.Model
 
         public string Sadrzaj { get; set; }
 
+        public string? OdgovorNaZalbu { get; set; }
+
         public DateTime DatumIzmjene { get; set; }
 
         public DateTime? DatumPreuzimanja { get; set; }

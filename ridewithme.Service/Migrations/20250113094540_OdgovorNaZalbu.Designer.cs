@@ -12,8 +12,8 @@ using ridewithme.Service.Database;
 namespace ridewithme.Service.Migrations
 {
     [DbContext(typeof(RidewithmeContext))]
-    [Migration("20250112143822_KuponiMigracia")]
-    partial class KuponiMigracia
+    [Migration("20250113094540_OdgovorNaZalbu")]
+    partial class OdgovorNaZalbu
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,7 +243,7 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumKreiranja = new DateTime(2025, 1, 12, 15, 38, 21, 726, DateTimeKind.Local).AddTicks(7604),
+                            DatumKreiranja = new DateTime(2025, 1, 13, 10, 45, 40, 213, DateTimeKind.Local).AddTicks(2855),
                             Email = "test@gmail.com",
                             Ime = "Test",
                             KorisnickoIme = "test",
@@ -285,7 +285,7 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumIzmjene = new DateTime(2025, 1, 12, 15, 38, 21, 727, DateTimeKind.Local).AddTicks(60),
+                            DatumIzmjene = new DateTime(2025, 1, 13, 10, 45, 40, 213, DateTimeKind.Local).AddTicks(8403),
                             KorisnikId = 1,
                             UlogaId = 1
                         });
@@ -301,6 +301,9 @@ namespace ridewithme.Service.Migrations
 
                     b.Property<int>("BrojIskoristivosti")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("DatumIzmjene")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DatumPocetka")
                         .HasColumnType("datetime2");
@@ -328,6 +331,32 @@ namespace ridewithme.Service.Migrations
                     b.HasIndex("KorisnikId");
 
                     b.ToTable("Kuponi");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrojIskoristivosti = 5,
+                            DatumIzmjene = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(99),
+                            DatumPocetka = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(103),
+                            Kod = "TESTNI-KOD",
+                            KorisnikId = 1,
+                            Naziv = "Testni kod",
+                            Popust = 0.10000000000000001,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrojIskoristivosti = 10,
+                            DatumIzmjene = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(108),
+                            DatumPocetka = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(111),
+                            Kod = "WELCOME",
+                            KorisnikId = 1,
+                            Naziv = "Popust dobrodošlice",
+                            Popust = 0.5,
+                            StateMachine = "active"
+                        });
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Uloge", b =>
@@ -418,6 +447,106 @@ namespace ridewithme.Service.Migrations
                     b.ToTable("Voznje");
                 });
 
+            modelBuilder.Entity("ridewithme.Service.Database.VrstaZalbe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumIzmjene")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KorisnikId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KorisnikId");
+
+                    b.ToTable("VrstaZalbe");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DatumIzmjene = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(7),
+                            KorisnikId = 1,
+                            Naziv = "Na vožnju"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DatumIzmjene = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(34),
+                            KorisnikId = 1,
+                            Naziv = "Na vozača"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DatumIzmjene = new DateTime(2025, 1, 13, 10, 45, 40, 215, DateTimeKind.Local).AddTicks(38),
+                            KorisnikId = 1,
+                            Naziv = "Ostalo"
+                        });
+                });
+
+            modelBuilder.Entity("ridewithme.Service.Database.Zalbe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AdministratorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DatumIzmjene")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DatumKreiranja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DatumPreuzimanja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KorisnikId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Naslov")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OdgovorNaZalbu")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sadrzaj")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StateMachine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VrstaZalbeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("KorisnikId");
+
+                    b.HasIndex("VrstaZalbeId");
+
+                    b.ToTable("Zalbe");
+                });
+
             modelBuilder.Entity("ridewithme.Service.Database.KorisniciUloge", b =>
                 {
                     b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
@@ -486,6 +615,43 @@ namespace ridewithme.Service.Migrations
                     b.Navigation("Kupon");
 
                     b.Navigation("Vozac");
+                });
+
+            modelBuilder.Entity("ridewithme.Service.Database.VrstaZalbe", b =>
+                {
+                    b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Korisnik");
+                });
+
+            modelBuilder.Entity("ridewithme.Service.Database.Zalbe", b =>
+                {
+                    b.HasOne("ridewithme.Service.Database.Korisnici", "Administrator")
+                        .WithMany()
+                        .HasForeignKey("AdministratorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("ridewithme.Service.Database.Korisnici", "Korisnik")
+                        .WithMany()
+                        .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ridewithme.Service.Database.VrstaZalbe", "VrstaZalbe")
+                        .WithMany()
+                        .HasForeignKey("VrstaZalbeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Administrator");
+
+                    b.Navigation("Korisnik");
+
+                    b.Navigation("VrstaZalbe");
                 });
 
             modelBuilder.Entity("ridewithme.Service.Database.Korisnici", b =>

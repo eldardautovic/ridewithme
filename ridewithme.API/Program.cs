@@ -10,6 +10,7 @@ using ridewithme.Service;
 using ridewithme.Service.Database;
 using ridewithme.Service.KuponiStateMachine;
 using ridewithme.Service.VoznjeStateMachine;
+using ridewithme.Service.ZalbeStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddTransient<IUlogeervice, Ulogeervice>();
 builder.Services.AddTransient<IGradoviService, GradoviService>();
 builder.Services.AddTransient<IKuponiService, KuponiService>();
 builder.Services.AddTransient<IVrstaZalbeService, VrstaZalbeService>();
+builder.Services.AddTransient<IZalbeService, ZalbeService>();
 
 builder.Services.AddTransient<BaseVoznjeState>();
 builder.Services.AddTransient<InitialVoznjeState>();
@@ -34,7 +36,11 @@ builder.Services.AddTransient<DraftKuponiState>();
 builder.Services.AddTransient<HiddenKuponiState>();
 builder.Services.AddTransient<ActiveKuponiState>();
 
-
+builder.Services.AddTransient<BaseZalbeState>();
+builder.Services.AddTransient<InitialZalbeState>();
+builder.Services.AddTransient<ActiveZalbeState>();
+builder.Services.AddTransient<ProcessingZalbeState>();
+builder.Services.AddTransient<CompletedZalbeState>();
 
 
 builder.Services.AddControllers(x=> x.Filters.Add<ExceptionFilter>());

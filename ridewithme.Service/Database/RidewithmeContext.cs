@@ -31,7 +31,7 @@ public partial class RidewithmeContext : DbContext
 
     public virtual DbSet<VrstaZalbe> VrstaZalbe { get; set; }
 
-
+    public virtual DbSet<Zalbe> Zalbe { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
@@ -176,7 +176,8 @@ public partial class RidewithmeContext : DbContext
                 entity.HasData(
                     new VrstaZalbe { Id = 1, Naziv = "Na vožnju", KorisnikId = 1, DatumIzmjene = DateTime.Now },
                     new VrstaZalbe { Id = 2, Naziv = "Na vozača", KorisnikId = 1, DatumIzmjene = DateTime.Now },
-                    new VrstaZalbe { Id = 3, Naziv = "Ostalo", KorisnikId = 1, DatumIzmjene = DateTime.Now }
+                    new VrstaZalbe { Id = 3, Naziv = "Na aplikaciju", KorisnikId = 1, DatumIzmjene = DateTime.Now },
+                    new VrstaZalbe { Id = 4, Naziv = "Ostalo", KorisnikId = 1, DatumIzmjene = DateTime.Now }
                 );
             });
 
@@ -185,6 +186,16 @@ public partial class RidewithmeContext : DbContext
                 entity.HasData(
                     new Kuponi { Id = 1, Naziv = "Testni kod", KorisnikId = 1, DatumIzmjene = DateTime.Now, BrojIskoristivosti = 5, DatumPocetka = DateTime.Now, Popust = 0.1, Kod = "TESTNI-KOD", StateMachine = "draft" },
                     new Kuponi { Id = 2, Naziv = "Popust dobrodošlice", KorisnikId = 1, DatumIzmjene = DateTime.Now, BrojIskoristivosti = 10, DatumPocetka = DateTime.Now, Popust = 0.5, Kod = "WELCOME", StateMachine = "active" }
+                );
+            });
+
+            modelBuilder.Entity<Zalbe>(entity =>
+            {
+                entity.HasData(
+                   new Zalbe { Id = 1, Naslov = "Problem prilikom prijave", Sadrzaj = "Prilikom pokušaja prijave na aplikaciju, ne mogu da se prijavim iako unosim ispravne podatke.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 3, StateMachine = "active" },
+                   new Zalbe { Id = 2, Naslov = "Vozač ne uzvraća poruke", Sadrzaj = "Potrebno je da dogovorim lokaciju polaska sa vozačem vožnje ID: 2 ali ne mogu da dobijem povratnu informaciju od vozača.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 2, StateMachine = "active" },
+                   new Zalbe { Id = 3, Naslov = "Vožnja nije bila do navedene lokacije", Sadrzaj = "Vožnja je naznačena da je do Sarajeva, a vozili smo se do Kaknja, molim za povrat novca.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 1, StateMachine = "active" },
+                   new Zalbe { Id = 4, Naslov = "Neiskoristiv kupon", Sadrzaj = "Naznačeno je da koristimo kupon 'WELCOME', ali on ne radi.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 4, StateMachine = "active" }
                 );
             });
 

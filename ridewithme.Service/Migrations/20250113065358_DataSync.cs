@@ -61,45 +61,50 @@ namespace ridewithme.Service.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Voznje",
+                name: "Kuponi",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Kod = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatumPocetka = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BrojIskoristivosti = table.Column<int>(type: "int", nullable: false),
                     StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatumVrijemePocetka = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DatumVrijemeZavrsetka = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Napomena = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ocjena = table.Column<int>(type: "int", nullable: true),
-                    Cijena = table.Column<double>(type: "float", nullable: false),
-                    GradOdId = table.Column<int>(type: "int", nullable: false),
-                    GradDoId = table.Column<int>(type: "int", nullable: false),
-                    VozacId = table.Column<int>(type: "int", nullable: false),
-                    KlijentId = table.Column<int>(type: "int", nullable: true)
+                    Popust = table.Column<double>(type: "float", nullable: false),
+                    KorisnikId = table.Column<int>(type: "int", nullable: false),
+                    DatumIzmjene = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Voznje", x => x.Id);
+                    table.PrimaryKey("PK_Kuponi", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Voznje_Gradovi_GradDoId",
-                        column: x => x.GradDoId,
-                        principalTable: "Gradovi",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Voznje_Gradovi_GradOdId",
-                        column: x => x.GradOdId,
-                        principalTable: "Gradovi",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Voznje_Korisnici_KlijentId",
-                        column: x => x.KlijentId,
+                        name: "FK_Kuponi_Korisnici_KorisnikId",
+                        column: x => x.KorisnikId,
                         principalTable: "Korisnici",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VrstaZalbe",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KorisnikId = table.Column<int>(type: "int", nullable: false),
+                    DatumIzmjene = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VrstaZalbe", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Voznje_Korisnici_VozacId",
-                        column: x => x.VozacId,
+                        name: "FK_VrstaZalbe_Korisnici_KorisnikId",
+                        column: x => x.KorisnikId,
                         principalTable: "Korisnici",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,6 +130,91 @@ namespace ridewithme.Service.Migrations
                         column: x => x.UlogaId,
                         principalTable: "Uloge",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Voznje",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatumVrijemePocetka = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DatumVrijemeZavrsetka = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Napomena = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ocjena = table.Column<int>(type: "int", nullable: true),
+                    Cijena = table.Column<double>(type: "float", nullable: false),
+                    GradOdId = table.Column<int>(type: "int", nullable: false),
+                    GradDoId = table.Column<int>(type: "int", nullable: false),
+                    VozacId = table.Column<int>(type: "int", nullable: false),
+                    KlijentId = table.Column<int>(type: "int", nullable: true),
+                    KuponId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Voznje", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Voznje_Gradovi_GradDoId",
+                        column: x => x.GradDoId,
+                        principalTable: "Gradovi",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Voznje_Gradovi_GradOdId",
+                        column: x => x.GradOdId,
+                        principalTable: "Gradovi",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Voznje_Korisnici_KlijentId",
+                        column: x => x.KlijentId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Voznje_Korisnici_VozacId",
+                        column: x => x.VozacId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Voznje_Kuponi_KuponId",
+                        column: x => x.KuponId,
+                        principalTable: "Kuponi",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Zalbe",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Naslov = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Sadrzaj = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatumIzmjene = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DatumPreuzimanja = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DatumKreiranja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VrstaZalbeId = table.Column<int>(type: "int", nullable: false),
+                    AdministratorId = table.Column<int>(type: "int", nullable: true),
+                    KorisnikId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Zalbe", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Zalbe_Korisnici_AdministratorId",
+                        column: x => x.AdministratorId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Zalbe_Korisnici_KorisnikId",
+                        column: x => x.KorisnikId,
+                        principalTable: "Korisnici",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Zalbe_VrstaZalbe_VrstaZalbeId",
+                        column: x => x.VrstaZalbeId,
+                        principalTable: "VrstaZalbe",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -157,7 +247,7 @@ namespace ridewithme.Service.Migrations
             migrationBuilder.InsertData(
                 table: "Korisnici",
                 columns: new[] { "Id", "DatumKreiranja", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "Prezime" },
-                values: new object[] { 1, new DateTime(2025, 1, 12, 15, 3, 24, 427, DateTimeKind.Local).AddTicks(5531), "test@gmail.com", "Test", "test", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" });
+                values: new object[] { 1, new DateTime(2025, 1, 13, 7, 53, 57, 145, DateTimeKind.Local).AddTicks(5413), "test@gmail.com", "Test", "test", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" });
 
             migrationBuilder.InsertData(
                 table: "Uloge",
@@ -171,7 +261,26 @@ namespace ridewithme.Service.Migrations
             migrationBuilder.InsertData(
                 table: "KorisniciUloge",
                 columns: new[] { "Id", "DatumIzmjene", "KorisnikId", "UlogaId" },
-                values: new object[] { 1, new DateTime(2025, 1, 12, 15, 3, 24, 427, DateTimeKind.Local).AddTicks(8091), 1, 1 });
+                values: new object[] { 1, new DateTime(2025, 1, 13, 7, 53, 57, 146, DateTimeKind.Local).AddTicks(2580), 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Kuponi",
+                columns: new[] { "Id", "BrojIskoristivosti", "DatumIzmjene", "DatumPocetka", "Kod", "KorisnikId", "Naziv", "Popust", "StateMachine" },
+                values: new object[,]
+                {
+                    { 1, 5, new DateTime(2025, 1, 13, 7, 53, 57, 157, DateTimeKind.Local).AddTicks(14), new DateTime(2025, 1, 13, 7, 53, 57, 157, DateTimeKind.Local).AddTicks(17), "TESTNI-KOD", 1, "Testni kod", 0.10000000000000001, "draft" },
+                    { 2, 10, new DateTime(2025, 1, 13, 7, 53, 57, 157, DateTimeKind.Local).AddTicks(25), new DateTime(2025, 1, 13, 7, 53, 57, 157, DateTimeKind.Local).AddTicks(28), "WELCOME", 1, "Popust dobrodošlice", 0.5, "active" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "VrstaZalbe",
+                columns: new[] { "Id", "DatumIzmjene", "KorisnikId", "Naziv" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2025, 1, 13, 7, 53, 57, 156, DateTimeKind.Local).AddTicks(9833), 1, "Na vožnju" },
+                    { 2, new DateTime(2025, 1, 13, 7, 53, 57, 156, DateTimeKind.Local).AddTicks(9915), 1, "Na vozača" },
+                    { 3, new DateTime(2025, 1, 13, 7, 53, 57, 156, DateTimeKind.Local).AddTicks(9920), 1, "Ostalo" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_KorisniciUloge_KorisnikId",
@@ -182,6 +291,11 @@ namespace ridewithme.Service.Migrations
                 name: "IX_KorisniciUloge_UlogaId",
                 table: "KorisniciUloge",
                 column: "UlogaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Kuponi_KorisnikId",
+                table: "Kuponi",
+                column: "KorisnikId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Voznje_GradDoId",
@@ -199,9 +313,34 @@ namespace ridewithme.Service.Migrations
                 column: "KlijentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Voznje_KuponId",
+                table: "Voznje",
+                column: "KuponId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Voznje_VozacId",
                 table: "Voznje",
                 column: "VozacId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VrstaZalbe_KorisnikId",
+                table: "VrstaZalbe",
+                column: "KorisnikId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Zalbe_AdministratorId",
+                table: "Zalbe",
+                column: "AdministratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Zalbe_KorisnikId",
+                table: "Zalbe",
+                column: "KorisnikId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Zalbe_VrstaZalbeId",
+                table: "Zalbe",
+                column: "VrstaZalbeId");
         }
 
         /// <inheritdoc />
@@ -214,10 +353,19 @@ namespace ridewithme.Service.Migrations
                 name: "Voznje");
 
             migrationBuilder.DropTable(
+                name: "Zalbe");
+
+            migrationBuilder.DropTable(
                 name: "Uloge");
 
             migrationBuilder.DropTable(
                 name: "Gradovi");
+
+            migrationBuilder.DropTable(
+                name: "Kuponi");
+
+            migrationBuilder.DropTable(
+                name: "VrstaZalbe");
 
             migrationBuilder.DropTable(
                 name: "Korisnici");
