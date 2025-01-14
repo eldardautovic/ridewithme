@@ -16,13 +16,13 @@ namespace ridewithme.API.Controllers
         {
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator")]
         public override VrstaZalbe Insert(VrstaZalbeInsertRequest request)
         {
             return base.Insert(request);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator")]
         public override PagedResult<VrstaZalbe> GetList([FromQuery] VrstaZalbeSearchObject searchObject)
         {
             return base.GetList(searchObject);

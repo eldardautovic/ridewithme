@@ -22,6 +22,8 @@ builder.Services.AddTransient<IGradoviService, GradoviService>();
 builder.Services.AddTransient<IKuponiService, KuponiService>();
 builder.Services.AddTransient<IVrstaZalbeService, VrstaZalbeService>();
 builder.Services.AddTransient<IZalbeService, ZalbeService>();
+builder.Services.AddTransient<IReklameService, ReklameService>();
+
 
 builder.Services.AddTransient<BaseVoznjeState>();
 builder.Services.AddTransient<InitialVoznjeState>();

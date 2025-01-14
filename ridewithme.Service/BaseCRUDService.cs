@@ -26,7 +26,12 @@ namespace ridewithme.Service
             {
                 typeof(TDbEntity)?.GetProperty("DatumIzmjene")?.SetValue(entity, DateTime.Now);
             }
-            
+
+            if (typeof(TDbEntity).GetProperty("DatumKreiranja") != null)
+            {
+                typeof(TDbEntity)?.GetProperty("DatumKreiranja")?.SetValue(entity, DateTime.Now);
+            }
+
             Context.Add(entity);
             Context.SaveChanges();
 

@@ -32,6 +32,7 @@ public partial class RidewithmeContext : DbContext
     public virtual DbSet<VrstaZalbe> VrstaZalbe { get; set; }
 
     public virtual DbSet<Zalbe> Zalbe { get; set; }
+    public virtual DbSet<Reklame> Reklame { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
@@ -61,7 +62,8 @@ public partial class RidewithmeContext : DbContext
                 .IsUnicode(false);
 
             entity.HasData(
-                    new Korisnici { Id = 1, KorisnickoIme = "test", Ime = "Test", Prezime = "Korisnik", Email = "test@gmail.com", LozinkaHash = "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", LozinkaSalt = "AglQFeC8HyIM/UV2yFOa0w==", DatumKreiranja = DateTime.Now }
+                    new Korisnici { Id = 1, KorisnickoIme = "test", Ime = "Test", Prezime = "Korisnik", Email = "test@gmail.com", LozinkaHash = "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", LozinkaSalt = "AglQFeC8HyIM/UV2yFOa0w==", DatumKreiranja = DateTime.Now },
+                    new Korisnici { Id = 2, KorisnickoIme = "admin", Ime = "Admin", Prezime = "Korisnik", Email = "admin@gmail.com", LozinkaHash = "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", LozinkaSalt = "AglQFeC8HyIM/UV2yFOa0w==", DatumKreiranja = DateTime.Now }
                 ); //pw string
         });
 
@@ -100,7 +102,8 @@ public partial class RidewithmeContext : DbContext
                 .HasConstraintName("FK_KorisniciUloge_Uloge");
 
             entity.HasData(
-               new KorisniciUloge { Id = 1, DatumIzmjene = DateTime.Now, KorisnikId = 1, UlogaId = 1 });
+               new KorisniciUloge { Id = 1, DatumIzmjene = DateTime.Now, KorisnikId = 1, UlogaId = 1 },
+               new KorisniciUloge { Id = 2, DatumIzmjene = DateTime.Now, KorisnikId = 2, UlogaId = 2 });
 
         });
 
