@@ -11,6 +11,7 @@ using ridewithme.Service.Database;
 using ridewithme.Service.KuponiStateMachine;
 using ridewithme.Service.VoznjeStateMachine;
 using ridewithme.Service.ZalbeStateMachine;
+using ridewithme.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddTransient<IKuponiService, KuponiService>();
 builder.Services.AddTransient<IVrstaZalbeService, VrstaZalbeService>();
 builder.Services.AddTransient<IZalbeService, ZalbeService>();
 builder.Services.AddTransient<IReklameService, ReklameService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 
 
 builder.Services.AddTransient<BaseVoznjeState>();

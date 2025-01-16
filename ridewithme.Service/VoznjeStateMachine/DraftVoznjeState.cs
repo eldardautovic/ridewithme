@@ -2,10 +2,12 @@
 using EasyNetQ;
 using Mapster;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using ridewithme.Model;
 using ridewithme.Model.Messages;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
+using ridewithme.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +18,10 @@ namespace ridewithme.Service.VoznjeStateMachine
 {
     public class DraftVoznjeState : BaseVoznjeState
     {
-        public DraftVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
+        private readonly IEmailService _emailService;
+        public DraftVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider, IEmailService emailService) : base(dbContext, mapper, serviceProvider)
         {
+            _emailService = emailService;
         }
 
         public override Model.Voznje Update(int id, VoznjeUpdateRequest request)
@@ -64,15 +68,23 @@ namespace ridewithme.Service.VoznjeStateMachine
 
         public override Model.Voznje Activate(int id)
         {
-            var set = Context.Set<Database.Voznje>();
+            var set = Context.Set<Database.Voznje>().Include(x => x.Vozac).Include(x => x.GradDo).Include(x => x.GradOd);
 
-            var entity = set.Find(id);
+            var entity = set.FirstOrDefault(x => x.Id == id);
 
             entity.StateMachine = "active";
 
             //var bus = RabbitHutch.CreateBus("host=localhost");
 
             var mappedEntity = Mapper.Map<Model.Voznje>(entity);
+
+            Model.Messages.VoznjeActivated notifikacija = new Model.Messages.VoznjeActivated
+            {
+                Voznja = mappedEntity,
+                email = entity.Vozac.Email
+            };
+
+            _emailService.SendingObject(notifikacija);
 
             //VoznjeActivated message = new VoznjeActivated{ Voznja = mappedEntity };
 
