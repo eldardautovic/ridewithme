@@ -74,8 +74,6 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "active";
 
-            //var bus = RabbitHutch.CreateBus("host=localhost");
-
             var mappedEntity = Mapper.Map<Model.Voznje>(entity);
 
             Model.Messages.VoznjeActivated notifikacija = new Model.Messages.VoznjeActivated
@@ -85,10 +83,6 @@ namespace ridewithme.Service.VoznjeStateMachine
             };
 
             _emailService.SendingObject(notifikacija);
-
-            //VoznjeActivated message = new VoznjeActivated{ Voznja = mappedEntity };
-
-            //bus.PubSub.Publish(message);
 
             Context.SaveChanges();
 

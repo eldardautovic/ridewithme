@@ -58,7 +58,7 @@ public class ConsumeRabbitMQHostedService : BackgroundService
             {
                 using (var bus = RabbitHutch.CreateBus($"host={_host};virtualHost={_virtualhost};username={_username};password={_password}"))
                 {
-                    bus.PubSub.Subscribe<VoznjeActivated>("new_rides", HandleMessage);
+                    bus.PubSub.Subscribe<VoznjeActivated>("activated_rides", HandleMessage);
                     Console.WriteLine("Čekanje na mailove");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                 }

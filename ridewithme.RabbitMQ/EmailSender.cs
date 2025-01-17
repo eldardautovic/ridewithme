@@ -27,11 +27,7 @@ namespace MailingService
             };
 
             return client.SendMailAsync(
-                new MailMessage(from: _gmailMail,
-                                to: email,
-                                subject,
-                                message
-                                )
+                new MailMessage(from: _gmailMail, to: email, subject, message)
                 { 
                     IsBodyHtml = true,
                     BodyEncoding = System.Text.Encoding.UTF8,

@@ -15,7 +15,7 @@ using ridewithme.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Services
 builder.Services.AddTransient<IVoznjeService, VoznjeService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IUlogeervice, Ulogeervice>();
@@ -26,8 +26,7 @@ builder.Services.AddTransient<IZalbeService, ZalbeService>();
 builder.Services.AddTransient<IReklameService, ReklameService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-
-
+//State machine
 builder.Services.AddTransient<BaseVoznjeState>();
 builder.Services.AddTransient<InitialVoznjeState>();
 builder.Services.AddTransient<DraftVoznjeState>();
@@ -97,7 +96,6 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<RidewithmeContext>();
-    //dataContext.Database.EnsureCreated();
 
     dataContext.Database.Migrate();
 }

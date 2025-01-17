@@ -15,6 +15,40 @@ services:
     networks:
       - ridewithmenet
 
+  rabbitmq:
+    image: rabbitmq:3.12.1-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 5672
+    networks:
+      - ridewithmenet
+
+  ridewithme-rabbitmq:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile.mailer
+    environment:
+      - RABBITMQ_HOST=localhost
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    depends_on:
+      - rabbitmq
+      - ridewithme-sql
+      - ridewithme-api
+    networks:
+      - ridewithmenet
+    ports:
+      - 7111:80
+
   ridewithme-api:
     restart: unless-stopped
     build:
