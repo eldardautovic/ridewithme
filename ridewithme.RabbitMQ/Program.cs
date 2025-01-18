@@ -1,4 +1,5 @@
 using MailingService;
+using System.Collections;
 
 var builder = WebApplication.CreateBuilder(args);
 

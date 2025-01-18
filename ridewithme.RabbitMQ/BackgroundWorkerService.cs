@@ -5,6 +5,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using ridewithme.Model.Messages;
 using System.Net.Mail;
+using System.Collections;
 
 
 public class ConsumeRabbitMQHostedService : BackgroundService
@@ -14,16 +15,22 @@ public class ConsumeRabbitMQHostedService : BackgroundService
     private IModel _channel;
     private readonly IEmailSender _emailSender;
 
-    private readonly string _host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
-    private readonly string _username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
-    private readonly string _password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
-    private readonly string _virtualhost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+    public readonly string _host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+    public readonly string _username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "user";
+    public readonly string _password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "mypass";
+    public readonly string _virtualhost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
 
     public ConsumeRabbitMQHostedService(ILoggerFactory loggerFactory, IEmailSender emailSender)
     {
         _logger = loggerFactory.CreateLogger<ConsumeRabbitMQHostedService>();
         _emailSender = emailSender;
         InitRabbitMQ();
+
+
+        _logger.LogError("[ !!!! ] Environment Variables: " + string.Join(Environment.NewLine,
+            Environment.GetEnvironmentVariables()
+               .Cast<DictionaryEntry>()
+               .Select(de => $"{de.Key}={de.Value}")));
     }
 
     private void InitRabbitMQ()
@@ -32,9 +39,9 @@ public class ConsumeRabbitMQHostedService : BackgroundService
         {
             HostName = _host,
             UserName = _username,
-            Password = _password
+            Password = _password,
+            VirtualHost = _virtualhost
         };
-
 
         _connection = factory.CreateConnection();
 
@@ -58,6 +65,7 @@ public class ConsumeRabbitMQHostedService : BackgroundService
             {
                 using (var bus = RabbitHutch.CreateBus($"host={_host};virtualHost={_virtualhost};username={_username};password={_password}"))
                 {
+                    _logger.LogError("[!!!!]" + _host, _username, _password + "ELDAR FUKARA!!!");
                     bus.PubSub.Subscribe<VoznjeActivated>("activated_rides", HandleMessage);
                     Console.WriteLine("Čekanje na mailove");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
