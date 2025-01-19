@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/custom_input_widget.dart';
-import './screens/voznje_list_screen.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -154,7 +154,19 @@ class LoginPage extends StatelessWidget {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const VoznjeListScreen(),
+                                            const HomeScreen(),
+                                      ),
+                                    );
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        content: Text("Uspješna prijava."),
+                                        action: SnackBarAction(
+                                            label: "U redu",
+                                            onPressed: () =>
+                                                ScaffoldMessenger.of(context)
+                                                  ..removeCurrentSnackBar()),
                                       ),
                                     );
                                   } on Exception catch (e) {

@@ -157,8 +157,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                           TextStyle(fontWeight: FontWeight.w500),
                       onTap: () {
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (context) => item['route']),
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => item['route'],
+                            transitionDuration: Duration(milliseconds: 200),
+                            transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) =>
+                                FadeTransition(
+                              opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                  .animate(animation),
+                              child: child,
+                            ),
+                          ),
                         );
                       },
                       title: item['title'],
