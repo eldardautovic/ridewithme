@@ -29,9 +29,10 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.tealAccent,
-            primary: Color(0xFF39D5C3),
-            secondary: Color(0xFF7463DE)),
+          seedColor: Colors.tealAccent,
+          primary: Color(0xFF39D5C3),
+          secondary: Color(0xFF7463DE),
+        ),
         useMaterial3: true,
       ),
       home: LoginPage(),
@@ -62,7 +63,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   TextField(
                     decoration: InputDecoration(
-                        labelText: "Elda fukara",
+                        border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.settings)),
                   ),
                   SizedBox(
@@ -70,7 +71,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   TextField(
                     decoration: InputDecoration(
-                        labelText: "Elda fukara",
+                        border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.settings)),
                   ),
                   SizedBox(
@@ -78,7 +79,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        print("login attempt");
+                        print("login attempt ! ");
                       },
                       child: Text("Elce fukara"))
                 ],
