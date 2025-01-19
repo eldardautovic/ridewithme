@@ -25,12 +25,6 @@ public class ConsumeRabbitMQHostedService : BackgroundService
         _logger = loggerFactory.CreateLogger<ConsumeRabbitMQHostedService>();
         _emailSender = emailSender;
         InitRabbitMQ();
-
-
-        _logger.LogError("[ !!!! ] Environment Variables: " + string.Join(Environment.NewLine,
-            Environment.GetEnvironmentVariables()
-               .Cast<DictionaryEntry>()
-               .Select(de => $"{de.Key}={de.Value}")));
     }
 
     private void InitRabbitMQ()
@@ -65,7 +59,6 @@ public class ConsumeRabbitMQHostedService : BackgroundService
             {
                 using (var bus = RabbitHutch.CreateBus($"host={_host};virtualHost={_virtualhost};username={_username};password={_password}"))
                 {
-                    _logger.LogError("[!!!!]" + _host, _username, _password + "ELDAR FUKARA!!!");
                     bus.PubSub.Subscribe<VoznjeActivated>("activated_rides", HandleMessage);
                     Console.WriteLine("Čekanje na mailove");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);

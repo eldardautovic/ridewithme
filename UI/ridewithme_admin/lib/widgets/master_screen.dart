@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:ridewithme_admin/main.dart';
-import 'package:ridewithme_admin/screens/voznje_details_screen.dart';
+import 'package:ridewithme_admin/screens/home_screen.dart';
+import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
 
-import '../screens/voznje_list_screen.dart';
-
 class MasterScreenWidget extends StatefulWidget {
-  Widget? child;
-  String? title;
-  MasterScreenWidget({this.child, this.title, super.key});
+  final Widget? child;
+  final int selectedIndex;
+  final String? headerTitle;
+  final String? headerDescription;
+
+  MasterScreenWidget({
+    this.child,
+    super.key,
+    required this.selectedIndex,
+    this.headerTitle,
+    this.headerDescription,
+  });
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -17,6 +25,40 @@ class MasterScreenWidget extends StatefulWidget {
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   int? selectedItem;
+
+  final List<Map<String, dynamic>> menuItems = [
+    {'title': 'Pregled', 'icon': Icons.home_rounded, 'route': HomeScreen()},
+    {
+      'title': 'Analitika',
+      'icon': Icons.pie_chart_rounded,
+      'route': VoznjeListScreen()
+    },
+    {
+      'title': 'Korisnici',
+      'icon': Icons.perm_contact_cal_rounded,
+      'route': VoznjeListScreen()
+    },
+    {
+      'title': 'Vožnje',
+      'icon': Icons.directions_car_filled_rounded,
+      'route': VoznjeListScreen()
+    },
+    {
+      'title': 'Kuponi',
+      'icon': Icons.confirmation_num_rounded,
+      'route': VoznjeListScreen()
+    },
+    {
+      'title': 'Žalbe',
+      'icon': Icons.support_rounded,
+      'route': VoznjeListScreen()
+    },
+    {
+      'title': 'Reklame',
+      'icon': Icons.backup_table_rounded,
+      'route': VoznjeListScreen()
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +89,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                           Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Container(
-                              width:
-                                  120, // Define the width to ensure overflow happens
+                              width: 120,
                               child: Text(
                                 "Testni Korisnikeeeeeeeeeeeeeeeee",
                                 maxLines: 1,
@@ -105,104 +146,79 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                               )),
                         ],
                       )),
-                  items: [
-                    SideMenuItemDataTile(
-                      isSelected: true,
+                  items: menuItems.map((item) {
+                    final isSelected = menuItems.indexOf(item) ==
+                        widget.selectedIndex; // Highlight selected item
+                    return SideMenuItemDataTile(
+                      isSelected: isSelected,
                       hasSelectedLine: false,
                       highlightSelectedColor: Color(0x268E9EE6),
                       selectedTitleStyle:
                           TextStyle(fontWeight: FontWeight.w500),
-                      onTap: () {},
-                      title: 'Pregled',
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => item['route']),
+                        );
+                      },
+                      title: item['title'],
                       titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.home_rounded,
+                      icon: Icon(
+                        item['icon'],
                         color: Color(0xFF7463DE),
                       ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Analitika',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.pie_chart_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Korisnici',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.perm_contact_cal_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Vožnje',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.directions_car_filled_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Kuponi',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.confirmation_num_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Žalbe',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.support_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Reklame',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.backup_table_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 ),
               )),
         ),
-        Column(children: [
-          Padding(
-              padding: EdgeInsets.all(20),
-              child: Container(
-                child: widget!.child,
-              ))
-        ]),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.headerDescription != null &&
+                    widget.headerTitle != null)
+                  // Header with title and description
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (widget.headerTitle != null)
+                          Text(
+                            widget.headerTitle ?? '',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF7463DE),
+                            ),
+                          ),
+                        if (widget.headerTitle != null) SizedBox(height: 4),
+                        if (widget.headerDescription != null)
+                          Text(
+                            widget.headerDescription ?? '',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: "Inter",
+                              color: Color(0xFF072220),
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                // Main child content
+                Expanded(
+                  child: Container(
+                    child: widget.child,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     ));
   }

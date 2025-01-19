@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
 import 'package:ridewithme_admin/utils/util.dart';
+import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
+import 'package:ridewithme_admin/widgets/custom_input_widget.dart';
 import './screens/voznje_list_screen.dart';
 
 void main() {
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'ridewithme',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF39D5C3)),
         useMaterial3: true,
@@ -111,76 +113,34 @@ class LoginPage extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextFormField(
+                            CustomInputField(
+                              labelText: "Korisničko ime",
+                              controller: _usernameController,
+                              prefixIcon: Icons.verified_user_rounded,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Korisničko ime je obavezno';
                                 }
                                 return null;
                               },
-                              style:
-                                  TextStyle(fontSize: 15, fontFamily: "Inter"),
-                              decoration: InputDecoration(
-                                label: Text("Korisničko ime"),
-                                labelStyle: TextStyle(
-                                    fontSize: 14, fontFamily: "Inter"),
-                                prefixIcon: Icon(Icons.verified_user),
-                                filled: true,
-                                fillColor: Color(0xFFF3FCFC),
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE3E3E3)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE3E3E3)),
-                                ),
-                              ),
-                              controller: _usernameController,
                             ),
                             SizedBox(height: 20),
-                            TextFormField(
+                            CustomInputField(
+                              labelText: "Lozinka",
+                              controller: _passwordController,
+                              prefixIcon: Icons.password_rounded,
+                              obscuredText: true,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Lozinka je obavezna';
+                                  return 'Lozinka je obavezna.';
                                 }
                                 return null;
                               },
-                              style:
-                                  TextStyle(fontSize: 15, fontFamily: "Inter"),
-                              decoration: InputDecoration(
-                                label: Text("Lozinka"),
-                                labelStyle: TextStyle(
-                                    fontSize: 14, fontFamily: "Inter"),
-                                filled: true,
-                                fillColor: Color(0xFFF3FCFC),
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE3E3E3)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE3E3E3)),
-                                ),
-                                prefixIcon: Icon(Icons.password_rounded),
-                              ),
-                              controller: _passwordController,
-                              obscureText: true,
                             ),
                             SizedBox(height: 30),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  foregroundColor: Color(0xFF072220),
-                                  backgroundColor: Color(0xFF39D5C3),
-                                  shadowColor: Colors.transparent,
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                  minimumSize: Size.fromHeight(40),
-                                  padding: EdgeInsets.only(top: 16, bottom: 16),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))),
-                              onPressed: () async {
+                            CustomButtonWidget(
+                              buttonText: "Prijavi se",
+                              onPress: () async {
                                 if (_formKey.currentState!.validate()) {
                                   var username = _usernameController.text;
                                   var password = _passwordController.text;
@@ -212,10 +172,6 @@ class LoginPage extends StatelessWidget {
                                   }
                                 }
                               },
-                              child: Text(
-                                "Prijavi se",
-                                style: TextStyle(fontFamily: "Inter"),
-                              ),
                             ),
                           ],
                         )),
