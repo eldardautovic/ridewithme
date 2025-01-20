@@ -64,6 +64,8 @@ namespace ridewithme.Service
                 filteredQuery = filteredQuery.Where(x => x.GradOdId == searchObject.GradOdId.Value);
             }
 
+            filteredQuery =  filteredQuery.Include(x => x.Dogadjaj);
+
             return filteredQuery;
         }
 

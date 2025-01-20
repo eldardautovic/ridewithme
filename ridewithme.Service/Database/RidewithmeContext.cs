@@ -33,6 +33,7 @@ public partial class RidewithmeContext : DbContext
 
     public virtual DbSet<Zalbe> Zalbe { get; set; }
     public virtual DbSet<Reklame> Reklame { get; set; }
+    public virtual DbSet<Dogadjaji> Dogadjaji { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");

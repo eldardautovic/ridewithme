@@ -9,5 +9,7 @@ namespace ridewithme.Model.Requests
         public int? GradDoId { get; set; }
         public string? Napomena { get; set; }
         public double? Cijena { get; set; }
+        public int? DogadjajId { get; set; }
+
     }
 }

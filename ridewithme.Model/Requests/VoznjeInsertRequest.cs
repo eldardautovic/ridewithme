@@ -10,5 +10,6 @@ namespace ridewithme.Model.Requests
         public int GradOdId { get; set; }
         public int GradDoId { get; set; }
         public string? Napomena { get; set; }
+        public int? DogadjajId { get; set; }
     }
 }

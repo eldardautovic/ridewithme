@@ -21,6 +21,7 @@ namespace ridewithme.Model
         public virtual Korisnici Vozac { get; set; }
         public virtual Korisnici? Klijent { get; set; }
         public virtual Kuponi? Kupon { get; set; }
+        public virtual Dogadjaji? Dogadjaj { get; set; }
 
     }
 }

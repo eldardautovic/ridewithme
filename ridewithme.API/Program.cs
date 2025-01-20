@@ -25,6 +25,7 @@ builder.Services.AddTransient<IVrstaZalbeService, VrstaZalbeService>();
 builder.Services.AddTransient<IZalbeService, ZalbeService>();
 builder.Services.AddTransient<IReklameService, ReklameService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IDogadjaji, DogadjajiService>();
 
 //State machine
 builder.Services.AddTransient<BaseVoznjeState>();
