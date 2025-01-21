@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
@@ -7,7 +5,6 @@ import 'package:ridewithme_admin/models/voznja.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/custom_input_widget.dart';
-import 'package:ridewithme_admin/widgets/info_card_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
 class VoznjeListScreen extends StatefulWidget {
@@ -80,54 +77,221 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
 
   Widget _buildResultView() {
     return Expanded(
-        child: SingleChildScrollView(
+      child: SizedBox(
+        width: double.infinity, // Expands to full width
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Color(0x29C3CBCA),
+            border: Border.all(color: Color(0xFFD3D3D3)),
+          ),
+          child: SingleChildScrollView(
             child: DataTable(
-      columns: [
-        DataColumn(label: Text("ID"), numeric: true),
-        DataColumn(label: Text("Grad od ID")),
-      ],
-      rows: result?.result
-              .map((e) => DataRow(cells: [
-                    DataCell(Text(e.id.toString())),
-                    DataCell(Text(e.stateMachine ?? ""))
-                  ]))
-              .toList()
-              .cast<DataRow>() ??
-          [],
-    )));
+              columnSpacing: 25,
+              border: const TableBorder(
+                horizontalInside: BorderSide(
+                  width: 1,
+                  color: Color(0xFFD3D3D3),
+                ),
+              ),
+              columns: [
+                DataColumn(
+                  label: Text(
+                    "ID",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                  numeric: true,
+                ),
+                DataColumn(
+                  label: Text(
+                    "Grad od",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    "Grad do",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    "Vozač",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    "Klijent",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    "Status",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    "Početak",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    "Završetak",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  numeric: true,
+                  label: Text(
+                    "Cijena",
+                    style: TextStyle(
+                      color: Color(0xFF5A605F),
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  numeric: true,
+                  label: SizedBox(width: 10),
+                ),
+              ],
+              rows: result?.result
+                      .map(
+                        (e) => DataRow(
+                          cells: [
+                            DataCell(Text(
+                              e.id.toString(),
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Text(
+                              e.gradOd?.naziv ?? "",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Text(
+                              e.gradDo?.naziv ?? "",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Text(
+                              e.vozac?.ime ?? "",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Text(
+                              e.klijent?.ime ?? "N/A",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Badge(
+                              label: Text(e.stateMachine?.toLowerCase() ?? ""),
+                              backgroundColor: e.stateMachine == "draft"
+                                  ? Colors.amber
+                                  : e.stateMachine == "active"
+                                      ? Colors.green
+                                      : Colors.red,
+                            )),
+                            DataCell(Text(
+                              e.datumVrijemePocetka?.toString() ?? "N/A",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Text(
+                              e.datumVrijemeZavrsetka?.toString() ?? "N/A",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Text(
+                              e.cijena.toString() + " KM" ?? "",
+                              style: TextStyle(
+                                color: Color(0xFF072220),
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                              ),
+                            )),
+                            DataCell(Row(
+                              children: [
+                                IconButton(
+                                  iconSize: 17,
+                                  onPressed: () {},
+                                  icon: Icon(Icons.delete),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.edit),
+                                  iconSize: 17,
+                                ),
+                              ],
+                            )),
+                          ],
+                        ),
+                      )
+                      .toList()
+                      .cast<DataRow>() ??
+                  [],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
-
-// za screen home
-// Column(
-//         children: [
-//           Row(
-//             spacing: 10,
-//             crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
-//             mainAxisAlignment:
-//                 MainAxisAlignment.spaceBetween, // Align to the top horizontally
-//             children: _cardItems
-//                 .map((e) => InfoCardWidget(
-//                       cardTitle: e.title,
-//                       cardSubtitle: e.subtitle,
-//                       cardValue: e.value,
-//                     ))
-//                 .toList(),
-//           ),
-//         ],
-//       ),
-
-//     child: Container(
-//   child: Column(
-//     children: [
-//       Text("Elce fukaresina"),
-//       ElevatedButton(
-//           onPressed: () async {
-//             var data = await _voznjeProvider.get();
-
-//             print(data);
-//           },
-//           child: Text("Vrati me"))
-//     ],
-//   ),
-// ));
