@@ -35,6 +35,9 @@ public partial class RidewithmeContext : DbContext
     public virtual DbSet<Reklame> Reklame { get; set; }
     public virtual DbSet<Dogadjaji> Dogadjaji { get; set; }
 
+    public virtual DbSet<Obavjestenja> Obavjestenja { get; set; }
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
 
@@ -200,6 +203,16 @@ public partial class RidewithmeContext : DbContext
                    new Zalbe { Id = 2, Naslov = "Vozač ne uzvraća poruke", Sadrzaj = "Potrebno je da dogovorim lokaciju polaska sa vozačem vožnje ID: 2 ali ne mogu da dobijem povratnu informaciju od vozača.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 2, StateMachine = "active" },
                    new Zalbe { Id = 3, Naslov = "Vožnja nije bila do navedene lokacije", Sadrzaj = "Vožnja je naznačena da je do Sarajeva, a vozili smo se do Kaknja, molim za povrat novca.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 1, StateMachine = "active" },
                    new Zalbe { Id = 4, Naslov = "Neiskoristiv kupon", Sadrzaj = "Naznačeno je da koristimo kupon 'WELCOME', ali on ne radi.", KorisnikId = 1, DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, VrstaZalbeId = 4, StateMachine = "active" }
+                );
+            });
+
+            modelBuilder.Entity<Obavjestenja>(entity =>
+            {
+
+                entity.HasData(
+                   new Obavjestenja { Id = 1, Naslov = "Ažuriranje pravila privatnosti", Opis = "Ažurirali smo naša pravila privatnosti kako bi ti pružili veću transparentnost i kontrolu nad tvojim podacima. Pregledaj nove postavke privatnosti u aplikaciji i prilagodi ih svojim potrebama.", Podnaslov= "Više kontrole nad tvojim podacima", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, DatumZavrsetka = DateTime.Now.AddDays(2),  KorisnikId= 2, StateMachine = "active"},
+                   new Obavjestenja { Id = 2, Naslov = "Stigli su novi alati za bolje iskustvo!", Opis = "RideWithMe je bogatiji za nove funkcionalnosti! Sada možeš lakše planirati putovanja, pratiti svoje vožnje i komunicirati s vozačima direktno iz aplikacije. Ažuriraj aplikaciju i isprobaj nove mogućnosti!", Podnaslov = "Otkrij nove funkcije aplikacije", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, DatumZavrsetka = DateTime.Now.AddHours(2), KorisnikId = 2, StateMachine = "active" },
+                   new Obavjestenja { Id = 3, Naslov= "Poboljšana korisnička podrška", Opis = "Uveli smo nove opcije podrške u aplikaciji, uključujući chat uživo i detaljniji centar za pomoć. Kontaktiraj nas jednostavno putem aplikacije za bilo kakva pitanja ili sugestije!", Podnaslov = "Brže rješenje tvojih upita", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now, DatumZavrsetka = DateTime.Now.AddHours(5), KorisnikId = 2, StateMachine = "active" }
                 );
             });
 

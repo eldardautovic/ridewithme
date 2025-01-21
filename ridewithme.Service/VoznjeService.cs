@@ -69,12 +69,6 @@ namespace ridewithme.Service
             return filteredQuery;
         }
 
-        public override void BeforeInsert(VoznjeInsertRequest request, Database.Voznje entity)
-        {
-            //TODO: throw exception if vozacId not existing
-            base.BeforeInsert(request, entity);
-        }
-
         public override Model.Voznje Insert(VoznjeInsertRequest request)
         {
             var state = BaseVoznjeState.CreateState("initial");

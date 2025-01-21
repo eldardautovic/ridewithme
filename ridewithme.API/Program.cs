@@ -9,6 +9,7 @@ using ridewithme.Model.Requests;
 using ridewithme.Service;
 using ridewithme.Service.Database;
 using ridewithme.Service.KuponiStateMachine;
+using ridewithme.Service.ObavjestenjaStateMachine;
 using ridewithme.Service.VoznjeStateMachine;
 using ridewithme.Service.ZalbeStateMachine;
 using ridewithme.Services;
@@ -26,6 +27,7 @@ builder.Services.AddTransient<IZalbeService, ZalbeService>();
 builder.Services.AddTransient<IReklameService, ReklameService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IDogadjaji, DogadjajiService>();
+builder.Services.AddTransient<IObavjestenjaService, ObavjestenjaService>();
 
 //State machine
 builder.Services.AddTransient<BaseVoznjeState>();
@@ -47,6 +49,11 @@ builder.Services.AddTransient<ActiveZalbeState>();
 builder.Services.AddTransient<ProcessingZalbeState>();
 builder.Services.AddTransient<CompletedZalbeState>();
 
+builder.Services.AddTransient<BaseObavjestenjaState>();
+builder.Services.AddTransient<InitialObavjestenjaState>();
+builder.Services.AddTransient<DraftObavjestenjaState>();
+builder.Services.AddTransient<ActiveObavjestenjaState>();
+builder.Services.AddTransient<HiddenObavjestenjaState>();
 
 builder.Services.AddControllers(x=> x.Filters.Add<ExceptionFilter>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
