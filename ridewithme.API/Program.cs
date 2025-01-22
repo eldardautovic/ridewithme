@@ -16,6 +16,7 @@ using ridewithme.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Services
 builder.Services.AddTransient<IVoznjeService, VoznjeService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
@@ -28,6 +29,7 @@ builder.Services.AddTransient<IReklameService, ReklameService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IDogadjaji, DogadjajiService>();
 builder.Services.AddTransient<IObavjestenjaService, ObavjestenjaService>();
+builder.Services.AddTransient<IStatistikaService,  StatistikaService>();
 
 //State machine
 builder.Services.AddTransient<BaseVoznjeState>();
