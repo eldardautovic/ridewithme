@@ -21,5 +21,6 @@ namespace ridewithme.Model.SearchObject
         public bool? IsKorisniciIncluded { get; set; }
         public bool? IsGradoviIncluded { get; set; }
 
+        public string? OrderBy { get; set; }
     }
 }

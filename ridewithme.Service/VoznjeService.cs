@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+
 
 namespace ridewithme.Service
 {
@@ -62,6 +64,24 @@ namespace ridewithme.Service
             if (searchObject?.GradOdId.HasValue == true)
             {
                 filteredQuery = filteredQuery.Where(x => x.GradOdId == searchObject.GradOdId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
+            {
+                var items = searchObject.OrderBy.Split(' ');
+                if (items.Length > 2 || items.Length == 0)
+                {
+                    throw new ApplicationException("Mozete sortirati samo po dva polja.");
+                }
+                if (items.Length == 1)
+                {
+                    filteredQuery = filteredQuery.OrderBy("@0", searchObject.OrderBy);
+                }
+                else
+                {
+                    filteredQuery = filteredQuery.OrderBy(string.Format("{0} {1}", items[0], items[1]));
+                }
+
             }
 
             filteredQuery =  filteredQuery.Include(x => x.Dogadjaj);

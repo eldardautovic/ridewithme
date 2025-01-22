@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ridewithme_admin/models/grad.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/models/voznja.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
@@ -18,6 +21,12 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   late VoznjeProvider _voznjeProvider;
 
   SearchResult<Voznja>? result = null;
+
+  List<Gradovi> gradovi = [Gradovi(1, "Sarajevo", 12, 13)];
+
+  bool sortingControllVisible = false;
+  String? _selectedValue;
+  String? _selectedDirectionValue;
 
   @override
   void didChangeDependencies() {
@@ -41,21 +50,67 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   TextEditingController _gradDoIdController = TextEditingController();
   TextEditingController _gradOdIdController = TextEditingController();
 
+  TextEditingController _sortingController = TextEditingController();
   Widget _buildSearch() {
     return Padding(
         padding: EdgeInsets.only(bottom: 20),
         child: Row(
           spacing: 10,
           children: [
-            Expanded(
-                child: CustomInputField(
-                    labelText: "Grad od id", controller: _gradOdIdController)),
-            Expanded(
-                child: CustomInputField(
-                    labelText: "Grad do id", controller: _gradDoIdController)),
-            Expanded(child: CustomInputField(labelText: "Korisnik id")),
+            DropdownMenu(
+              dropdownMenuEntries: gradovi
+                  .map((e) =>
+                      DropdownMenuEntry(value: e.id, label: e.naziv ?? ''))
+                  .toList(),
+              label: Text("Grad od"),
+            ),
+            DropdownMenu<String>(
+              dropdownMenuEntries: const [
+                DropdownMenuEntry(value: "Id", label: "ID"),
+                DropdownMenuEntry(
+                    value: "DatumVrijemePocetka", label: "Datum početka"),
+                DropdownMenuEntry(
+                    value: "DatumVrijemeZavrsetka", label: "Datum završetka"),
+                DropdownMenuEntry(value: "Cijena", label: "Cijena"),
+              ],
+              selectedTrailingIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedValue = null;
+                    _sortingController.clear();
+                    sortingControllVisible = false;
+                  });
+                },
+                child: _selectedValue != null
+                    ? Icon(Icons.clear)
+                    : Icon(Icons.arrow_drop_down),
+              ),
+              label: const Text("Sortiraj"),
+              controller: _sortingController,
+              onSelected: (value) {
+                setState(() {
+                  _selectedValue = value;
+                  sortingControllVisible = true;
+                });
+              },
+            ),
+            if (sortingControllVisible == true)
+              DropdownMenu(
+                dropdownMenuEntries: [
+                  DropdownMenuEntry(value: "ASC", label: "Rastuće"),
+                  DropdownMenuEntry(value: "DESC", label: "Opadajuće"),
+                ],
+                onSelected: (value) {
+                  setState(() {
+                    _selectedDirectionValue = value;
+                  });
+                },
+                initialSelection: 'ASC',
+                label: Text("Smijer"),
+              ),
             Container(
-                width: 200,
+                width: 100,
+                height: 45,
                 child: CustomButtonWidget(
                     buttonText: "Pretraži",
                     onPress: () async {
@@ -64,8 +119,14 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                       var filters = {
                         'GradOdId': _gradOdIdController.text,
                         'GradDoId': _gradDoIdController.text,
-                        'IsGradoviIncluded': true
+                        'IsGradoviIncluded': true,
                       };
+
+                      if (_selectedValue != null &&
+                          _selectedDirectionValue != null) {
+                        filters['OrderBy'] =
+                            "$_selectedValue $_selectedDirectionValue";
+                      }
 
                       result = await _voznjeProvider.get(filter: filters);
 
