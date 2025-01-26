@@ -91,7 +91,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                             child: Container(
                               width: 120,
                               child: Text(
-                                "Testni Korisnikeeeeeeeeeeeeeeeee",
+                                Authorization.fullName ?? "",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

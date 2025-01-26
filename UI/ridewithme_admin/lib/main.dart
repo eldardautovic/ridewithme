@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:ridewithme_admin/models/korisnik.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
+import 'package:ridewithme_admin/providers/korisnik_provider.dart';
+import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
@@ -12,7 +15,9 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => VoznjeProvider()),
-      ChangeNotifierProvider(create: (_) => GradoviProvider())
+      ChangeNotifierProvider(create: (_) => GradoviProvider()),
+      ChangeNotifierProvider(create: (_) => StatistikaProvider()),
+      ChangeNotifierProvider(create: (_) => KorisnikProvider()),
     ],
     child: const MyApp(),
   ));
@@ -39,13 +44,13 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  late VoznjeProvider _voznjeProvider;
+  late KorisnikProvider _korisnikProvider;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _voznjeProvider = context.read<VoznjeProvider>();
+    _korisnikProvider = context.read<KorisnikProvider>();
     return Scaffold(
       body: Stack(
         children: [
@@ -153,7 +158,11 @@ class LoginPage extends StatelessWidget {
                                   Authorization.password = password;
 
                                   try {
-                                    await _voznjeProvider.get();
+                                    Korisnik result = await _korisnikProvider
+                                        .login(username, password);
+
+                                    Authorization.fullName =
+                                        "${result.ime} ${result.prezime}";
 
                                     Navigator.of(context).push(
                                       MaterialPageRoute(

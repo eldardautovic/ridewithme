@@ -45,7 +45,8 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   }
 
   Future initTable() async {
-    result = await _voznjeProvider.get(filter: {'IsGradoviIncluded': true});
+    result = await _voznjeProvider
+        .get(filter: {'IsGradoviIncluded': true, 'IsKorisniciIncluded': true});
     gradoviResult =
         await _gradoviProvider.get(filter: {'IsGradoviIncluded': true});
 
@@ -190,6 +191,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                         var filters = {};
 
                         filters['IsGradoviIncluded'] = true;
+                        filters['IsKorisniciIncluded'] = true;
 
                         if (_formKey.currentState?.value['gradOdId'] != null) {
                           filters['GradOdId'] =
@@ -389,7 +391,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                               ),
                             )),
                             DataCell(Text(
-                              e.vozac?.ime ?? "",
+                              "${e.vozac?.ime} ${e.vozac?.prezime}" ?? "",
                               style: TextStyle(
                                 color: Color(0xFF072220),
                                 fontFamily: "Inter",
@@ -397,7 +399,9 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                               ),
                             )),
                             DataCell(Text(
-                              e.klijent?.ime ?? "N/A",
+                              e.klijent != null
+                                  ? "${e.klijent?.ime} ${e.klijent?.prezime}"
+                                  : "N/A",
                               style: TextStyle(
                                 color: Color(0xFF072220),
                                 fontFamily: "Inter",

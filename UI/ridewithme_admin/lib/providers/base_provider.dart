@@ -10,6 +10,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
   String _endpoint = "";
 
+  String get fullUrl => "$_baseUrl$_endpoint";
+
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
     _baseUrl = const String.fromEnvironment("baseUrl",

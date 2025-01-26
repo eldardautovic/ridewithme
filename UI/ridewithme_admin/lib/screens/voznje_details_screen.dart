@@ -149,6 +149,37 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
                     if (widget.voznja == null) {
                       _voznjeProvider.insert(_formKey.currentState?.value);
+
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(
+                            title: Row(
+                              children: [
+                                Icon(Icons.info),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Uspješno ste kreirali novu vožnju",
+                                  style: TextStyle(
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            contentPadding: EdgeInsets.all(10),
+                            children: [
+                              Text(
+                                "Vožnja koju ste kreirali je kreirana putem Administratorskog naloga.",
+                                style: TextStyle(
+                                    fontFamily: "Inter",
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          );
+                        },
+                      );
                     } else {
                       _voznjeProvider.update(
                           widget.voznja!.id!, _formKey.currentState?.value);
