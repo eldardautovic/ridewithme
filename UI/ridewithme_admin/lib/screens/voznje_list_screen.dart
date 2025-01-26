@@ -1,13 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/grad.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/models/voznja.dart';
+import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/screens/voznje_details_screen.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
-import 'package:ridewithme_admin/widgets/custom_input_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
 class VoznjeListScreen extends StatefulWidget {
@@ -19,19 +21,37 @@ class VoznjeListScreen extends StatefulWidget {
 
 class _VoznjeListScreenState extends State<VoznjeListScreen> {
   late VoznjeProvider _voznjeProvider;
+  late GradoviProvider _gradoviProvider;
 
-  SearchResult<Voznja>? result = null;
-
-  List<Gradovi> gradovi = [Gradovi(1, "Sarajevo", 12, 13)];
+  SearchResult<Voznja>? result;
+  SearchResult<Gradovi>? gradoviResult;
 
   bool sortingControllVisible = false;
   String? _selectedValue;
-  String? _selectedDirectionValue;
+  String? _selectedDirectionValue = 'ASC';
+
+  bool isLoading = true;
+
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     _voznjeProvider = context.read<VoznjeProvider>();
+    _gradoviProvider = context.read<GradoviProvider>();
+
+    initTable();
+  }
+
+  Future initTable() async {
+    result = await _voznjeProvider.get(filter: {'IsGradoviIncluded': true});
+    gradoviResult =
+        await _gradoviProvider.get(filter: {'IsGradoviIncluded': true});
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -42,98 +62,174 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
         headerDescription: "Ovdje možete pronaći listu vožnji.",
         child: Container(
           child: Column(
-            children: [_buildSearch(), _buildResultView()],
+            children: [
+              isLoading ? CircularProgressIndicator() : _buildSearch(),
+              isLoading ? CircularProgressIndicator() : _buildResultView()
+            ],
           ),
         ));
   }
 
-  TextEditingController _gradDoIdController = TextEditingController();
-  TextEditingController _gradOdIdController = TextEditingController();
-
   TextEditingController _sortingController = TextEditingController();
   Widget _buildSearch() {
-    return Padding(
-        padding: EdgeInsets.only(bottom: 20),
-        child: Row(
-          spacing: 10,
-          children: [
-            DropdownMenu(
-              dropdownMenuEntries: gradovi
-                  .map((e) =>
-                      DropdownMenuEntry(value: e.id, label: e.naziv ?? ''))
-                  .toList(),
-              label: Text("Grad od"),
-            ),
-            DropdownMenu<String>(
-              dropdownMenuEntries: const [
-                DropdownMenuEntry(value: "Id", label: "ID"),
-                DropdownMenuEntry(
-                    value: "DatumVrijemePocetka", label: "Datum početka"),
-                DropdownMenuEntry(
-                    value: "DatumVrijemeZavrsetka", label: "Datum završetka"),
-                DropdownMenuEntry(value: "Cijena", label: "Cijena"),
-              ],
-              selectedTrailingIcon: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedValue = null;
-                    _sortingController.clear();
-                    sortingControllVisible = false;
-                  });
-                },
-                child: _selectedValue != null
-                    ? Icon(Icons.clear)
-                    : Icon(Icons.arrow_drop_down),
-              ),
-              label: const Text("Sortiraj"),
-              controller: _sortingController,
-              onSelected: (value) {
-                setState(() {
-                  _selectedValue = value;
-                  sortingControllVisible = true;
-                });
-              },
-            ),
-            if (sortingControllVisible == true)
-              DropdownMenu(
-                dropdownMenuEntries: [
-                  DropdownMenuEntry(value: "ASC", label: "Rastuće"),
-                  DropdownMenuEntry(value: "DESC", label: "Opadajuće"),
+    return FormBuilder(
+      key: _formKey,
+      child: Padding(
+          padding: EdgeInsets.only(bottom: 20),
+          child: Row(
+            spacing: 10,
+            children: [
+              Expanded(
+                  child: FormBuilderDropdown(
+                name: "gradOdId",
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.only(left: 5),
+                  labelText: 'Grad od',
+                  suffix: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      _formKey.currentState!.fields['gradOdId']?.reset();
+                    },
+                  ),
+                  hintText: 'Odaberi grad',
+                ),
+                items: gradoviResult?.result
+                        .map((e) => DropdownMenuItem(
+                              value: e.id,
+                              child: Text(
+                                e.naziv ?? "",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ))
+                        .toList() ??
+                    [],
+              )),
+              Expanded(
+                  flex: 1,
+                  child: FormBuilderDropdown(
+                    name: "gradDoId",
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 5),
+                      border: OutlineInputBorder(),
+                      labelText: 'Grad do',
+                      suffix: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          _formKey.currentState!.fields['gradDoId']?.reset();
+                        },
+                      ),
+                      hintText: 'Odaberi grad',
+                    ),
+                    items: gradoviResult?.result
+                            .map((e) => DropdownMenuItem(
+                                  value: e.id,
+                                  child: Text(
+                                    e.naziv ?? "",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ))
+                            .toList() ??
+                        [],
+                  )),
+              DropdownMenu<String>(
+                dropdownMenuEntries: const [
+                  DropdownMenuEntry(value: "Id", label: "ID"),
+                  DropdownMenuEntry(
+                      value: "DatumVrijemePocetka", label: "Datum početka"),
+                  DropdownMenuEntry(
+                      value: "DatumVrijemeZavrsetka", label: "Datum završetka"),
+                  DropdownMenuEntry(value: "Cijena", label: "Cijena"),
                 ],
+                selectedTrailingIcon: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedValue = null;
+                      _sortingController.clear();
+                      _selectedDirectionValue = "ASC";
+                      sortingControllVisible = false;
+                    });
+                  },
+                  child: _selectedValue != null
+                      ? Icon(Icons.clear)
+                      : Icon(Icons.arrow_drop_down),
+                ),
+                label: const Text("Sortiraj"),
+                controller: _sortingController,
                 onSelected: (value) {
                   setState(() {
-                    _selectedDirectionValue = value;
+                    _selectedValue = value;
+                    sortingControllVisible = true;
                   });
                 },
-                initialSelection: 'ASC',
-                label: Text("Smijer"),
               ),
-            Container(
-                width: 100,
-                height: 45,
-                child: CustomButtonWidget(
-                    buttonText: "Pretraži",
-                    onPress: () async {
-                      //TODO: add call to api
+              if (sortingControllVisible == true)
+                DropdownMenu(
+                  dropdownMenuEntries: [
+                    DropdownMenuEntry(value: "ASC", label: "Rastuće"),
+                    DropdownMenuEntry(value: "DESC", label: "Opadajuće"),
+                  ],
+                  onSelected: (value) {
+                    setState(() {
+                      _selectedDirectionValue = value;
+                    });
+                  },
+                  initialSelection: 'ASC',
+                  label: Text("Smijer"),
+                ),
+              Container(
+                  width: 100,
+                  height: 45,
+                  child: CustomButtonWidget(
+                      buttonText: "Pretraži",
+                      onPress: () async {
+                        //TODO: add call to api
 
-                      var filters = {
-                        'GradOdId': _gradOdIdController.text,
-                        'GradDoId': _gradDoIdController.text,
-                        'IsGradoviIncluded': true,
-                      };
+                        _formKey.currentState?.save();
 
-                      if (_selectedValue != null &&
-                          _selectedDirectionValue != null) {
-                        filters['OrderBy'] =
-                            "$_selectedValue $_selectedDirectionValue";
-                      }
+                        var filters = {};
 
-                      result = await _voznjeProvider.get(filter: filters);
+                        filters['IsGradoviIncluded'] = true;
 
-                      setState(() {});
-                    })),
-          ],
-        ));
+                        if (_formKey.currentState?.value['gradOdId'] != null) {
+                          filters['GradOdId'] =
+                              _formKey.currentState?.value['gradOdId'];
+                        }
+
+                        if (_formKey.currentState?.value['gradDoId'] != null) {
+                          filters['GradDoId'] =
+                              _formKey.currentState?.value['gradDoId'];
+                        }
+
+                        if (_selectedValue != null &&
+                            _selectedDirectionValue != null) {
+                          filters['OrderBy'] =
+                              "$_selectedValue $_selectedDirectionValue";
+                        }
+
+                        print(filters);
+
+                        result = await _voznjeProvider.get(filter: filters);
+
+                        setState(() {});
+                      })),
+              Container(
+                  width: 100,
+                  height: 45,
+                  child: CustomButtonWidget(
+                      buttonText: "Dodaj",
+                      onPress: () {
+                        //TODO: add call to api
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => VoznjeDetailsScreen(),
+                          ),
+                        );
+                      })),
+            ],
+          )),
+    );
   }
 
   Widget _buildResultView() {
@@ -148,6 +244,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
           ),
           child: SingleChildScrollView(
             child: DataTable(
+              showCheckboxColumn: false,
               columnSpacing: 25,
               border: const TableBorder(
                 horizontalInside: BorderSide(
@@ -256,6 +353,16 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
               rows: result?.result
                       .map(
                         (e) => DataRow(
+                          onSelectChanged: (value) {
+                            if (value == true) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      VoznjeDetailsScreen(voznja: e),
+                                ),
+                              );
+                            }
+                          },
                           cells: [
                             DataCell(Text(
                               e.id.toString(),
@@ -322,7 +429,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                               ),
                             )),
                             DataCell(Text(
-                              e.cijena.toString() + " KM" ?? "",
+                              e.cijena.toString() + " KM",
                               style: TextStyle(
                                 color: Color(0xFF072220),
                                 fontFamily: "Inter",

@@ -1,203 +1,161 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_side_menu/flutter_side_menu.dart';
-import 'package:ridewithme_admin/main.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:provider/provider.dart';
+import 'package:ridewithme_admin/models/grad.dart';
+import 'package:ridewithme_admin/models/voznja.dart';
+import 'package:ridewithme_admin/providers/gradovi_provider.dart';
+import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
+import 'package:ridewithme_admin/widgets/master_screen.dart';
+import '../models/search_result.dart';
 
 class VoznjeDetailsScreen extends StatefulWidget {
-  const VoznjeDetailsScreen({super.key});
+  Voznja? voznja;
+  VoznjeDetailsScreen({super.key, this.voznja});
 
   @override
   State<VoznjeDetailsScreen> createState() => _VoznjeDetailsScreenState();
 }
 
 class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
-  int? selectedItem;
+  late VoznjeProvider _voznjeProvider;
+  late GradoviProvider _gradoviProvider;
+
+  SearchResult<Gradovi>? gradoviResult;
+
+  final _formKey = GlobalKey<FormBuilderState>();
+  Map<String, dynamic> _initialValue = {};
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _voznjeProvider = context.read<VoznjeProvider>();
+    _gradoviProvider = context.read<GradoviProvider>();
+    // TODO: implement initState
+    super.initState();
+
+    _initialValue = {
+      'napomena': widget.voznja?.napomena,
+      'cijena': widget.voznja?.cijena.toString(),
+      'gradOdId': widget.voznja?.gradOd?.id,
+      'gradDoId': widget.voznja?.gradDo?.id,
+    };
+
+    initForm();
+  }
+
+  Future initForm() async {
+    gradoviResult = await _gradoviProvider.get();
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Row(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(20),
-          child: Container(
-              clipBehavior: Clip.hardEdge,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
-              child: SideMenu(
-                mode: SideMenuMode.open,
-                backgroundColor: Color(0xFFDFF2F0),
-                hasResizer: false,
-                hasResizerToggle: false,
-                builder: (data) => SideMenuData(
-                  header: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.account_circle,
-                            size: 30,
-                            color: Color(0xFF7463DE),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Container(
-                              width:
-                                  120, // Define the width to ensure overflow happens
-                              child: Text(
-                                "Testni Korisnikeeeeeeeeeeeeeeeee",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Color(0xFF072220),
-                                  fontFamily: "Inter",
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: PopupMenuButton<int>(
-                                tooltip: "Prikaži meni",
-                                iconColor: Color(0xFF7463DE),
-                                initialValue: selectedItem,
-                                onSelected: (int item) {
-                                  setState(() {
-                                    selectedItem = item;
-                                  });
-                                },
-                                itemBuilder: (BuildContext context) =>
-                                    <PopupMenuEntry<int>>[
-                                  PopupMenuItem<int>(
-                                      value: 1,
-                                      child: const Text('Odjavi se'),
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => LoginPage(),
-                                          ),
-                                        );
+    return MasterScreenWidget(
+      selectedIndex: 3,
+      headerTitle: _initialValue != {} ? "Detalji vožnje" : "Kreiranje vožnje",
+      headerDescription: "Ovdje možete pogledati detalje o vožnji.",
+      child: Column(
+        children: [isLoading ? Container() : _buildForm(), _save()],
+      ),
+    );
+  }
 
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            behavior: SnackBarBehavior.floating,
-                                            content: Text(
-                                                "Uspješno ste se odjavili."),
-                                            action: SnackBarAction(
-                                                label: "U redu",
-                                                onPressed: () =>
-                                                    ScaffoldMessenger.of(
-                                                        context)
-                                                      ..removeCurrentSnackBar()),
-                                          ),
-                                        );
-                                      })
-                                ],
-                              )),
-                        ],
-                      )),
-                  items: [
-                    SideMenuItemDataTile(
-                      isSelected: true,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      selectedTitleStyle:
-                          TextStyle(fontWeight: FontWeight.w500),
-                      onTap: () {},
-                      title: 'Pregled',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.home_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Analitika',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.pie_chart_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Korisnici',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.perm_contact_cal_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Vožnje',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.directions_car_filled_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Kuponi',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.confirmation_num_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Žalbe',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.support_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                    SideMenuItemDataTile(
-                      isSelected: false,
-                      hasSelectedLine: false,
-                      highlightSelectedColor: Color(0x268E9EE6),
-                      onTap: () {},
-                      title: 'Reklame',
-                      titleStyle: TextStyle(color: Color(0xFF072220)),
-                      icon: const Icon(
-                        Icons.backup_table_rounded,
-                        color: Color(0xFF7463DE),
-                      ),
-                    ),
-                  ],
+  Widget _buildForm() {
+    return FormBuilder(
+        key: _formKey,
+        initialValue: _initialValue,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                    child: FormBuilderTextField(
+                  name: "cijena",
+                  initialValue: _initialValue['cijena'].toString(),
+                  decoration: InputDecoration(label: Text("Cijena")),
+                )),
+                SizedBox(
+                  width: 10,
                 ),
-              )),
-        ),
-        Expanded(
-          child: Container(
-            color: Color(0xFFF2FCFB),
-            child: const Center(
-              child: Text(
-                'body',
-              ),
+                Expanded(
+                    child: FormBuilderTextField(
+                  name: "napomena",
+                  initialValue: _initialValue['napomena'],
+                  decoration: InputDecoration(label: Text("Napomena")),
+                ))
+              ],
             ),
-          ),
-        ),
-      ],
-    ));
+            Row(
+              children: [
+                Expanded(
+                    child: FormBuilderDropdown(
+                  name: "gradOdId",
+                  decoration: InputDecoration(label: Text("Grad od")),
+                  initialValue:
+                      _initialValue['gradOdId'] ?? gradoviResult?.result[0].id,
+                  items: gradoviResult?.result
+                          .map((e) => DropdownMenuItem(
+                                value: e.id,
+                                child: Text(
+                                  e.naziv ?? "",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ))
+                          .toList() ??
+                      [],
+                )),
+                Expanded(
+                    child: FormBuilderDropdown(
+                  name: "gradDoId",
+                  initialValue:
+                      _initialValue['gradDoId'] ?? gradoviResult?.result[1].id,
+                  decoration: InputDecoration(label: Text("Grad do")),
+                  items: gradoviResult?.result
+                          .map((e) => DropdownMenuItem(
+                                value: e.id,
+                                child: Text(
+                                  e.naziv ?? "",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ))
+                          .toList() ??
+                      [],
+                )),
+              ],
+            )
+          ],
+        ));
+  }
+
+  Widget _save() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+              width: 100,
+              height: 45,
+              child: CustomButtonWidget(
+                  buttonText: "Sačuvaj",
+                  onPress: () {
+                    _formKey.currentState?.saveAndValidate();
+                    debugPrint(_formKey.currentState?.value.toString());
+
+                    if (widget.voznja == null) {
+                      _voznjeProvider.insert(_formKey.currentState?.value);
+                    } else {
+                      _voznjeProvider.update(
+                          widget.voznja!.id!, _formKey.currentState?.value);
+                    }
+                  })),
+        ],
+      ),
+    );
   }
 }

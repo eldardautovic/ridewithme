@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
@@ -9,7 +10,10 @@ import 'package:ridewithme_admin/widgets/custom_input_widget.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => VoznjeProvider())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => VoznjeProvider()),
+      ChangeNotifierProvider(create: (_) => GradoviProvider())
+    ],
     child: const MyApp(),
   ));
 }
