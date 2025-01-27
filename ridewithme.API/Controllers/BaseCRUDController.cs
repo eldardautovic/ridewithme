@@ -22,7 +22,7 @@ namespace ridewithme.API.Controllers
         {
             return _service.Insert(request);
         }
-        [HttpPut]
+        [HttpPut("{id}")]
         public virtual TModel Update(int id, TUpdate request)
         {
             return _service.Update(id, request);

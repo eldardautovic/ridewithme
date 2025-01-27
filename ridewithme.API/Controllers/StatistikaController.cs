@@ -17,7 +17,7 @@ namespace ridewithme.API.Controllers
 
         [HttpGet]
 
-        public Statistika Get()
+        public PagedResult<Statistika> Get()
         {
             return _service.GetList();
         }

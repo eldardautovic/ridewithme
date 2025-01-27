@@ -17,14 +17,22 @@ namespace ridewithme.Service
         {
             context = dbContext;
         }
-        public Statistika GetList()
+        public PagedResult<Statistika> GetList()
         {
-            return new Statistika
+            PagedResult<Statistika> paged = new PagedResult<Statistika>();
+
+            paged.Count = 1;
+            paged.Results = new List<Statistika>()
             {
-                BrojIskoristenihKupona = context.Kuponi.Count(x => x.BrojIskoristivosti == 0),
-                BrojKreiranihVoznji = context.Voznje.Count(),
-                BrojRegistrovanihKorisnika = context.Korisnicis.Count()
+                new Statistika
+                {
+                    BrojIskoristenihKupona = context.Kuponi.Count(x => x.BrojIskoristivosti == 0),
+                    BrojKreiranihVoznji = context.Voznje.Count(),
+                    BrojRegistrovanihKorisnika = context.Korisnicis.Count()
+                }
             };
+
+            return paged;
         }
     }
 }
