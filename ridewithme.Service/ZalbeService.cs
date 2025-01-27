@@ -79,6 +79,17 @@ namespace ridewithme.Service
                 query = query.Include(x => x.Korisnik);
             }
 
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoImeAdministratorGTE))
+            {
+                query = query.Where(x => x.Administrator.KorisnickoIme.Contains(searchObject.KorisnickoImeAdministratorGTE));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoImeKorisnikGTE))
+            {
+                query = query.Where(x => x.Korisnik.KorisnickoIme.Contains(searchObject.KorisnickoImeKorisnikGTE));
+            }
+
             return query;
         }
 

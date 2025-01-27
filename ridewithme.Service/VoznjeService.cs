@@ -84,6 +84,16 @@ namespace ridewithme.Service
 
             }
 
+            if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoImeVozacGTE))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Vozac.KorisnickoIme.Contains(searchObject.KorisnickoImeVozacGTE));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoImeKlijentGTE))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Vozac.KorisnickoIme.Contains(searchObject.KorisnickoImeKlijentGTE));
+            }
+
             filteredQuery =  filteredQuery.Include(x => x.Dogadjaj);
 
             return filteredQuery;

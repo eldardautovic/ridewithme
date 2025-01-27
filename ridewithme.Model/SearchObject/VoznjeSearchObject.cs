@@ -22,5 +22,11 @@ namespace ridewithme.Model.SearchObject
         public bool? IsGradoviIncluded { get; set; }
 
         public string? OrderBy { get; set; }
+
+
+        public string? KorisnickoImeVozacGTE { get; set; }
+
+        public string? KorisnickoImeKlijentGTE { get; set; }
+
     }
 }

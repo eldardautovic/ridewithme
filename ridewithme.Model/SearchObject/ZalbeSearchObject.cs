@@ -26,5 +26,9 @@ namespace ridewithme.Model.SearchObject
 
         public bool? IsVrstaZalbeIncluded { get; set; }
 
+        public string? KorisnickoImeAdministratorGTE { get; set; }
+        public string? KorisnickoImeKorisnikGTE { get; set; }
+
+
     }
 }
