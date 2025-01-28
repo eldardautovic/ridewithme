@@ -273,7 +273,7 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 261, DateTimeKind.Local).AddTicks(3747),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 630, DateTimeKind.Local).AddTicks(4031),
                             Email = "test@gmail.com",
                             Ime = "Test",
                             KorisnickoIme = "test",
@@ -284,7 +284,7 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 2,
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 261, DateTimeKind.Local).AddTicks(3845),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 630, DateTimeKind.Local).AddTicks(4137),
                             Email = "admin@gmail.com",
                             Ime = "Admin",
                             KorisnickoIme = "admin",
@@ -326,14 +326,14 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 261, DateTimeKind.Local).AddTicks(9799),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 630, DateTimeKind.Local).AddTicks(8928),
                             KorisnikId = 1,
                             UlogaId = 1
                         },
                         new
                         {
                             Id = 2,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 261, DateTimeKind.Local).AddTicks(9843),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 630, DateTimeKind.Local).AddTicks(8966),
                             KorisnikId = 2,
                             UlogaId = 2
                         });
@@ -385,8 +385,8 @@ namespace ridewithme.Service.Migrations
                         {
                             Id = 1,
                             BrojIskoristivosti = 5,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3758),
-                            DatumPocetka = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3762),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9895),
+                            DatumPocetka = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9899),
                             Kod = "TESTNI-KOD",
                             KorisnikId = 1,
                             Naziv = "Testni kod",
@@ -397,8 +397,8 @@ namespace ridewithme.Service.Migrations
                         {
                             Id = 2,
                             BrojIskoristivosti = 10,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3767),
-                            DatumPocetka = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3770),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9905),
+                            DatumPocetka = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9908),
                             Kod = "WELCOME",
                             KorisnikId = 1,
                             Naziv = "Popust dobrodošlice",
@@ -453,9 +453,9 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3898),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3900),
-                            DatumZavrsetka = new DateTime(2025, 1, 23, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3903),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(9),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(13),
+                            DatumZavrsetka = new DateTime(2025, 1, 30, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(16),
                             KorisnikId = 2,
                             Naslov = "Ažuriranje pravila privatnosti",
                             Opis = "Ažurirali smo naša pravila privatnosti kako bi ti pružili veću transparentnost i kontrolu nad tvojim podacima. Pregledaj nove postavke privatnosti u aplikaciji i prilagodi ih svojim potrebama.",
@@ -465,9 +465,9 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 2,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3913),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3915),
-                            DatumZavrsetka = new DateTime(2025, 1, 21, 16, 17, 2, 263, DateTimeKind.Local).AddTicks(3918),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(25),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(27),
+                            DatumZavrsetka = new DateTime(2025, 1, 28, 13, 22, 14, 632, DateTimeKind.Local).AddTicks(29),
                             KorisnikId = 2,
                             Naslov = "Stigli su novi alati za bolje iskustvo!",
                             Opis = "RideWithMe je bogatiji za nove funkcionalnosti! Sada možeš lakše planirati putovanja, pratiti svoje vožnje i komunicirati s vozačima direktno iz aplikacije. Ažuriraj aplikaciju i isprobaj nove mogućnosti!",
@@ -477,9 +477,9 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 3,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3923),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3925),
-                            DatumZavrsetka = new DateTime(2025, 1, 21, 19, 17, 2, 263, DateTimeKind.Local).AddTicks(3927),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(33),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 632, DateTimeKind.Local).AddTicks(35),
+                            DatumZavrsetka = new DateTime(2025, 1, 28, 16, 22, 14, 632, DateTimeKind.Local).AddTicks(37),
                             KorisnikId = 2,
                             Naslov = "Poboljšana korisnička podrška",
                             Opis = "Uveli smo nove opcije podrške u aplikaciji, uključujući chat uživo i detaljniji centar za pomoć. Kontaktiraj nas jednostavno putem aplikacije za bilo kakva pitanja ili sugestije!",
@@ -648,28 +648,28 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3635),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9791),
                             KorisnikId = 1,
                             Naziv = "Na vožnju"
                         },
                         new
                         {
                             Id = 2,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3673),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9827),
                             KorisnikId = 1,
                             Naziv = "Na vozača"
                         },
                         new
                         {
                             Id = 3,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3677),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9831),
                             KorisnikId = 1,
                             Naziv = "Na aplikaciju"
                         },
                         new
                         {
                             Id = 4,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3681),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9834),
                             KorisnikId = 1,
                             Naziv = "Ostalo"
                         });
@@ -730,8 +730,8 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 1,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3825),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3828),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9947),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9951),
                             KorisnikId = 1,
                             Naslov = "Problem prilikom prijave",
                             Sadrzaj = "Prilikom pokušaja prijave na aplikaciju, ne mogu da se prijavim iako unosim ispravne podatke.",
@@ -741,8 +741,8 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 2,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3837),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3839),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9956),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9958),
                             KorisnikId = 1,
                             Naslov = "Vozač ne uzvraća poruke",
                             Sadrzaj = "Potrebno je da dogovorim lokaciju polaska sa vozačem vožnje ID: 2 ali ne mogu da dobijem povratnu informaciju od vozača.",
@@ -752,8 +752,8 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 3,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3844),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3846),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9962),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9964),
                             KorisnikId = 1,
                             Naslov = "Vožnja nije bila do navedene lokacije",
                             Sadrzaj = "Vožnja je naznačena da je do Sarajeva, a vozili smo se do Kaknja, molim za povrat novca.",
@@ -763,8 +763,8 @@ namespace ridewithme.Service.Migrations
                         new
                         {
                             Id = 4,
-                            DatumIzmjene = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3850),
-                            DatumKreiranja = new DateTime(2025, 1, 21, 14, 17, 2, 263, DateTimeKind.Local).AddTicks(3853),
+                            DatumIzmjene = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9967),
+                            DatumKreiranja = new DateTime(2025, 1, 28, 11, 22, 14, 631, DateTimeKind.Local).AddTicks(9970),
                             KorisnikId = 1,
                             Naslov = "Neiskoristiv kupon",
                             Sadrzaj = "Naznačeno je da koristimo kupon 'WELCOME', ali on ne radi.",

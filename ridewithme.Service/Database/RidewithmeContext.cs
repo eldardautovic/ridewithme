@@ -37,7 +37,6 @@ public partial class RidewithmeContext : DbContext
 
     public virtual DbSet<Obavjestenja> Obavjestenja { get; set; }
 
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
 
@@ -45,6 +44,7 @@ public partial class RidewithmeContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.Entity<Korisnici>(entity =>
         {
             entity.ToTable("Korisnici");

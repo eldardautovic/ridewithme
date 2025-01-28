@@ -8,15 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
+using ridewithme.Services;
 
 namespace ridewithme.Service.ZalbeStateMachine
 {
     public class InitialZalbeState : BaseZalbeState
     {
         ILogger<InitialZalbeState> _logger;
-        public InitialZalbeState(Database.RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider, ILogger<InitialZalbeState> logger) : base(dbContext, mapper, serviceProvider)
+        IEmailService _emailService;
+        public InitialZalbeState(Database.RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider, ILogger<InitialZalbeState> logger, IEmailService emailService) : base(dbContext, mapper, serviceProvider)
         {
             _logger = logger;
+            _emailService = emailService;
         }
 
 
@@ -47,8 +52,17 @@ namespace ridewithme.Service.ZalbeStateMachine
             Context.SaveChanges();
 
             _logger.LogInformation($"[+] Kreirana je nova Zalba ID: {entity.Id} | Korisnik ID: {request.KorisnikId}");
+            _logger.LogInformation("[!!!] Saljem e-mailove administratorima o kreiranju.");
 
-            //TODO: Slanje notifikacije/mejla administratorima da je kreirana nova zalba
+            var adminEmails = Context.Korisnicis.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga).Where(x => x.KorisniciUloge.Any(x => x.Uloga.Naziv == "Administrator")).Select(x => x.Email).ToList();
+
+            Model.Messages.ZalbaActivated notifikacija = new Model.Messages.ZalbaActivated
+            {
+                Zalba = Mapper.Map<Zalbe>(entity),
+                AdminEmails = adminEmails,
+            };
+
+            _emailService.SendingObject(notifikacija);
 
             return Mapper.Map<Zalbe>(entity);
         }

@@ -16,7 +16,6 @@ using ridewithme.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Services
 builder.Services.AddTransient<IVoznjeService, VoznjeService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
@@ -60,6 +59,7 @@ builder.Services.AddTransient<HiddenObavjestenjaState>();
 builder.Services.AddControllers(x=> x.Filters.Add<ExceptionFilter>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("basicAuth", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()

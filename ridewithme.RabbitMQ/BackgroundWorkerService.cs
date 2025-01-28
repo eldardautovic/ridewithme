@@ -60,6 +60,7 @@ public class ConsumeRabbitMQHostedService : BackgroundService
                 using (var bus = RabbitHutch.CreateBus($"host={_host};virtualHost={_virtualhost};username={_username};password={_password}"))
                 {
                     bus.PubSub.Subscribe<VoznjeActivated>("activated_rides", HandleMessage);
+                    bus.PubSub.Subscribe<ZalbaActivated>("activated_complaint", HandleMessage);
                     Console.WriteLine("Čekanje na mailove");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                 }
@@ -100,6 +101,37 @@ public class ConsumeRabbitMQHostedService : BackgroundService
                     <hr style='border: none; border-top: 1px solid #ddd; margin: 20px 0;' />
                     <p style='font-size: 0.9em; color: #555;'>Ova poruka je automatski generisana. Molimo Vas da ne odgovarate na ovu poruku.</p>
                 </div>");
+
+    }
+
+    private async Task HandleMessage(ZalbaActivated mail)
+    {
+
+        foreach (var item in mail.AdminEmails)
+        {
+
+            await _emailSender.SendEmailAsync(item, $"[#{mail.Zalba.Id}] Nova žalba u redu za rješavanje",
+               $@"
+                <div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+                    <h2 style='color: #39D5C3;'>Poštovani administratore,</h2>
+                    <p>Primljena je nova žalba korisnika <b>{mail.Zalba.Korisnik.Ime} {mail.Zalba.Korisnik.Prezime}</b>, kreirana dana <b>{mail.Zalba.DatumKreiranja:dd.MM.yyyy}</b>.</p>
+                    <div style='margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #39D5C3;'>
+                        <h3><strong>Detalji žalbe:</strong></h3>
+                        <ul style='list-style-type: none; padding-left: 0;'>
+                            <li><p><b>ID žalbe:</b> {mail.Zalba.Id}</p></li>
+                            <li><p><b>Naslov žalbe:</b> {mail.Zalba.Naslov}</p></li>
+                            <li><p><b>Sadržaj:</b> {mail.Zalba.Sadrzaj}</p></li>
+                            <li><p><b>Status:</b> {mail.Zalba.StateMachine}</p></li>
+                        </ul>
+                    </div>
+                    <p style='margin-top: 20px;'>Molimo Vas da što prije pristupite ovoj žalbi i poduzmete potrebne korake.</p>
+                    <p style='margin-top: 20px;'><i>Hvala na Vašem angažmanu!</i></p>
+                    <hr style='border: none; border-top: 1px solid #ddd; margin: 20px 0;' />
+                    <p style='font-size: 0.9em; color: #555;'>Ova poruka je automatski generisana. Molimo Vas da ne odgovarate na ovu poruku.</p>
+                </div>"
+                );
+        }
+
 
     }
 
