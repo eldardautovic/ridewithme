@@ -4,6 +4,7 @@ using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service;
+using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
 {
@@ -69,6 +70,15 @@ namespace ridewithme.API.Controllers
         public List<Korisnici> GetParticipants(int id)
         {
             return (_service as IVoznjeService).GetParticipants(id);
+        }
+
+        public override Voznje Insert(VoznjeInsertRequest request)
+        {
+
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            request.VozacId = userId;
+            return base.Insert(request);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace ridewithme.Service
 {
     public interface IStatistikaService
     {
-        public Statistika GetList();
+        public PagedResult<Statistika> GetList();
     }
 }
