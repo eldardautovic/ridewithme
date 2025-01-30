@@ -79,11 +79,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment
                           .spaceBetween, // Align to the top horizontally
                       children: _cardItems
-                          .map((e) => InfoCardWidget(
+                          .map((e) => Expanded(
+                                  child: InfoCardWidget(
                                 cardTitle: e.title,
                                 cardSubtitle: e.subtitle,
                                 cardValue: e.value,
-                              ))
+                              )))
                           .toList(),
                     ),
                     SizedBox(

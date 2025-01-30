@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/grad.dart';
+import 'package:ridewithme_admin/models/korisnik.dart';
 import 'package:ridewithme_admin/models/voznja.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
+import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
+import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 import '../models/search_result.dart';
 
@@ -20,8 +25,10 @@ class VoznjeDetailsScreen extends StatefulWidget {
 class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   late VoznjeProvider _voznjeProvider;
   late GradoviProvider _gradoviProvider;
+  late KorisnikProvider _korisnikProvider;
 
   SearchResult<Gradovi>? gradoviResult;
+  SearchResult<Korisnik>? korisniciResult;
 
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
@@ -32,7 +39,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   void initState() {
     _voznjeProvider = context.read<VoznjeProvider>();
     _gradoviProvider = context.read<GradoviProvider>();
-    // TODO: implement initState
+    _korisnikProvider = context.read<KorisnikProvider>();
     super.initState();
 
     _initialValue = {
@@ -40,6 +47,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       'cijena': widget.voznja?.cijena.toString(),
       'gradOdId': widget.voznja?.gradOd?.id,
       'gradDoId': widget.voznja?.gradDo?.id,
+      'datumVrijemePocetka': widget.voznja?.datumVrijemePocetka,
+      'vozacId': widget.voznja?.vozac?.id
     };
 
     initForm();
@@ -47,6 +56,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   Future initForm() async {
     gradoviResult = await _gradoviProvider.get();
+    korisniciResult = await _korisnikProvider.get();
 
     setState(() {
       isLoading = false;
@@ -57,10 +67,13 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       selectedIndex: 3,
-      headerTitle: _initialValue != {} ? "Detalji vožnje" : "Kreiranje vožnje",
-      headerDescription: "Ovdje možete pogledati detalje o vožnji.",
+      headerTitle:
+          widget.voznja != null ? "Detalji vožnje" : "Kreiranje vožnje",
+      headerDescription: widget.voznja != null
+          ? "Ovdje možete pogledati detalje o vožnji."
+          : "Ovdje možete kreirati novu vožnju",
       child: Column(
-        children: [isLoading ? Container() : _buildForm(), _save()],
+        children: [isLoading ? LoadingSpinnerWidget() : _buildForm(), _save()],
       ),
     );
   }
@@ -76,60 +89,161 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                 Expanded(
                     child: FormBuilderTextField(
                   name: "cijena",
-                  initialValue: _initialValue['cijena'].toString(),
-                  decoration: InputDecoration(label: Text("Cijena")),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Ovo polje je obavezno.',
+                    ),
+                  ]),
+                  initialValue: _initialValue['cijena'],
+                  decoration: InputDecoration(
+                    label: Text("Cijena"),
+                    labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
+                    filled: true,
+                    fillColor: Color(0xFFF3FCFC),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                  ),
+                )),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: FormBuilderTextField(
+                  name: "napomena",
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Ovo polje je obavezno.',
+                    ),
+                  ]),
+                  initialValue: _initialValue['napomena'],
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  minLines: 3,
+                  decoration:
+                      buildTextFieldDecoration("Napomena", "Napomena..."),
+                )),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: buildDropdown(
+                  name: 'gradOdId',
+                  labelText: "Grad od",
+                  initialValue: widget.voznja?.gradOd?.id.toString() ??
+                      gradoviResult?.result[0].id.toString(),
+                  items: gradoviResult?.result
+                          .map((e) => DropdownMenuItem(
+                                value: e.id.toString(),
+                                child: Text(
+                                  e.naziv ?? "",
+                                ),
+                              ))
+                          .toList() ??
+                      [],
                 )),
                 SizedBox(
                   width: 10,
                 ),
                 Expanded(
-                    child: FormBuilderTextField(
-                  name: "napomena",
-                  initialValue: _initialValue['napomena'],
-                  decoration: InputDecoration(label: Text("Napomena")),
-                ))
+                    child: buildDropdown(
+                  name: 'gradDoId',
+                  labelText: "Grad do",
+                  initialValue: widget.voznja?.gradOd?.id.toString() ??
+                      gradoviResult?.result[1].id.toString(),
+                  items: gradoviResult?.result
+                          .map((e) => DropdownMenuItem(
+                                value: e.id.toString(),
+                                child: Text(
+                                  e.naziv ?? "",
+                                ),
+                              ))
+                          .toList() ??
+                      [],
+                )),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: FormBuilderDateTimePicker(
+                        name: "datumVrijemePocetka",
+                        initialValue: _initialValue['datumVrijemePocetka'],
+                        decoration: buildTextFieldDecoration(
+                            "Datum vrijeme početka", "Datum vrijeme početka"))),
               ],
             ),
-            Row(
-              children: [
-                Expanded(
-                    child: FormBuilderDropdown(
-                  name: "gradOdId",
-                  decoration: InputDecoration(label: Text("Grad od")),
-                  initialValue:
-                      _initialValue['gradOdId'] ?? gradoviResult?.result[0].id,
-                  items: gradoviResult?.result
-                          .map((e) => DropdownMenuItem(
-                                value: e.id,
-                                child: Text(
-                                  e.naziv ?? "",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ))
-                          .toList() ??
-                      [],
-                )),
-                Expanded(
-                    child: FormBuilderDropdown(
-                  name: "gradDoId",
-                  initialValue:
-                      _initialValue['gradDoId'] ?? gradoviResult?.result[1].id,
-                  decoration: InputDecoration(label: Text("Grad do")),
-                  items: gradoviResult?.result
-                          .map((e) => DropdownMenuItem(
-                                value: e.id,
-                                child: Text(
-                                  e.naziv ?? "",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ))
-                          .toList() ??
-                      [],
-                )),
-              ],
-            )
+            SizedBox(
+              height: 10,
+            ),
+            Row(children: [
+              Expanded(
+                  child: buildDropdown(
+                name: 'vozacId',
+                labelText: "Vozač",
+                items: korisniciResult?.result
+                        .map((e) => DropdownMenuItem(
+                              value: e.id,
+                              child: Text(
+                                e.korisnickoIme ?? "",
+                              ),
+                            ))
+                        .toList() ??
+                    [],
+              )),
+            ])
           ],
         ));
+  }
+
+  Future<void> showSnackBar(String message) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(message),
+        action: SnackBarAction(
+          label: "U redu",
+          onPressed: () =>
+              ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+        ),
+      ),
+    );
+  }
+
+  Future<void> handleFormSubmit() async {
+    try {
+      if (!_formKey.currentState!.saveAndValidate()) {
+        return;
+      }
+
+      debugPrint(_formKey.currentState?.value.toString());
+
+      var request = Map.from(_formKey.currentState!.value);
+      if (request['datumVrijemePocetka'] is DateTime) {
+        request['datumVrijemePocetka'] =
+            (request['datumVrijemePocetka'] as DateTime).toIso8601String();
+      }
+
+      if (widget.voznja == null) {
+        await _voznjeProvider.insert(request);
+        await showSnackBar("Uspješno ste dodali novu vožnju.");
+      } else {
+        await _voznjeProvider.update(widget.voznja!.id!, request);
+        await showSnackBar("Uspješno ste izmjenili vožnju.");
+      }
+    } on Exception catch (e) {
+      await showSnackBar("Došlo je do greške: ${e.toString()}");
+    }
   }
 
   Widget _save() {
@@ -138,53 +252,12 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-              width: 100,
-              height: 45,
-              child: CustomButtonWidget(
-                  buttonText: "Sačuvaj",
-                  onPress: () {
-                    _formKey.currentState?.saveAndValidate();
-                    debugPrint(_formKey.currentState?.value.toString());
-
-                    if (widget.voznja == null) {
-                      _voznjeProvider.insert(_formKey.currentState?.value);
-
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return SimpleDialog(
-                            title: Row(
-                              children: [
-                                Icon(Icons.info),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Uspješno ste kreirali novu vožnju",
-                                  style: TextStyle(
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            contentPadding: EdgeInsets.all(10),
-                            children: [
-                              Text(
-                                "Vožnja koju ste kreirali je kreirana putem Administratorskog naloga.",
-                                style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      _voznjeProvider.update(
-                          widget.voznja!.id!, _formKey.currentState?.value);
-                    }
-                  })),
+          CustomButtonWidget(
+              buttonText: "Sačuvaj",
+              onPress: () async {
+                await handleFormSubmit();
+              } // Promenite zaobljenost ivica
+              ),
         ],
       ),
     );

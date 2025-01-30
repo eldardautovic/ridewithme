@@ -1,27 +1,46 @@
 import 'package:flutter/material.dart';
 
 class CustomButtonWidget extends StatelessWidget {
-  CustomButtonWidget({required this.buttonText, required this.onPress});
+  CustomButtonWidget({
+    required this.buttonText,
+    required this.onPress,
+    this.padding = const EdgeInsets.symmetric(
+        vertical: 16, horizontal: 24), // default padding
+    this.buttonColor = const Color(0xFF39D5C3),
+    this.textColor = const Color(0xFF072220),
+    this.fontSize = 14,
+    this.fontWeight = FontWeight.bold,
+    this.borderRadius = 10,
+  });
 
-  final void Function()? onPress;
   final String buttonText;
+  final void Function()? onPress;
+  final EdgeInsetsGeometry padding;
+  final Color buttonColor;
+  final Color textColor;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPress,
-      style: ElevatedButton.styleFrom(
-          foregroundColor: Color(0xFF072220),
-          backgroundColor: Color(0xFF39D5C3),
+    return IntrinsicWidth(
+      child: ElevatedButton(
+        onPressed: onPress,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: textColor,
+          backgroundColor: buttonColor,
           shadowColor: Colors.transparent,
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          minimumSize: Size.fromHeight(40),
-          padding: EdgeInsets.only(top: 16, bottom: 16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-      child: Text(
-        buttonText,
-        style: TextStyle(fontFamily: "Inter"),
+          textStyle: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+          padding: padding, // Apply the padding here
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+        ),
+        child: Text(
+          buttonText,
+          style: TextStyle(fontFamily: "Inter"),
+        ),
       ),
     );
   }

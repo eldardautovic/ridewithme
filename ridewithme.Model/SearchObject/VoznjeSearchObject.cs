@@ -23,6 +23,8 @@ namespace ridewithme.Model.SearchObject
 
         public string? OrderBy { get; set; }
 
+        public string? Status { get; set; }
+
 
         public string? KorisnickoImeVozacGTE { get; set; }
 

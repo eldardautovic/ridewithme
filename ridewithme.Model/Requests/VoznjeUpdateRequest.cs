@@ -11,5 +11,9 @@ namespace ridewithme.Model.Requests
         public double? Cijena { get; set; }
         public int? DogadjajId { get; set; }
 
+        public int? VozacId { get; set; }
+
+        public DateTime? DatumVrijemePocetka { get; set; }
+
     }
 }

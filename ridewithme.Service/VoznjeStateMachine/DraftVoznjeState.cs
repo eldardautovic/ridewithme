@@ -30,9 +30,15 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             var entity = set.Find(id);
 
+
             if (entity == null)
             {
                 throw new UserException("Voznja sa tim ID-om ne postoji.");
+            }
+
+            if (Context.Korisnicis.FirstOrDefault(x => x.Id == request.VozacId) == null)
+            {
+                throw new UserException("Korisnik sa tim ID-om ne postoji.");
             }
 
             if(request.GradOdId != null && Context.Gradovi.Find(request.GradOdId) == null)
@@ -53,6 +59,11 @@ namespace ridewithme.Service.VoznjeStateMachine
             if(request.Cijena != null && request.Cijena <= 0)
             {
                 throw new UserException("Cijena ne moze biti manja ili jednaka 0.");
+            }
+
+            if(request.DatumVrijemePocetka != null && request.DatumVrijemePocetka < DateTime.Now)
+            {
+                throw new UserException("Datum vrijeme pocetka ne moze biti manje od danasnjeg datuma.");
             }
 
             Mapper.Config.Default.IgnoreNullValues(true);

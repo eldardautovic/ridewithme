@@ -94,6 +94,12 @@ namespace ridewithme.Service
                 filteredQuery = filteredQuery.Where(x => x.Vozac.KorisnickoIme.Contains(searchObject.KorisnickoImeKlijentGTE));
             }
 
+            if (!string.IsNullOrWhiteSpace(searchObject?.Status))
+            {
+                filteredQuery = filteredQuery.Where(x => x.StateMachine == searchObject.Status);
+            }
+
+
             filteredQuery =  filteredQuery.Include(x => x.Dogadjaj);
 
             return filteredQuery;

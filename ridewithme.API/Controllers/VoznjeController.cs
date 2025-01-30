@@ -74,10 +74,13 @@ namespace ridewithme.API.Controllers
 
         public override Voznje Insert(VoznjeInsertRequest request)
         {
+            if(request.VozacId == null)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                request.VozacId = userId;
+            }
 
-            request.VozacId = userId;
             return base.Insert(request);
         }
     }

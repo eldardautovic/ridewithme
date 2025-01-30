@@ -48,6 +48,11 @@ namespace ridewithme.Service.VoznjeStateMachine
                 throw new UserException("Grad polaska ne moze biti jednak Gradu dolaska.");
             }
 
+            if (request.DatumVrijemePocetka != null && request.DatumVrijemePocetka < DateTime.Now)
+            {
+                throw new UserException("Datum vrijeme pocetka ne moze biti manje od danasnjeg datuma.");
+            }
+
             var voznjeSet = Context.Set<Database.Voznje>();
 
             Mapper.Config.Default.IgnoreNullValues(true);

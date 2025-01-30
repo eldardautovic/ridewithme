@@ -35,7 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: const MyHomePage(
+        title: "Eldar",
+      ),
     );
   }
 }
@@ -81,7 +83,7 @@ class LoginPage extends StatelessWidget {
                       onPressed: () {
                         print("login attempt ! ");
                       },
-                      child: Text("Elce fukara"))
+                      child: Text("Eldar"))
                 ],
               ),
             ),
