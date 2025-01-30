@@ -53,7 +53,7 @@ namespace ridewithme.API.Controllers
 
         [HttpDelete("{id}/delete")]
 
-        public string Delete (int id)
+        public Model.Voznje Delete (int id)
         {
             return (_service as IVoznjeService).Delete(id);
         }

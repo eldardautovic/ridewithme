@@ -10,14 +10,15 @@ class MasterScreenWidget extends StatefulWidget {
   final int selectedIndex;
   final String? headerTitle;
   final String? headerDescription;
+  final bool? backButton;
 
-  MasterScreenWidget({
-    this.child,
-    super.key,
-    required this.selectedIndex,
-    this.headerTitle,
-    this.headerDescription,
-  });
+  MasterScreenWidget(
+      {this.child,
+      super.key,
+      required this.selectedIndex,
+      this.headerTitle,
+      this.headerDescription,
+      this.backButton});
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -187,9 +188,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (widget.backButton == true)
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: Icon(Icons.arrow_back_rounded),
+                    iconSize: 30,
+                  ),
                 if (widget.headerDescription != null &&
                     widget.headerTitle != null)
-                  // Header with title and description
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Column(

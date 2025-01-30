@@ -113,7 +113,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             return Mapper.Map<Model.Voznje>(entity);
         }
 
-        public override string Delete(int id)
+        public override Model.Voznje Delete(int id)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -123,7 +123,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             Context.SaveChanges();
 
-            return "Voznja je uspjesno obrisana.";
+            return Mapper.Map<Model.Voznje>(entity);
         }
 
         public override List<string> AllowedActions(Database.Voznje entity)

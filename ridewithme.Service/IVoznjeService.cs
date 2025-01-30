@@ -17,7 +17,7 @@ namespace ridewithme.Service
         public Voznje Hide(int id);
         public Voznje Edit(int id);
 
-        public string Delete(int id);
+        public Voznje Delete(int id);
 
         public Voznje Rate(int id, int ocjena);
 

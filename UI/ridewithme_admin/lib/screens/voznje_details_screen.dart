@@ -8,7 +8,9 @@ import 'package:ridewithme_admin/models/voznja.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
+import 'package:ridewithme_admin/utils/util.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
@@ -29,6 +31,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   SearchResult<Gradovi>? gradoviResult;
   SearchResult<Korisnik>? korisniciResult;
+  List<String>? allowedActions;
 
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
@@ -57,24 +60,100 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   Future initForm() async {
     gradoviResult = await _gradoviProvider.get();
     korisniciResult = await _korisnikProvider.get();
+    if (widget.voznja != null) {
+      allowedActions =
+          await _voznjeProvider.allowedActions(widget.voznja?.id ?? 0);
+    }
 
     setState(() {
       isLoading = false;
     });
   }
 
+  void executeAction(String name) async {
+    print(name);
+    try {
+      switch (name) {
+        case "Hide":
+          {
+            await _voznjeProvider.hide(widget.voznja?.id ?? 0);
+
+            showSnackBar(
+                "Uspješno ste sakrili vožnju ID ${widget.voznja?.id}.");
+            break;
+          }
+        case "Edit":
+          {
+            await _voznjeProvider.edit(widget.voznja?.id ?? 0);
+
+            showSnackBar(
+                "Uspješno ste vratili Draft status vožnji ID ${widget.voznja?.id}.");
+            break;
+          }
+        case "Activate":
+          {
+            await _voznjeProvider.activate(widget.voznja?.id ?? 0);
+
+            showSnackBar(
+                "Uspješno ste aktivirali vožnju ID ${widget.voznja?.id}.");
+            break;
+          }
+        default:
+      }
+
+      setState(() {
+        isLoading = true;
+      });
+
+      initForm();
+    } on Exception catch (e) {
+      await showSnackBar("Došlo je do greške: ${e.toString()}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       selectedIndex: 3,
+      backButton: true,
       headerTitle:
           widget.voznja != null ? "Detalji vožnje" : "Kreiranje vožnje",
       headerDescription: widget.voznja != null
           ? "Ovdje možete pogledati detalje o vožnji."
           : "Ovdje možete kreirati novu vožnju",
       child: Column(
-        children: [isLoading ? LoadingSpinnerWidget() : _buildForm(), _save()],
+        children: [
+          _buildActions(),
+          isLoading ? LoadingSpinnerWidget() : _buildForm(),
+          _save()
+        ],
       ),
+    );
+  }
+
+  Widget _buildActions() {
+    return Column(
+      children: [
+        Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: (allowedActions ?? [])
+              .where((e) =>
+                  VoznjaActions.fromString(e)?.naziv.isNotEmpty ??
+                  false) // Filtriranje praznih
+              .map((e) {
+            final action = VoznjaActions.fromString(e);
+            return CustomButtonWidget(
+              buttonText: action!.naziv,
+              onPress: () => executeAction(e),
+              buttonColor: action.boja ?? Colors.teal,
+            );
+          }).toList(),
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
 
@@ -88,14 +167,19 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
               children: [
                 Expanded(
                     child: FormBuilderTextField(
+                  enabled: (allowedActions?.contains("Update") ?? false) ||
+                      widget.voznja == null,
                   name: "cijena",
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(
                       errorText: 'Ovo polje je obavezno.',
                     ),
+                    FormBuilderValidators.integer(
+                        errorText: "Ovo polje mora biti broj.")
                   ]),
                   initialValue: _initialValue['cijena'],
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.attach_money_rounded),
                     label: Text("Cijena"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                     filled: true,
@@ -118,6 +202,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                 Expanded(
                     child: FormBuilderTextField(
                   name: "napomena",
+                  enabled: (allowedActions?.contains("Update") ?? false) ||
+                      widget.voznja == null,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(
                       errorText: 'Ovo polje je obavezno.',
@@ -127,8 +213,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   minLines: 3,
-                  decoration:
-                      buildTextFieldDecoration("Napomena", "Napomena..."),
+                  decoration: buildTextFieldDecoration(
+                      hintText: "Napomena...", labelText: "Napomena"),
                 )),
               ],
             ),
@@ -141,6 +227,9 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                     child: buildDropdown(
                   name: 'gradOdId',
                   labelText: "Grad od",
+                  prefixIcon: Icon(Icons.location_city_rounded),
+                  enabled: (allowedActions?.contains("Update") ?? false) ||
+                      widget.voznja == null,
                   initialValue: widget.voznja?.gradOd?.id.toString() ??
                       gradoviResult?.result[0].id.toString(),
                   items: gradoviResult?.result
@@ -160,7 +249,11 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                     child: buildDropdown(
                   name: 'gradDoId',
                   labelText: "Grad do",
-                  initialValue: widget.voznja?.gradOd?.id.toString() ??
+                  hintText: "Grad do",
+                  prefixIcon: Icon(Icons.location_city_rounded),
+                  enabled: (allowedActions?.contains("Update") ?? false) ||
+                      widget.voznja == null,
+                  initialValue: widget.voznja?.gradDo?.id.toString() ??
                       gradoviResult?.result[1].id.toString(),
                   items: gradoviResult?.result
                           .map((e) => DropdownMenuItem(
@@ -178,9 +271,14 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                 Expanded(
                     child: FormBuilderDateTimePicker(
                         name: "datumVrijemePocetka",
+                        enabled:
+                            (allowedActions?.contains("Update") ?? false) ||
+                                widget.voznja == null,
                         initialValue: _initialValue['datumVrijemePocetka'],
                         decoration: buildTextFieldDecoration(
-                            "Datum vrijeme početka", "Datum vrijeme početka"))),
+                            labelText: "Datum vrijeme početka",
+                            hintText: "Datum vrijeme početka",
+                            prefixIcon: Icon(Icons.date_range_rounded)))),
               ],
             ),
             SizedBox(
@@ -191,6 +289,9 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   child: buildDropdown(
                 name: 'vozacId',
                 labelText: "Vozač",
+                prefixIcon: Icon(Icons.person),
+                enabled: (allowedActions?.contains("Update") ?? false) ||
+                    widget.voznja == null,
                 items: korisniciResult?.result
                         .map((e) => DropdownMenuItem(
                               value: e.id,
@@ -237,9 +338,20 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       if (widget.voznja == null) {
         await _voznjeProvider.insert(request);
         await showSnackBar("Uspješno ste dodali novu vožnju.");
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const VoznjeListScreen(),
+          ),
+        );
       } else {
         await _voznjeProvider.update(widget.voznja!.id!, request);
         await showSnackBar("Uspješno ste izmjenili vožnju.");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const VoznjeListScreen(),
+          ),
+        );
       }
     } on Exception catch (e) {
       await showSnackBar("Došlo je do greške: ${e.toString()}");
@@ -253,6 +365,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CustomButtonWidget(
+              isDisabled: !(allowedActions?.contains("Update") ?? false) &&
+                  widget.voznja != null,
               buttonText: "Sačuvaj",
               onPress: () async {
                 await handleFormSubmit();

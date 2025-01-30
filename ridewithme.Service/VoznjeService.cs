@@ -142,7 +142,7 @@ namespace ridewithme.Service
             return state.Edit(id);
         }
 
-        public string Delete(int id)
+        public Model.Voznje Delete(int id)
         {
             var entity = GetById(id);
             var state = BaseVoznjeState.CreateState(entity.StateMachine);

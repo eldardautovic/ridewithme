@@ -92,6 +92,71 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
     });
   }
 
+  showAlertDialog(BuildContext context, int id) {
+    Widget cancelButton = TextButton(
+      child: Text("Odustani"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Da"),
+      onPressed: () async {
+        try {
+          await _voznjeProvider.delete(id);
+
+          Navigator.pop(context);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text("Uspješno ste obrisali vožnju ID $id."),
+              action: SnackBarAction(
+                label: "U redu",
+                onPressed: () =>
+                    ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+              ),
+            ),
+          );
+
+          initTable();
+
+          setState(() {
+            isLoading = true;
+          });
+        } on Exception catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(e.toString()),
+              action: SnackBarAction(
+                label: "U redu",
+                onPressed: () =>
+                    ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+              ),
+            ),
+          );
+        }
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Upozorenje"),
+      content: Text("Da li ste sigurni da želite da obrišete vožnju ID $id ?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -125,6 +190,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
               child: buildDropdown(
                 name: "gradOdId",
                 labelText: "Grad od",
+                prefixIcon: Icon(Icons.location_city_rounded),
                 items: _buildGradoviDropdownItems(),
                 onClear: () {
                   _formKey.currentState!.fields['gradOdId']?.reset();
@@ -135,6 +201,8 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
               child: buildDropdown(
                 name: "gradDoId",
                 labelText: "Grad do",
+                hintText: "Grad do",
+                prefixIcon: Icon(Icons.location_city_rounded),
                 items: _buildGradoviDropdownItems(),
                 onClear: () {
                   _formKey.currentState!.fields['gradDoId']?.reset();
@@ -145,6 +213,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
               child: buildDropdown(
                 name: "status",
                 labelText: "Status",
+                prefixIcon: Icon(Icons.flag),
                 items: VoznjaStatus.values
                     .map((status) => DropdownMenuItem(
                           value: status.name,
@@ -161,6 +230,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                 name: "OrderByField",
                 labelText: "Sortiraj po",
                 initialValue: "id",
+                prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
                   DropdownMenuItem(value: "id", child: Text("ID")),
                   DropdownMenuItem(
@@ -178,6 +248,10 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                 name: "OrderByDirection",
                 labelText: "Smjer",
                 initialValue: "ASC",
+                prefixIcon:
+                    _formKey.currentState?.value['OrderByDirection'] == "ASC"
+                        ? Icon(Icons.arrow_upward_rounded)
+                        : Icon(Icons.arrow_downward_rounded),
                 items: const [
                   DropdownMenuItem(value: "ASC", child: Text("Rastuće")),
                   DropdownMenuItem(value: "DESC", child: Text("Opadajuće")),
@@ -212,7 +286,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
         .toList();
   }
 
-  DataRow _buildDataRow(e, BuildContext context) {
+  DataRow _buildDataRow(Voznja e, BuildContext context) {
     return DataRow(
       cells: [
         buildDataCell(e.id?.toString()),
@@ -240,7 +314,9 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
           children: [
             IconButton(
               iconSize: 17,
-              onPressed: () {},
+              onPressed: () {
+                showAlertDialog(context, e.id ?? 0);
+              },
               icon: const Icon(Icons.delete),
             ),
             IconButton(

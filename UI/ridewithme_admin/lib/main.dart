@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/korisnik.dart';
+import 'package:ridewithme_admin/models/korisnik_uloga.dart';
+import 'package:ridewithme_admin/models/uloga.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
@@ -160,6 +162,30 @@ class LoginPage extends StatelessWidget {
                                   try {
                                     Korisnik result = await _korisnikProvider
                                         .login(username, password);
+
+                                    bool? hasAdminRole = result.korisniciUloge
+                                        ?.any((korisnikUloga) =>
+                                            korisnikUloga.uloga?.naziv ==
+                                            "Administrator");
+
+                                    if (hasAdminRole != true) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          content: Text(
+                                              "Nemate administratorska ovlaštenja."),
+                                          action: SnackBarAction(
+                                            label: "U redu",
+                                            onPressed: () =>
+                                                ScaffoldMessenger.of(context)
+                                                    .removeCurrentSnackBar(),
+                                          ),
+                                        ),
+                                      );
+
+                                      return;
+                                    }
 
                                     Authorization.fullName =
                                         "${result.ime} ${result.prezime}";
