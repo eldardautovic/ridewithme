@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/korisnik.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
+import 'package:ridewithme_admin/providers/kuponi_provider.dart';
 import 'package:ridewithme_admin/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
@@ -20,6 +21,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => StatistikaProvider()),
       ChangeNotifierProvider(create: (_) => KorisnikProvider()),
       ChangeNotifierProvider(create: (_) => ObavjestenjaProvider()),
+      ChangeNotifierProvider(create: (_) => KuponiProvider()),
     ],
     child: const MyApp(),
   ));

@@ -48,7 +48,6 @@ enum VoznjaActions {
   }
 }
 
-
 enum ObavjestenjeStatus {
   draft("Draft", Colors.amber),
   active("Aktivan", Colors.green),
@@ -86,6 +85,23 @@ enum ObavjestenjaActions {
     return ObavjestenjaActions.values.firstWhere(
       (status) => status.name == value,
       orElse: () => ObavjestenjaActions.NonExisting,
+    );
+  }
+}
+
+enum KuponiStatus {
+  draft("Draft", Colors.amber),
+  active("Aktivan", Colors.green),
+  hidden("Sakriven", Colors.grey);
+
+  final String naziv;
+  final Color boja;
+  const KuponiStatus(this.naziv, this.boja);
+
+  static KuponiStatus? fromString(String? value) {
+    return KuponiStatus.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => KuponiStatus.draft, // Podrazumevana vrednost
     );
   }
 }

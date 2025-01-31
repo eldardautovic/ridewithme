@@ -93,13 +93,23 @@ builder.Services.AddAuthentication("BasicAuthentication")
 builder.Services.AddQuartz(q =>
 {
     var obavjestenjaJobKey = new JobKey("CompletedObavjestenjaJob");
+    var kuponiJobKey = new JobKey("UsedKuponiJob");
+
     q.AddJob<CompletedObavjestenjaJob>(opts => opts.WithIdentity(obavjestenjaJobKey));
+    q.AddJob<UsedKuponiJob>(opts => opts.WithIdentity(kuponiJobKey));
+
 
     q.AddTrigger(opts => opts
         .ForJob(obavjestenjaJobKey)
         .WithIdentity("CompletedObavjestenjaJob-trigger")
         .WithCronSchedule("0 0 0 * * ?")
     );
+
+    q.AddTrigger(opts => opts
+       .ForJob(kuponiJobKey)
+       .WithIdentity("UsedKuponiJob-trigger")
+       .WithCronSchedule("0 0 0 * * ?")
+   );
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 

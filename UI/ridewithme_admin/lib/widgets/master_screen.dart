@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:ridewithme_admin/main.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
+import 'package:ridewithme_admin/screens/kuponi_screen.dart';
 import 'package:ridewithme_admin/screens/obavjestenja_screen.dart';
 import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
@@ -48,7 +49,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     {
       'title': 'Kuponi',
       'icon': Icons.confirmation_num_rounded,
-      'route': VoznjeListScreen()
+      'route': KuponiScreen()
     },
     {
       'title': 'Žalbe',
