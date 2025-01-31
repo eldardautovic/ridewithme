@@ -1,11 +1,10 @@
 using Mapster;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.OpenApi.Models;
+using Quartz;
 using ridewithme.API;
 using ridewithme.API.Filters;
-using ridewithme.Model.Requests;
 using ridewithme.Service;
 using ridewithme.Service.Database;
 using ridewithme.Service.KuponiStateMachine;
@@ -13,6 +12,7 @@ using ridewithme.Service.ObavjestenjaStateMachine;
 using ridewithme.Service.VoznjeStateMachine;
 using ridewithme.Service.ZalbeStateMachine;
 using ridewithme.Services;
+using ridewithme.Service.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +87,19 @@ builder.Services.AddDbContext<RidewithmeContext>(options =>
 builder.Services.AddMapster();
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+builder.Services.AddQuartz(q =>
+{
+    var obavjestenjaJobKey = new JobKey("CompletedObavjestenjaJob");
+    q.AddJob<CompletedObavjestenjaJob>(opts => opts.WithIdentity(obavjestenjaJobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(obavjestenjaJobKey)
+        .WithIdentity("CompletedObavjestenjaJob-trigger")
+        .WithCronSchedule("0 0 * * *")
+    );
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 var app = builder.Build();
 
