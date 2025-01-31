@@ -55,6 +55,11 @@ namespace ridewithme.Service.ObavjestenjaStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
+        public virtual Model.Obavjestenja Delete(int id)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+
         public virtual List<string> AllowedActions(Database.Obavjestenja entity)
         {
             throw new UserException("Metoda nije dozvoljena.");
@@ -75,6 +80,9 @@ namespace ridewithme.Service.ObavjestenjaStateMachine
 
                 case "hidden":
                     return ServiceProvider.GetService<HiddenObavjestenjaState>();
+
+                case "completed":
+                    return ServiceProvider.GetService<CompletedObavjestenjeState>();
 
                 default: throw new Exception("State not recognized.");
             }

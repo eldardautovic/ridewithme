@@ -71,7 +71,6 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   }
 
   void executeAction(String name) async {
-    print(name);
     try {
       switch (name) {
         case "Hide":
@@ -115,7 +114,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       selectedIndex: 3,
-      backButton: true,
+      backButton: VoznjeListScreen(),
       headerTitle:
           widget.voznja != null ? "Detalji vožnje" : "Kreiranje vožnje",
       headerDescription: widget.voznja != null
@@ -146,7 +145,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             return CustomButtonWidget(
               buttonText: action!.naziv,
               onPress: () => executeAction(e),
-              buttonColor: action.boja ?? Colors.teal,
+              buttonColor: action.boja,
             );
           }).toList(),
         ),

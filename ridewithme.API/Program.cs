@@ -55,6 +55,8 @@ builder.Services.AddTransient<InitialObavjestenjaState>();
 builder.Services.AddTransient<DraftObavjestenjaState>();
 builder.Services.AddTransient<ActiveObavjestenjaState>();
 builder.Services.AddTransient<HiddenObavjestenjaState>();
+builder.Services.AddTransient<CompletedObavjestenjeState>();
+
 
 builder.Services.AddControllers(x=> x.Filters.Add<ExceptionFilter>());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -96,7 +98,7 @@ builder.Services.AddQuartz(q =>
     q.AddTrigger(opts => opts
         .ForJob(obavjestenjaJobKey)
         .WithIdentity("CompletedObavjestenjaJob-trigger")
-        .WithCronSchedule("0 0 * * *")
+        .WithCronSchedule("0 0 0 * * ?")
     );
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);

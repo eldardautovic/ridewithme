@@ -1,15 +1,9 @@
 ﻿using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
 using ridewithme.Service.ObavjestenjaStateMachine;
-using ridewithme.Service.ZalbeStateMachine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace ridewithme.Service
 {
@@ -27,6 +21,39 @@ namespace ridewithme.Service
             if (searchObject.IsCompletedIncluded.HasValue && searchObject.IsCompletedIncluded == false)
             {
                 query = query.Where(x => x.DatumZavrsetka > DateTime.Now || x.StateMachine == "active");
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
+            {
+                var items = searchObject.OrderBy.Split(' ');
+                if (items.Length > 2 || items.Length == 0)
+                {
+                    throw new ApplicationException("Mozete sortirati samo po dva polja.");
+                }
+                if (items.Length == 1)
+                {
+                    query = query.OrderBy("@0", searchObject.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(string.Format("{0} {1}", items[0], items[1]));
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.Status))
+            {
+                query = query.Where(x => x.StateMachine == searchObject.Status);
+            }
+
+            if (searchObject.DatumOdGTE.HasValue)
+            {
+                query = query.Where(x => x.DatumZavrsetka >= searchObject.DatumOdGTE.Value);
+            }
+
+            if (searchObject.DatumDoGTE.HasValue)
+            {
+                query = query.Where(x => x.DatumZavrsetka <= searchObject.DatumDoGTE.Value);
             }
 
             return query;
@@ -90,6 +117,14 @@ namespace ridewithme.Service
             var state = BaseObavjestenjaState.CreateState(entity.StateMachine);
 
             return state.Edit(id);
+        }
+
+        public Model.Obavjestenja Delete(int id)
+        {
+            var entity = GetById(id);
+            var state = BaseObavjestenjaState.CreateState(entity.StateMachine);
+
+            return state.Delete(id);
         }
 
     }

@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ridewithme.Service
+namespace ridewithme.Service.Jobs
 {
     public class CompletedObavjestenjaJob : IJob
     {
         RidewithmeContext Context;
         ILogger<CompletedObavjestenjaJob> _logger;
-        public CompletedObavjestenjaJob(RidewithmeContext dbContext, ILogger<CompletedObavjestenjaJob> logger) {
+        public CompletedObavjestenjaJob(RidewithmeContext dbContext, ILogger<CompletedObavjestenjaJob> logger)
+        {
             Context = dbContext;
             _logger = logger;
         }
@@ -30,7 +31,7 @@ namespace ridewithme.Service
 
             _logger.LogInformation("[!!!] CompletedObavjestenja CRON zavrsen.");
 
-            
+
             return Task.CompletedTask;
         }
     }

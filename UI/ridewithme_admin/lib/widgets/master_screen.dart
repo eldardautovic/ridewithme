@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:ridewithme_admin/main.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
+import 'package:ridewithme_admin/screens/obavjestenja_screen.dart';
 import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
 
@@ -10,7 +11,7 @@ class MasterScreenWidget extends StatefulWidget {
   final int selectedIndex;
   final String? headerTitle;
   final String? headerDescription;
-  final bool? backButton;
+  final Widget? backButton;
 
   MasterScreenWidget(
       {this.child,
@@ -58,6 +59,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       'title': 'Reklame',
       'icon': Icons.backup_table_rounded,
       'route': VoznjeListScreen()
+    },
+    {
+      'title': 'Obavještenja',
+      'icon': Icons.dashboard_customize_rounded,
+      'route': ObavjestenjaScreen()
     },
   ];
 
@@ -188,9 +194,16 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.backButton == true)
+                if (widget.backButton != null)
                   IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    tooltip: "Nazad",
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => widget.backButton!,
+                        ),
+                      );
+                    },
                     icon: Icon(Icons.arrow_back_rounded),
                     iconSize: 30,
                   ),

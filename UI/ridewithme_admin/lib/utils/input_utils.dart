@@ -40,11 +40,16 @@ Widget buildDropdown(
   );
 }
 
-InputDecoration buildTextFieldDecoration(
-    {required String labelText, required String hintText, Icon? prefixIcon}) {
+InputDecoration buildTextFieldDecoration({
+  required String labelText,
+  required String hintText,
+  Icon? prefixIcon,
+  VoidCallback? onClear,
+}) {
   return InputDecoration(
     label: Text(labelText),
     labelStyle: tableTextStyle,
+    contentPadding: const EdgeInsets.only(left: 5, bottom: 10),
     hintText: hintText,
     filled: true,
     fillColor: Color(0xFFF3FCFC),
@@ -55,5 +60,11 @@ InputDecoration buildTextFieldDecoration(
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Color(0xFFE3E3E3)),
     ),
+    suffix: onClear != null
+        ? IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: onClear,
+          )
+        : null,
   );
 }

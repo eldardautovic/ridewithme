@@ -68,9 +68,22 @@ namespace ridewithme.Service.ObavjestenjaStateMachine
             return Mapper.Map<Model.Obavjestenja>(entity);
         }
 
+        public override Model.Obavjestenja Delete(int id)
+        {
+            var set = Context.Set<Database.Obavjestenja>();
+
+            var entity = set.Find(id);
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Obavjestenja>(entity);
+        }
+
         public override List<string> AllowedActions(Database.Obavjestenja entity)
         {
-            return new List<string>() { nameof(Activate), nameof(Hide), nameof(Update) };
+            return new List<string>() { nameof(Activate), nameof(Hide), nameof(Update), nameof(Delete) };
         }
     }
 }

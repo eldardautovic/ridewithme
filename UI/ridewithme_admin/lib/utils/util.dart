@@ -27,20 +27,65 @@ enum VoznjaStatus {
 }
 
 enum VoznjaActions {
-  Activate("Aktiviraj", Colors.green), // Zelena za aktivaciju
-  Hide("Sakrij", Colors.orange), // Narandžasta za sakrivanje
-  Delete("Obriši", Colors.red), // Crvena za brisanje
-  Edit("Uredi", Colors.blue), // Plava za uređivanje
-  NonExisting("", Colors.transparent); // Transparentna za nepostojeće akcije
+  Activate(
+      "Aktiviraj", Color(0xFF4CAF50), Color(0xFF072220)), // Smaragdno zelena
+  Hide("Sakrij", Color(0xFFFFC107), Color(0xFF072220)), // Zlatno žuta
+  Delete("Obriši", Color(0xFFFF7043), Color(0xFF072220)), // Topla narandžasta
+  Edit("Uredi", Color(0xFF64B5F6), Color(0xFF072220)), // Pastelno plava
+  NonExisting("", Colors.transparent,
+      Color(0xFF072220)); // Transparentna za nepostojeće akcije
 
   final String naziv;
   final Color boja;
-  const VoznjaActions(this.naziv, this.boja);
+  final Color textBoja;
+  const VoznjaActions(this.naziv, this.boja, this.textBoja);
 
   static VoznjaActions? fromString(String? value) {
     return VoznjaActions.values.firstWhere(
       (status) => status.name == value,
       orElse: () => VoznjaActions.NonExisting,
+    );
+  }
+}
+
+
+enum ObavjestenjeStatus {
+  draft("Draft", Colors.amber),
+  active("Aktivan", Colors.green),
+  hidden("Sakriven", Colors.grey),
+  completed("Završen", Colors.purple);
+
+  final String naziv;
+  final Color boja;
+  const ObavjestenjeStatus(this.naziv, this.boja);
+
+  static ObavjestenjeStatus? fromString(String? value) {
+    return ObavjestenjeStatus.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => ObavjestenjeStatus.draft, // Podrazumevana vrednost
+    );
+  }
+}
+
+enum ObavjestenjaActions {
+  Activate(
+      "Aktiviraj", Color(0xFF4CAF50), Color(0xFF072220)), // Smaragdno zelena
+  Hide("Sakrij", Color(0xFFFFC107), Color(0xFF072220)), // Zlatno žuta
+  Complete("Označi kao završeno", Color(0xFFFF7043),
+      Color(0xFF072220)), // Topla narandžasta
+  Edit("Uredi", Color(0xFF64B5F6), Color(0xFF072220)), // Pastelno plava
+  NonExisting("", Colors.transparent,
+      Color(0xFF072220)); // Transparentna za nepostojeće akcije
+
+  final String naziv;
+  final Color boja;
+  final Color textBoja;
+  const ObavjestenjaActions(this.naziv, this.boja, this.textBoja);
+
+  static ObavjestenjaActions? fromString(String? value) {
+    return ObavjestenjaActions.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => ObavjestenjaActions.NonExisting,
     );
   }
 }

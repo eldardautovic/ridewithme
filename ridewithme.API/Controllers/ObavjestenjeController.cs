@@ -5,6 +5,7 @@ using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service;
+using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
 {
@@ -44,6 +45,13 @@ namespace ridewithme.API.Controllers
             return (_service as IObavjestenjaService).Edit(id);
         }
 
+        [HttpDelete("{id}/delete")]
+
+        public Model.Obavjestenja Delete(int id)
+        {
+            return (_service as IObavjestenjaService).Delete(id);
+        }
+
         [HttpPut("{id}/hide")]
 
         public Model.Obavjestenja Hide(int id)
@@ -56,6 +64,18 @@ namespace ridewithme.API.Controllers
         public List<string> AllowedActions(int id)
         {
             return (_service as IObavjestenjaService).AllowedActions(id);
+        }
+
+        public override Obavjestenja Insert(ObavjestenjaInsertRequest request)
+        {
+            if (request.KorisnikId == null || request.KorisnikId == 0)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                request.KorisnikId = userId;
+            }
+
+            return base.Insert(request);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace ridewithme.Service
         public Model.Obavjestenja Activate(int id);
         public Model.Obavjestenja Hide(int id);
         public Model.Obavjestenja Edit(int id);
+        public Model.Obavjestenja Delete(int id);
         public Model.Obavjestenja Complete(int id);
 
     }
