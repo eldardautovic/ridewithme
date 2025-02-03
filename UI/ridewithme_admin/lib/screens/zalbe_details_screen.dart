@@ -51,10 +51,20 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
 
             showSnackBar("Uspješno ste preuzeli žalbu ID ${widget.zalba.id}.");
 
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const ZalbeScreen(),
+              ),
+            );
+
             break;
           }
         case "Complete":
           {
+            if (Authorization.id != widget.zalba.administrator?.id) {
+              return showSnackBar("Vi niste preuzeli žalbu.");
+            }
+
             String? odgovorNaZalbu = await showDialog<String>(
               context: context,
               builder: (context) {
@@ -91,20 +101,11 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
 
               showSnackBar(
                   "Uspješno ste odgovorili na žalbu ID ${widget.zalba.id}.");
-            } else {
-              showSnackBar("Odgovor na žalbu nije unesen.");
             }
-
             break;
           }
         default:
       }
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const ZalbeScreen(),
-        ),
-      );
     } on Exception catch (e) {
       await showSnackBar("Došlo je do greške: ${e.toString()}");
     }

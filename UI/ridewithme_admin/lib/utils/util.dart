@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Authorization {
   static String? username;
   static String? password;
+  static int? id;
   static String? fullName;
 }
 

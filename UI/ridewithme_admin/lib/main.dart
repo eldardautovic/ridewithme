@@ -194,6 +194,8 @@ class LoginPage extends StatelessWidget {
                                     Authorization.fullName =
                                         "${result.ime} ${result.prezime}";
 
+                                    Authorization.id = result.id;
+
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
