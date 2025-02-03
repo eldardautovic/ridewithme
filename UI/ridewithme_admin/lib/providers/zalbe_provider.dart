@@ -1,13 +1,12 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:ridewithme_admin/models/kupon.dart';
+import 'package:ridewithme_admin/models/zalba.dart';
 import 'package:ridewithme_admin/providers/base_provider.dart';
 
 import 'package:http/http.dart' as http;
 
-class KuponiProvider extends BaseProvider<Kupon> {
-  KuponiProvider() : super("Kuponi");
+class ZalbaProvider extends BaseProvider<Zalba> {
+  ZalbaProvider() : super("Zalbe");
 
   Future<List<String>> allowedActions(int id) async {
     var url = "$fullUrl/$id/allowedActions";
@@ -32,8 +31,8 @@ class KuponiProvider extends BaseProvider<Kupon> {
     }
   }
 
-  Future<Kupon> hide(int id) async {
-    var url = "$fullUrl/$id/hide";
+  Future<Zalba> process(int id) async {
+    var url = "$fullUrl/$id/process";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -47,7 +46,7 @@ class KuponiProvider extends BaseProvider<Kupon> {
     }
   }
 
-  Future<Kupon> activate(int id) async {
+  Future<Zalba> activate(int id) async {
     var url = "$fullUrl/$id/activate";
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -62,12 +61,13 @@ class KuponiProvider extends BaseProvider<Kupon> {
     }
   }
 
-  Future<Kupon> edit(int id) async {
-    var url = "$fullUrl/$id/edit";
+  Future<Zalba> complete(int id, dynamic request) async {
+    var url = "$fullUrl/$id/complete";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var response = await http.put(uri, headers: headers);
+    var jsonRequest = jsonEncode(request);
+    var response = await http.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
@@ -80,6 +80,6 @@ class KuponiProvider extends BaseProvider<Kupon> {
   @override
   fromJson(data) {
     // TODO: implement fromJson
-    return Kupon.fromJson(data);
+    return Zalba.fromJson(data);
   }
 }

@@ -26,6 +26,11 @@ namespace ridewithme.Service.KuponiStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
+        public virtual Model.Kuponi Delete(int id)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+
         public virtual Model.Kuponi Update(int id, KuponiUpdateRequest request)
         { 
             throw new UserException("Metoda nije dozvoljena.");
@@ -40,11 +45,6 @@ namespace ridewithme.Service.KuponiStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
         public virtual Model.Kuponi Edit(int id)
-        {
-            throw new UserException("Metoda nije dozvoljena.");
-        }
-
-        public virtual string Delete(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }

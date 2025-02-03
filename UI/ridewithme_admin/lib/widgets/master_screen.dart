@@ -5,6 +5,7 @@ import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/screens/kuponi_screen.dart';
 import 'package:ridewithme_admin/screens/obavjestenja_screen.dart';
 import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
+import 'package:ridewithme_admin/screens/zalbe_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
 
 class MasterScreenWidget extends StatefulWidget {
@@ -51,11 +52,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       'icon': Icons.confirmation_num_rounded,
       'route': KuponiScreen()
     },
-    {
-      'title': 'Žalbe',
-      'icon': Icons.support_rounded,
-      'route': VoznjeListScreen()
-    },
+    {'title': 'Žalbe', 'icon': Icons.support_rounded, 'route': ZalbeScreen()},
     {
       'title': 'Reklame',
       'icon': Icons.backup_table_rounded,

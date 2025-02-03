@@ -8,17 +8,9 @@ namespace ridewithme.Model.SearchObject
     {
         public string? NaslovGTE { get; set; }
 
-        public string? SadrzajGTE { get; set; }
-
         public DateTime? DatumPreuzimanja { get; set; }
-        public DateTime? DatumIzmjene { get; set; }
-        public DateTime? DatumKreiranja { get; set; }
 
-        public string? VrstaZalbe { get; set; }
-
-        public int? AdministratorId { get; set; }
-
-        public int? KorisnikId { get; set; }
+        public string? VrstaZalbeGTE { get; set; }
 
         public bool? IsKorisnikIncluded { get; set; }
 
@@ -29,6 +21,8 @@ namespace ridewithme.Model.SearchObject
         public string? KorisnickoImeAdministratorGTE { get; set; }
         public string? KorisnickoImeKorisnikGTE { get; set; }
 
+        public string? OrderBy { get; set; }
 
+        public string? Status { get; set; }
     }
 }

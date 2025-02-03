@@ -30,6 +30,14 @@ namespace ridewithme.Service
             return state.Update(id, request);
         }
 
+        public Model.Kuponi Delete(int id)
+        {
+            var entity = GetById(id);
+            var state = BaseKuponiState.CreateState(entity.StateMachine);
+
+            return state.Delete(id);
+        }
+
         public override IQueryable<Kuponi> AddFilter(KuponiSearchObject searchObject, IQueryable<Kuponi> query)
         {
             if(searchObject.KuponId.HasValue)

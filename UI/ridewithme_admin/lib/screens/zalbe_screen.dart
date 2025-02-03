@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:ridewithme_admin/models/kupon.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
-import 'package:ridewithme_admin/providers/kuponi_provider.dart';
+import 'package:ridewithme_admin/models/zalba.dart';
+import 'package:ridewithme_admin/providers/zalbe_provider.dart';
 import 'package:ridewithme_admin/screens/kuponi_details_screen.dart';
+import 'package:ridewithme_admin/screens/zalbe_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/utils/util.dart';
@@ -14,49 +14,51 @@ import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
-class KuponiScreen extends StatefulWidget {
-  const KuponiScreen({super.key});
+class ZalbeScreen extends StatefulWidget {
+  const ZalbeScreen({super.key});
 
   @override
-  State<KuponiScreen> createState() => _KuponiScreenState();
+  State<ZalbeScreen> createState() => _ZalbeScreenState();
 }
 
-class _KuponiScreenState extends State<KuponiScreen> {
-  late KuponiProvider _kuponiProvider;
+class _ZalbeScreenState extends State<ZalbeScreen> {
+  late ZalbaProvider _zalbaProvider;
 
-  SearchResult<Kupon>? kuponiResult;
+  SearchResult<Zalba>? zalbeResult;
 
   final _formKey = GlobalKey<FormBuilderState>();
 
   Map<String, dynamic> _initialValue = {};
 
-  bool isLoading = true;
+  bool isLoading = false;
 
   final List<Map<String, dynamic>> columnData = [
     {"label": "ID", "numeric": true},
-    {"label": "Kod"},
-    {"label": "Naziv"},
-    {"label": "Početak"},
+    {"label": "Naslov"},
+    {"label": "Datum kreiranja"},
+    {"label": "Datum preuzimanja"},
+    {"label": "Vrsta žalbe"},
+    {"label": "Podnio"},
+    {"label": "Preuzeo"},
     {"label": "Status"},
-    {"label": "Broj iskoristivosti", "numeric": true},
-    {"label": "Popust", "numeric": true},
-    {"label": "Kreirao"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
 
-    _kuponiProvider = context.read<KuponiProvider>();
+    _zalbaProvider = context.read<ZalbaProvider>();
 
     _initialValue = {
       'OrderBy': 'id ASC',
-      'status': null,
-      'datumPocetka': null,
-      'kodGTE': null,
-      'brojIskoristivostiGTE': null,
-      'popustGTE': null,
+      'NaslovGTE': null,
+      'DatumPreuzimanja': null,
+      'VrstaZalbeGTE': null,
+      'KorisnickoImeAdministratorGTE': null,
+      'KorisnickoImeKorisnikGTE': null,
+      'Status': null,
     };
 
     initTable();
@@ -69,14 +71,19 @@ class _KuponiScreenState extends State<KuponiScreen> {
 
     print(_formKey.currentState?.value);
 
-    kuponiResult = await _kuponiProvider.get(filter: {
+    zalbeResult = await _zalbaProvider.get(filter: {
       'OrderBy': "$orderByField $orderByDirection",
-      'Status': _formKey.currentState?.value['status'],
-      'DatumPocetka': _formKey.currentState?.value['datumPocetka'],
-      'KodGTE': _formKey.currentState?.value['kodGTE'],
-      'BrojIskoristivostiGTE':
-          _formKey.currentState?.value['brojIskoristivostiGTE'],
-      'PopustGTE': _formKey.currentState?.value['popustGTE'],
+      'Status': _formKey.currentState?.value['Status'],
+      'DatumPreuzimanja': _formKey.currentState?.value['DatumPreuzimanja'],
+      'NaslovGTE': _formKey.currentState?.value['NaslovGTE'],
+      'VrstaZalbeGTE': _formKey.currentState?.value['VrstaZalbeGTE'],
+      'KorisnickoImeAdministratorGTE':
+          _formKey.currentState?.value['KorisnickoImeAdministratorGTE'],
+      'KorisnickoImeKorisnikGTE':
+          _formKey.currentState?.value['KorisnickoImeKorisnikGTE'],
+      'IsKorisnikIncluded': true,
+      'IsAdministratorIncluded': true,
+      'IsVrstaZalbeIncluded': true
     });
 
     setState(() {
@@ -95,14 +102,14 @@ class _KuponiScreenState extends State<KuponiScreen> {
       child: Text("Da"),
       onPressed: () async {
         try {
-          await _kuponiProvider.delete(id);
+          await _zalbaProvider.delete(id);
 
           Navigator.pop(context, true);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text("Uspješno ste obrisali kupon ID $id."),
+              content: Text("Uspješno ste obrisali žalbu ID $id."),
               action: SnackBarAction(
                 label: "U redu",
                 onPressed: () =>
@@ -134,7 +141,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
 
     AlertDialog alert = AlertDialog(
       title: Text("Upozorenje"),
-      content: Text("Da li ste sigurni da želite da obrišete kupon ID $id ?"),
+      content: Text("Da li ste sigurni da želite da obrišete žalbu ID $id ?"),
       actions: [
         cancelButton,
         continueButton,
@@ -152,18 +159,16 @@ class _KuponiScreenState extends State<KuponiScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 4,
-      headerTitle: "Kuponi",
-      headerDescription: "Ovdje možete vidjeti listu kupona",
-      child: Container(
+        selectedIndex: 5,
+        headerTitle: "Žalbe",
+        headerDescription:
+            "Ovdje možete da pregledate i odgovorite na eventualne žalbe.",
         child: Column(
           children: [
             _buildSearch(),
             isLoading ? LoadingSpinnerWidget() : _buildResultView()
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildSearch() {
@@ -181,76 +186,45 @@ class _KuponiScreenState extends State<KuponiScreen> {
           children: [
             Expanded(
                 child: FormBuilderDateTimePicker(
-                    name: "datumPocetka",
+                    name: "DatumPreuzimanja",
                     decoration: buildTextFieldDecoration(
-                        labelText: "Datum početka",
-                        hintText: "Datum početka",
+                        labelText: "Datum preuzimanja",
+                        hintText: "Datum preuzimanja",
                         prefixIcon: Icon(Icons.date_range_rounded),
                         onClear: () => _formKey
-                            .currentState!.fields['datumPocetka']
+                            .currentState!.fields['DatumPreuzimanja']
                             ?.reset()))),
             Expanded(
                 child: FormBuilderTextField(
-              name: "kodGTE",
-              initialValue: _initialValue['kodGTE'],
+              name: "KorisnickoImeAdministratorGTE",
+              initialValue: _initialValue['KorisnickoImeAdministratorGTE'],
               decoration: buildTextFieldDecoration(
-                  hintText: "Kod...",
-                  labelText: "Kod",
+                  hintText: "Administrator...",
+                  labelText: "Administrator",
                   prefixIcon: Icon(Icons.abc_rounded)),
             )),
             Expanded(
                 child: FormBuilderTextField(
-              name: "brojIskoristivostiGTE",
-              keyboardType: TextInputType.number,
-              valueTransformer: (value) {
-                if (value != null) {
-                  return int.tryParse(value);
-                }
-              },
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.float(
-                  errorText: 'Ovo polje mora biti broj.',
-                ),
-              ]),
-              initialValue: _initialValue['brojIskoristivostiGTE'],
+              name: "KorisnickoImeKorisnikGTE",
+              initialValue: _initialValue['KorisnickoImeKorisnikGTE'],
               decoration: buildTextFieldDecoration(
-                  hintText: "Broj iskoristivosti...",
-                  labelText: "Broj iskoristivosti",
-                  prefixIcon: Icon(Icons.pin_outlined)),
-            )),
-            Expanded(
-                child: FormBuilderTextField(
-              name: "popustGTE",
-              keyboardType: TextInputType.number,
-              valueTransformer: (value) {
-                if (value != null) {
-                  return double.tryParse(value);
-                }
-              },
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.float(
-                  errorText: 'Ovo polje mora biti broj.',
-                ),
-              ]),
-              initialValue: _initialValue['popustGTE'],
-              decoration: buildTextFieldDecoration(
-                  hintText: "Popust...",
-                  labelText: "Popust",
-                  prefixIcon: Icon(Icons.percent)),
+                  hintText: "Korisnik...",
+                  labelText: "Korisnik",
+                  prefixIcon: Icon(Icons.abc_rounded)),
             )),
             Expanded(
               child: buildDropdown(
-                name: "status",
+                name: "Status",
                 labelText: "Status",
                 prefixIcon: Icon(Icons.flag),
-                items: KuponiStatus.values
+                items: ZalbeStatus.values
                     .map((status) => DropdownMenuItem(
                           value: status.name,
                           child: Text(status.naziv),
                         ))
                     .toList(),
                 onClear: () {
-                  _formKey.currentState!.fields['status']?.reset();
+                  _formKey.currentState!.fields['Status']?.reset();
                 },
               ),
             ),
@@ -262,13 +236,11 @@ class _KuponiScreenState extends State<KuponiScreen> {
                 prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
                   DropdownMenuItem(value: "id", child: Text("ID")),
-                  DropdownMenuItem(value: "Kod", child: Text("Kod")),
                   DropdownMenuItem(
-                      value: "DatumPocetka", child: Text("Datum početka")),
+                      value: "DatumPreuzimanja",
+                      child: Text("Datum preuzimanja")),
                   DropdownMenuItem(
-                      value: "BrojIskoristivosti",
-                      child: Text("Broj iskoristivosti")),
-                  DropdownMenuItem(value: "Popust", child: Text("Popust")),
+                      value: "DatumKreiranja", child: Text("Datum kreiranja")),
                   DropdownMenuItem(
                       value: "DatumIzmjene", child: Text("Datum izmjene")),
                 ],
@@ -289,49 +261,41 @@ class _KuponiScreenState extends State<KuponiScreen> {
                 ],
               ),
             ),
-            CustomButtonWidget(
-              buttonText: "Dodaj kupon",
-              onPress: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => KuponiDetailsScreen(),
-                  ),
-                );
-              },
-            ),
           ],
         ),
       ),
     );
   }
 
-  DataRow _buildDataRow(Kupon e, BuildContext context) {
+  DataRow _buildDataRow(Zalba e, BuildContext context) {
     return DataRow(
       cells: [
         buildDataCell(e.id?.toString()),
-        buildDataCell(e.kod),
-        buildDataCell(e.naziv),
-        buildDataCell(e.datumPocetka != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumPocetka!)
+        buildDataCell(e.naslov),
+        buildDataCell(e.datumKreiranja != null
+            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumKreiranja!)
             : "N/A"),
+        buildDataCell(e.datumPreuzimanja != null
+            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumPreuzimanja!)
+            : "N/A"),
+        buildDataCell(e.vrstaZalbe?.naziv),
+        buildDataCell("${e.korisnik?.ime ?? ""} ${e.korisnik?.prezime ?? ""}"),
+        if (e.administrator != null)
+          buildDataCell(
+              "${e.administrator?.ime ?? ""} ${e.administrator?.prezime ?? ""}"),
+        if (e.administrator == null) buildDataCell("N/A"),
         DataCell(
           Badge(
             padding:
                 const EdgeInsets.only(left: 5, right: 5, top: 4, bottom: 4),
-            label: Text(KuponiStatus.fromString(e.stateMachine)?.naziv ?? ""),
+            label: Text(ZalbeStatus.fromString(e.stateMachine)?.naziv ?? ""),
             backgroundColor:
-                KuponiStatus.fromString(e.stateMachine)?.boja ?? Colors.red,
+                ZalbeStatus.fromString(e.stateMachine)?.boja ?? Colors.red,
           ),
         ),
-        buildDataCell(e.brojIskoristivosti.toString()),
-        buildDataCell(((e.popust ?? 0) * 100).toString() + "%"),
-        if (e.korisnik == null) buildDataCell("Sistem"),
-        if (e.korisnik != null)
-          buildDataCell(
-              "${e.korisnik?.ime ?? ""} ${e.korisnik?.prezime ?? ""}"),
         DataCell(Row(
           children: [
-            if (e.stateMachine == 'completed' || e.stateMachine == 'draft')
+            if (e.stateMachine == 'completed')
               IconButton(
                 iconSize: 17,
                 onPressed: () {
@@ -345,8 +309,8 @@ class _KuponiScreenState extends State<KuponiScreen> {
                   Navigator.of(context)
                       .push(
                         MaterialPageRoute(
-                          builder: (context) => KuponiDetailsScreen(
-                            kupon: e,
+                          builder: (context) => ZalbeDetailsScreen(
+                            zalba: e,
                           ),
                         ),
                       )
@@ -387,7 +351,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
                   numeric: col["numeric"] ?? false,
                 );
               }).toList(),
-              rows: kuponiResult?.result
+              rows: zalbeResult?.result
                       .map((e) => _buildDataRow(e, context))
                       .toList()
                       .cast<DataRow>() ??

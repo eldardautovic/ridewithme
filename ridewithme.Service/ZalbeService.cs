@@ -3,13 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
-using ridewithme.Service.KuponiStateMachine;
 using ridewithme.Service.ZalbeStateMachine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+
 
 namespace ridewithme.Service
 {
@@ -29,39 +25,14 @@ namespace ridewithme.Service
                 query = query.Where(x => x.Naslov.Contains(searchObject.NaslovGTE));
             }
 
-            if (!string.IsNullOrWhiteSpace(searchObject.SadrzajGTE))
-            {
-                query = query.Where(x => x.Sadrzaj.Contains(searchObject.SadrzajGTE));
-            }
-
-            if (searchObject.DatumKreiranja.HasValue)
-            {
-                query = query.Where(x => x.DatumKreiranja == searchObject.DatumKreiranja.Value);
-            }
-
-            if (searchObject.DatumIzmjene.HasValue)
-            {
-                query = query.Where(x => x.DatumIzmjene == searchObject.DatumIzmjene.Value);
-            }
-
             if (searchObject.DatumPreuzimanja.HasValue)
             {
                 query = query.Where(x => x.DatumPreuzimanja == searchObject.DatumPreuzimanja.Value);
             }
 
-            if(!string.IsNullOrWhiteSpace(searchObject.VrstaZalbe))
+            if(!string.IsNullOrWhiteSpace(searchObject.VrstaZalbeGTE))
             {
-                query = query.Include(x => x.VrstaZalbe).Where(x => x.VrstaZalbe.Naziv == searchObject.VrstaZalbe);
-            }
-
-            if(searchObject.AdministratorId.HasValue)
-            {
-                query = query.Where(x => x.AdministratorId ==  searchObject.AdministratorId.Value);
-            }
-
-            if (searchObject.KorisnikId.HasValue)
-            {
-                query = query.Where(x => x.KorisnikId == searchObject.KorisnikId.Value);
+                query = query.Include(x => x.VrstaZalbe).Where(x => x.VrstaZalbe.Naziv.Contains(searchObject.VrstaZalbeGTE));
             }
 
             if (searchObject.IsVrstaZalbeIncluded.HasValue && searchObject.IsVrstaZalbeIncluded == true)
@@ -79,7 +50,6 @@ namespace ridewithme.Service
                 query = query.Include(x => x.Korisnik);
             }
 
-
             if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoImeAdministratorGTE))
             {
                 query = query.Where(x => x.Administrator.KorisnickoIme.Contains(searchObject.KorisnickoImeAdministratorGTE));
@@ -88,6 +58,29 @@ namespace ridewithme.Service
             if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoImeKorisnikGTE))
             {
                 query = query.Where(x => x.Korisnik.KorisnickoIme.Contains(searchObject.KorisnickoImeKorisnikGTE));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
+            {
+                var items = searchObject.OrderBy.Split(' ');
+                if (items.Length > 2 || items.Length == 0)
+                {
+                    throw new ApplicationException("Mozete sortirati samo po dva polja.");
+                }
+                if (items.Length == 1)
+                {
+                    query = query.OrderBy("@0", searchObject.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(string.Format("{0} {1}", items[0], items[1]));
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchObject?.Status))
+            {
+                query = query.Where(x => x.StateMachine == searchObject.Status);
             }
 
             return query;

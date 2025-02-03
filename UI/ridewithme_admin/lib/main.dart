@@ -8,6 +8,7 @@ import 'package:ridewithme_admin/providers/kuponi_provider.dart';
 import 'package:ridewithme_admin/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/providers/zalbe_provider.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
@@ -22,6 +23,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => KorisnikProvider()),
       ChangeNotifierProvider(create: (_) => ObavjestenjaProvider()),
       ChangeNotifierProvider(create: (_) => KuponiProvider()),
+      ChangeNotifierProvider(create: (_) => ZalbaProvider()),
     ],
     child: const MyApp(),
   ));

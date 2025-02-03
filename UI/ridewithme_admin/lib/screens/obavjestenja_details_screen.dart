@@ -132,8 +132,6 @@ class _ObavjestenjaDetailsScreenState extends State<ObavjestenjaDetailsScreen> {
         return;
       }
 
-      debugPrint(_formKey.currentState?.value.toString());
-
       var request = Map.from(_formKey.currentState!.value);
       if (request['datumZavrsetka'] is DateTime) {
         request['datumZavrsetka'] =
@@ -203,7 +201,6 @@ class _ObavjestenjaDetailsScreenState extends State<ObavjestenjaDetailsScreen> {
                   ]),
                   initialValue: _initialValue['naslov'],
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.attach_money_rounded),
                     label: Text("Naslov"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                     filled: true,
@@ -235,7 +232,6 @@ class _ObavjestenjaDetailsScreenState extends State<ObavjestenjaDetailsScreen> {
                   ]),
                   initialValue: _initialValue['podnaslov'],
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.attach_money_rounded),
                     label: Text("Podnaslov"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                     filled: true,

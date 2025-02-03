@@ -14,6 +14,9 @@ namespace ridewithme.Service
         public Kuponi Activate(int id);
         public Kuponi Hide(int id);
         public Kuponi Edit(int id);
+
+        public Kuponi Delete(int id);
+
         public List<string> AllowedActions(int id);
     }
 }

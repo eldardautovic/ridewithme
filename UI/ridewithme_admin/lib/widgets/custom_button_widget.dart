@@ -10,7 +10,7 @@ class CustomButtonWidget extends StatelessWidget {
       this.textColor = const Color(0xFF072220),
       this.fontSize = 14,
       this.fontWeight = FontWeight.bold,
-      this.borderRadius = 10,
+      this.borderRadius = 5,
       this.isDisabled = false});
 
   final String buttonText;

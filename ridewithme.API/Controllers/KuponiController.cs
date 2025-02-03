@@ -5,6 +5,7 @@ using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service;
+using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
 {
@@ -19,6 +20,12 @@ namespace ridewithme.API.Controllers
         [Authorize(Roles = "Administrator")]
         public override Kuponi Insert(KuponiInsertRequest request)
         {
+            if (request.KorisnikId == null || request.KorisnikId == 0)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                request.KorisnikId = userId;
+            }
             return base.Insert(request);
         }
 
@@ -26,6 +33,14 @@ namespace ridewithme.API.Controllers
         public override Kuponi Update(int id, KuponiUpdateRequest request)
         {
             return base.Update(id, request);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpDelete("{id}/delete")]
+
+        public Model.Kuponi Delete(int id)
+        {
+            return (_service as IKuponiService).Delete(id);
         }
 
         [HttpPut("{id}/activate")]

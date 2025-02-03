@@ -30,7 +30,7 @@ class _InfoCardWidgetState extends State<InfoCardWidget> {
                     widget.cardTitle ?? '',
                     style: TextStyle(
                         fontFamily: "Inter",
-                        fontSize: 14,
+                        fontSize: MediaQuery.of(context).size.width * 0.009,
                         fontWeight: FontWeight.w300),
                   ),
                   Column(
@@ -40,14 +40,16 @@ class _InfoCardWidgetState extends State<InfoCardWidget> {
                           widget.cardValue ?? '',
                           style: TextStyle(
                               fontFamily: "Inter",
-                              fontSize: 30,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.02,
                               fontWeight: FontWeight.w800),
                         ),
                         Text(
                           widget.cardSubtitle ?? '',
                           style: TextStyle(
                               fontFamily: "Inter",
-                              fontSize: 12,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.008,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF7463DE)),
                         ),

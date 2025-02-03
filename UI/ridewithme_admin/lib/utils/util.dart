@@ -105,3 +105,61 @@ enum KuponiStatus {
     );
   }
 }
+
+enum KuponiActions {
+  Activate(
+      "Aktiviraj", Color(0xFF4CAF50), Color(0xFF072220)), // Smaragdno zelena
+  Hide("Sakrij", Color(0xFFFFC107), Color(0xFF072220)), // Zlatno žutaandžasta
+  Edit("Uredi", Color(0xFF64B5F6), Color(0xFF072220)), // Pastelno plava
+  NonExisting("", Colors.transparent,
+      Color(0xFF072220)); // Transparentna za nepostojeće akcije
+
+  final String naziv;
+  final Color boja;
+  final Color textBoja;
+  const KuponiActions(this.naziv, this.boja, this.textBoja);
+
+  static KuponiActions? fromString(String? value) {
+    return KuponiActions.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => KuponiActions.NonExisting,
+    );
+  }
+}
+
+enum ZalbeStatus {
+  processing("U obradi", Colors.amber),
+  active("Aktivan", Colors.green),
+  completed("Završen", Colors.grey);
+
+  final String naziv;
+  final Color boja;
+  const ZalbeStatus(this.naziv, this.boja);
+
+  static ZalbeStatus? fromString(String? value) {
+    return ZalbeStatus.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => ZalbeStatus.active, // Podrazumevana vrednost
+    );
+  }
+}
+
+enum ZalbeActions {
+  Complete(
+      "Odgovori", Color(0xFF4CAF50), Color(0xFF072220)), // Smaragdno zelena
+  Processing("Preuzmi", Color(0xFFFFC107), Color(0xFF072220)),
+  NonExisting("", Colors.transparent,
+      Color(0xFF072220)); // Transparentna za nepostojeće akcije
+
+  final String naziv;
+  final Color boja;
+  final Color textBoja;
+  const ZalbeActions(this.naziv, this.boja, this.textBoja);
+
+  static ZalbeActions? fromString(String? value) {
+    return ZalbeActions.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => ZalbeActions.NonExisting,
+    );
+  }
+}

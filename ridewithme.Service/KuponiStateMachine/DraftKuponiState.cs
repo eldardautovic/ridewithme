@@ -98,9 +98,22 @@ namespace ridewithme.Service.KuponiStateMachine
             return Mapper.Map<Model.Kuponi>(entity);
         }
 
+        public override Model.Kuponi Delete(int id)
+        {
+            var set = Context.Set<Database.Kuponi>();
+
+            var entity = set.Find(id);
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Kuponi>(entity);
+        }
+
         public override List<string> AllowedActions(Database.Kuponi entity)
         {
-            return new List<string>() { nameof(Activate), nameof(Hide), nameof(Update) };
+            return new List<string>() { nameof(Activate), nameof(Hide), nameof(Update), nameof(Delete) };
         }
     }
 }
