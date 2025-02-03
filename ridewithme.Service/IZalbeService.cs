@@ -17,7 +17,7 @@ namespace ridewithme.Service
 
         public Zalbe Complete(int id, ZalbeCompleteRequest request);
 
-        public string Delete(int id);
+        public Zalbe Delete(int id);
         public List<string> AllowedActions(int id);
 
     }

@@ -108,7 +108,7 @@ namespace ridewithme.Service
             return state.Activate(id);
         }
 
-        public string Delete(int id)
+        public Model.Zalbe Delete(int id)
         {
             var entity = GetById(id);
             var state = BaseZalbeState.CreateState(entity.StateMachine);

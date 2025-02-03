@@ -20,7 +20,7 @@ namespace ridewithme.Service.ZalbeStateMachine
             _logger = logger;
         }
 
-        public override string Delete(int id)
+        public override Zalbe Delete(int id)
         {
             var set = Context.Set<Database.Zalbe>();
 
@@ -37,7 +37,7 @@ namespace ridewithme.Service.ZalbeStateMachine
 
             _logger.LogInformation($"[-] Zalba ID: {id} je obrisana od strane administratora.");
 
-            return "Zalba je uspjesno obrisana.";
+            return Mapper.Map<Zalbe>(entity);
         }
 
         public override List<string> AllowedActions(Database.Zalbe entity)

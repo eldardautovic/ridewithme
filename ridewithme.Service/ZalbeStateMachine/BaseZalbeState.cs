@@ -41,7 +41,7 @@ namespace ridewithme.Service.ZalbeStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual string Delete(int id)
+        public virtual Model.Zalbe Delete(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }

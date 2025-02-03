@@ -38,9 +38,9 @@ namespace ridewithme.API.Controllers
             return (_service as IZalbeService).Complete(id, request);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/delete")]
 
-        public string Delete(int id)
+        public Model.Zalbe Delete(int id)
         {
             return (_service as IZalbeService).Delete(id);
         }

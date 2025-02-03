@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/zalba.dart';
@@ -22,9 +21,6 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
   late ZalbaProvider _zalbaProvider;
 
   List<String>? allowedActions;
-
-  final _formKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _initialValue = {};
 
   bool isLoading = true;
 

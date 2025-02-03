@@ -5,12 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/models/zalba.dart';
 import 'package:ridewithme_admin/providers/zalbe_provider.dart';
-import 'package:ridewithme_admin/screens/kuponi_details_screen.dart';
 import 'package:ridewithme_admin/screens/zalbe_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/utils/util.dart';
-import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
@@ -46,7 +44,6 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _zalbaProvider = context.read<ZalbaProvider>();
