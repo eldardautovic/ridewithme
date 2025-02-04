@@ -28,5 +28,12 @@ namespace ridewithme.API.Controllers
         {
             return base.GetList(searchObject);
         }
+
+        [HttpDelete("{id}/delete")]
+
+        public Model.Gradovi Delete(int id)
+        {
+            return (_service as IGradoviService).Delete(id);
+        }
     }
 }

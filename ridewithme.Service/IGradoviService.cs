@@ -11,6 +11,6 @@ namespace ridewithme.Service
 {
     public interface IGradoviService : ICRUDService<Gradovi, GradoviSearchObject, GradoviUpsertRequest, GradoviUpsertRequest>
     {
-
+        public Model.Gradovi Delete(int id);
     }
 }

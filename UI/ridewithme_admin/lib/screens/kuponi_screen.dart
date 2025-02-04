@@ -67,8 +67,6 @@ class _KuponiScreenState extends State<KuponiScreen> {
     String orderByDirection =
         _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
 
-    print(_formKey.currentState?.value);
-
     kuponiResult = await _kuponiProvider.get(filter: {
       'OrderBy': "$orderByField $orderByDirection",
       'Status': _formKey.currentState?.value['status'],
