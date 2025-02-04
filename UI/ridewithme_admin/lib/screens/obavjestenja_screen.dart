@@ -93,6 +93,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
       headerDescription: "Ovdje možete vidjeti listu obavještenja",
       child: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearch(),
             isLoading ? LoadingSpinnerWidget() : _buildResultView()
@@ -320,6 +321,11 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   }
 
   Widget _buildResultView() {
+    if (isLoading == false &&
+        obavjestenjeResult != null &&
+        obavjestenjeResult?.count == 0) {
+      return Text("Nema rezultata.");
+    }
     return Expanded(
       child: SizedBox(
         width: double.infinity, // Expands to full width

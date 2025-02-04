@@ -66,8 +66,6 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
     String orderByDirection =
         _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
 
-    print(_formKey.currentState?.value);
-
     zalbeResult = await _zalbaProvider.get(filter: {
       'OrderBy': "$orderByField $orderByDirection",
       'Status': _formKey.currentState?.value['Status'],
@@ -161,6 +159,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
         headerDescription:
             "Ovdje možete da pregledate i odgovorite na eventualne žalbe.",
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearch(),
             isLoading ? LoadingSpinnerWidget() : _buildResultView()
@@ -323,6 +322,10 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
   }
 
   Widget _buildResultView() {
+    if (isLoading == false && zalbeResult != null && zalbeResult?.count == 0) {
+      return Text("Nema rezultata.");
+    }
+
     return Expanded(
       child: SizedBox(
         width: double.infinity, // Expands to full width

@@ -165,6 +165,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
         headerDescription: "Ovdje možete pronaći listu vožnji.",
         child: Container(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSearch(),
               isLoading ? LoadingSpinnerWidget() : _buildResultView()
@@ -337,6 +338,10 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   }
 
   Widget _buildResultView() {
+    if (isLoading == false && result != null && result?.count == 0) {
+      return Text("Nema rezultata.");
+    }
+
     return Expanded(
       child: SizedBox(
         width: double.infinity, // Expands to full width

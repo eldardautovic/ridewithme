@@ -16,5 +16,16 @@ namespace ridewithme.Service
         {
         }
 
+
+        public override IQueryable<VrstaZalbe> AddFilter(VrstaZalbeSearchObject searchObject, IQueryable<VrstaZalbe> query)
+        {
+            if (!string.IsNullOrEmpty(searchObject.NazivGTE))
+            {
+                query = query.Where(x => x.Naziv.Contains(searchObject.NazivGTE));
+            }
+
+            return query;
+        }
+
     }
 }

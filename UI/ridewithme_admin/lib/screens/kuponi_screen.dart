@@ -155,6 +155,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
       headerDescription: "Ovdje možete vidjeti listu kupona",
       child: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearch(),
             isLoading ? LoadingSpinnerWidget() : _buildResultView()
@@ -360,6 +361,12 @@ class _KuponiScreenState extends State<KuponiScreen> {
   }
 
   Widget _buildResultView() {
+    if (isLoading == false &&
+        kuponiResult != null &&
+        kuponiResult?.count == 0) {
+      return Text("Nema rezultata.");
+    }
+
     return Expanded(
       child: SizedBox(
         width: double.infinity, // Expands to full width

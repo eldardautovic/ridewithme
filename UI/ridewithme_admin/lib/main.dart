@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/korisnik.dart';
+import 'package:ridewithme_admin/models/vrsta_zalbe.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/providers/kuponi_provider.dart';
 import 'package:ridewithme_admin/providers/obavjestenja_provider.dart';
+import 'package:ridewithme_admin/providers/reklame_provider.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
+import 'package:ridewithme_admin/providers/vrsta_zalbe_provider.dart';
 import 'package:ridewithme_admin/providers/zalbe_provider.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
@@ -24,6 +27,8 @@ void main() {
       ChangeNotifierProvider(create: (_) => ObavjestenjaProvider()),
       ChangeNotifierProvider(create: (_) => KuponiProvider()),
       ChangeNotifierProvider(create: (_) => ZalbaProvider()),
+      ChangeNotifierProvider(create: (_) => VrstaZalbeProvider()),
+      ChangeNotifierProvider(create: (_) => ReklameProvider()),
     ],
     child: const MyApp(),
   ));

@@ -131,7 +131,7 @@ enum KuponiActions {
 enum ZalbeStatus {
   processing("U obradi", Colors.amber),
   active("Aktivan", Colors.green),
-  completed("Završen", Colors.grey);
+  completed("Završen", Colors.purple);
 
   final String naziv;
   final Color boja;

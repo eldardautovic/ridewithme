@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:ridewithme_admin/models/grad.dart';
+import 'package:ridewithme_admin/models/reklama.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
-import 'package:ridewithme_admin/providers/gradovi_provider.dart';
+import 'package:ridewithme_admin/providers/reklame_provider.dart';
 import 'package:ridewithme_admin/screens/gradovi_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
@@ -11,17 +12,17 @@ import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
-class GradoviScreen extends StatefulWidget {
-  const GradoviScreen({super.key});
+class ReklameScreen extends StatefulWidget {
+  const ReklameScreen({super.key});
 
   @override
-  State<GradoviScreen> createState() => _GradoviScreenState();
+  State<ReklameScreen> createState() => _ReklameScreenState();
 }
 
-class _GradoviScreenState extends State<GradoviScreen> {
-  late GradoviProvider _gradoviProvider;
+class _ReklameScreenState extends State<ReklameScreen> {
+  late ReklameProvider _reklameProvider;
 
-  SearchResult<Gradovi>? gradoviResult;
+  SearchResult<Reklama>? reklameResult;
 
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -29,24 +30,29 @@ class _GradoviScreenState extends State<GradoviScreen> {
 
   final List<Map<String, dynamic>> columnData = [
     {"label": "ID", "numeric": true},
-    {"label": "Naziv"},
-    {"label": "Geo. dužina"},
-    {"label": "Geo. širina"},
+    {"label": "Klijent"},
+    {"label": "Naziv kampanje"},
+    {"label": "Kreirao"},
+    {"label": "Datum kreiranja"},
+    {"label": "Datum izmjene"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _gradoviProvider = context.read<GradoviProvider>();
+
+    _reklameProvider = context.read<ReklameProvider>();
 
     initTable();
   }
 
   Future initTable() async {
-    gradoviResult = await _gradoviProvider
-        .get(filter: {"NazivGTE": _formKey.currentState?.value['NazivGTE']});
+    reklameResult = await _reklameProvider.get(filter: {
+      "NazivKlijentaGTE": _formKey.currentState?.value['NazivKlijentaGTE'],
+      "NazivKampanjeGTE": _formKey.currentState?.value['NazivKampanjeGTE'],
+      "IsKorisniciIncluded": true
+    });
 
     setState(() {
       isLoading = false;
@@ -56,18 +62,16 @@ class _GradoviScreenState extends State<GradoviScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      headerTitle: "Gradovi",
-      headerDescription:
-          "Ovdje možete da pregledate i dodate nove/postojeće gradove.",
-      selectedIndex: 8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSearch(),
-          isLoading ? LoadingSpinnerWidget() : _buildResultView()
-        ],
-      ),
-    );
+        selectedIndex: 6,
+        headerTitle: "Reklame",
+        headerDescription: "Ovdje možete pregledati listu reklama.",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSearch(),
+            isLoading ? LoadingSpinnerWidget() : _buildResultView()
+          ],
+        ));
   }
 
   Widget _buildSearch() {
@@ -86,14 +90,22 @@ class _GradoviScreenState extends State<GradoviScreen> {
             children: [
               Expanded(
                   child: FormBuilderTextField(
-                name: "NazivGTE",
+                name: "NazivKlijentaGTE",
                 decoration: buildTextFieldDecoration(
-                    hintText: "Naziv...",
-                    labelText: "Naziv",
+                    hintText: "Klijent...",
+                    labelText: "Klijent",
+                    prefixIcon: Icon(Icons.abc_rounded)),
+              )),
+              Expanded(
+                  child: FormBuilderTextField(
+                name: "NazivKampanjeGTE",
+                decoration: buildTextFieldDecoration(
+                    hintText: "Kampanja...",
+                    labelText: "Kampanja",
                     prefixIcon: Icon(Icons.abc_rounded)),
               )),
               CustomButtonWidget(
-                buttonText: "Dodaj grad",
+                buttonText: "Dodaj reklamu",
                 onPress: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -109,13 +121,19 @@ class _GradoviScreenState extends State<GradoviScreen> {
     );
   }
 
-  DataRow _buildDataRow(Gradovi e, BuildContext context) {
+  DataRow _buildDataRow(Reklama e, BuildContext context) {
     return DataRow(
       cells: [
         buildDataCell(e.id?.toString()),
-        buildDataCell(e.naziv.toString()),
-        buildDataCell(e.longitude.toString()),
-        buildDataCell(e.latitude.toString()),
+        buildDataCell(e.nazivKlijenta),
+        buildDataCell(e.nazivKampanje),
+        buildDataCell("${e.korisnik?.ime} ${e.korisnik?.prezime}"),
+        buildDataCell(e.datumKreiranja != null
+            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumKreiranja!)
+            : "N/A"),
+        buildDataCell(e.datumIzmjene != null
+            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumIzmjene!)
+            : "N/A"),
         DataCell(Row(
           children: [
             IconButton(
@@ -123,9 +141,7 @@ class _GradoviScreenState extends State<GradoviScreen> {
                 Navigator.of(context)
                     .push(
                       MaterialPageRoute(
-                        builder: (context) => GradoviDetailsScreen(
-                          grad: e,
-                        ),
+                        builder: (context) => GradoviDetailsScreen(),
                       ),
                     )
                     .then((value) => setState(() {}));
@@ -141,8 +157,8 @@ class _GradoviScreenState extends State<GradoviScreen> {
 
   Widget _buildResultView() {
     if (isLoading == false &&
-        gradoviResult != null &&
-        gradoviResult?.count == 0) {
+        reklameResult != null &&
+        reklameResult?.count == 0) {
       return Text("Nema rezultata.");
     }
 
@@ -171,7 +187,7 @@ class _GradoviScreenState extends State<GradoviScreen> {
                   numeric: col["numeric"] ?? false,
                 );
               }).toList(),
-              rows: gradoviResult?.result
+              rows: reklameResult?.result
                       .map((e) => _buildDataRow(e, context))
                       .toList()
                       .cast<DataRow>() ??

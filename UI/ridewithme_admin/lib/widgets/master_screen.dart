@@ -5,7 +5,9 @@ import 'package:ridewithme_admin/screens/gradovi_screen.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/screens/kuponi_screen.dart';
 import 'package:ridewithme_admin/screens/obavjestenja_screen.dart';
+import 'package:ridewithme_admin/screens/reklame_screen.dart';
 import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
+import 'package:ridewithme_admin/screens/vrsta_zalbe_screen.dart';
 import 'package:ridewithme_admin/screens/zalbe_screen.dart';
 import 'package:ridewithme_admin/utils/util.dart';
 
@@ -57,7 +59,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     {
       'title': 'Reklame',
       'icon': Icons.backup_table_rounded,
-      'route': VoznjeListScreen()
+      'route': ReklameScreen()
     },
     {
       'title': 'Obavještenja',
@@ -68,6 +70,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       'title': 'Gradovi',
       'icon': Icons.location_city_rounded,
       'route': GradoviScreen()
+    },
+    {
+      'title': 'Vrste žalbe',
+      'icon': Icons.contact_support_rounded,
+      'route': VrstaZalbeScreen()
     },
   ];
 
