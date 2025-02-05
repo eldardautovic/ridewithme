@@ -59,7 +59,7 @@ class _GradoviScreenState extends State<GradoviScreen> {
       headerTitle: "Gradovi",
       headerDescription:
           "Ovdje možete da pregledate i dodate nove/postojeće gradove.",
-      selectedIndex: 8,
+      selectedIndex: 9,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service
 {
-    public interface IReklameService : ICRUDService<Reklame, ReklameSearchObject, ReklameUpsertRequest, ReklameUpsertRequest>
-    {  
+    public interface IReklameService : ICRUDService<Reklame, ReklameSearchObject,ReklameInsertRequest, ReklameUpdateRequest>
+    {
+        public Model.Reklame Delete(int id);
+
     }
 }

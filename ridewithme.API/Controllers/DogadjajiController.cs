@@ -17,6 +17,13 @@ namespace ridewithme.API.Controllers
         {
         }
 
+        [HttpDelete("{id}/delete")]
+
+        public Model.Dogadjaji Delete(int id)
+        {
+            return (_service as IDogadjaji).Delete(id);
+        }
+
         [AllowAnonymous]
         public override PagedResult<Dogadjaji> GetList([FromQuery] DogadjajiSearchObejct searchObject)
         {

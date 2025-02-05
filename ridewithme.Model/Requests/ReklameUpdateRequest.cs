@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ridewithme.Model.Requests
 {
-    public class ReklameUpsertRequest
+    public class ReklameUpdateRequest
     {
         public string NazivKlijenta { get; set; }
 
@@ -13,8 +13,6 @@ namespace ridewithme.Model.Requests
         public string SadrzajKampanje { get; set; }
 
         public byte[]? Slika { get; set; }
-
-        public int? KorisnikId { get; set; }
 
     }
 }

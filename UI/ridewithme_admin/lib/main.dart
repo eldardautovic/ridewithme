@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/korisnik.dart';
-import 'package:ridewithme_admin/models/vrsta_zalbe.dart';
+import 'package:ridewithme_admin/providers/dogadjaji_provider.dart';
+import 'package:ridewithme_admin/providers/faq_provider.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/providers/kuponi_provider.dart';
@@ -29,6 +30,8 @@ void main() {
       ChangeNotifierProvider(create: (_) => ZalbaProvider()),
       ChangeNotifierProvider(create: (_) => VrstaZalbeProvider()),
       ChangeNotifierProvider(create: (_) => ReklameProvider()),
+      ChangeNotifierProvider(create: (_) => DogadjajiProvider()),
+      ChangeNotifierProvider(create: (_) => FaqProvider()),
     ],
     child: const MyApp(),
   ));

@@ -154,7 +154,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        selectedIndex: 5,
+        selectedIndex: 6,
         headerTitle: "Žalbe",
         headerDescription:
             "Ovdje možete da pregledate i odgovorite na eventualne žalbe.",
@@ -269,10 +269,10 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
         buildDataCell(e.id?.toString()),
         buildDataCell(e.naslov),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumPreuzimanja != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumPreuzimanja!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumPreuzimanja!)
             : "N/A"),
         buildDataCell(e.vrstaZalbe?.naziv),
         buildDataCell("${e.korisnik?.ime ?? ""} ${e.korisnik?.prezime ?? ""}"),

@@ -82,7 +82,7 @@ class _VrstaZalbeDetailsScreenState extends State<VrstaZalbeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 8,
+      selectedIndex: 10,
       backButton: VrstaZalbeScreen(),
       headerTitle: widget.vrstaZalbe != null
           ? "Detalji vrste žalbe"

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace ridewithme.Service
 {
@@ -39,7 +40,38 @@ namespace ridewithme.Service
                 query = query.Where(x => x.DatumZavrsetka == searchObject.DatumZavrsetka.Value);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
+            {
+                var items = searchObject.OrderBy.Split(' ');
+                if (items.Length > 2 || items.Length == 0)
+                {
+                    throw new ApplicationException("Mozete sortirati samo po dva polja.");
+                }
+                if (items.Length == 1)
+                {
+                    query = query.OrderBy("@0", searchObject.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(string.Format("{0} {1}", items[0], items[1]));
+                }
+
+            }
+
             return query;
+        }
+
+        public Model.Dogadjaji Delete(int id)
+        {
+            var set = Context.Set<Dogadjaji>();
+
+            var entity = set.Find(id);
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Dogadjaji>(entity);
         }
 
     }

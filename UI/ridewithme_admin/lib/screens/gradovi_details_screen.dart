@@ -83,7 +83,7 @@ class _GradoviDetailsScreenState extends State<GradoviDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 8,
+      selectedIndex: 9,
       backButton: GradoviScreen(),
       headerTitle: widget.grad != null ? "Detalji grada" : "Dodavanje grada",
       headerDescription: widget.grad != null

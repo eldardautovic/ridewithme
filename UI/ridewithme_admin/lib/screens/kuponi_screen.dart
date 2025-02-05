@@ -150,7 +150,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 4,
+      selectedIndex: 5,
       headerTitle: "Kuponi",
       headerDescription: "Ovdje možete vidjeti listu kupona",
       child: Container(
@@ -311,7 +311,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
         buildDataCell(e.kod),
         buildDataCell(e.naziv),
         buildDataCell(e.datumPocetka != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumPocetka!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumPocetka!)
             : "N/A"),
         DataCell(
           Badge(

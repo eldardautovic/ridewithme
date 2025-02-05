@@ -148,7 +148,7 @@ class _KuponiDetailsScreenState extends State<KuponiDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 7,
+      selectedIndex: 5,
       backButton: KuponiScreen(),
       headerTitle: widget.kupon != null ? "Detalji kupona" : "Kreiranje kupona",
       headerDescription: widget.kupon != null

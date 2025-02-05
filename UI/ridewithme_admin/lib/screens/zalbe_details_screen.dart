@@ -128,7 +128,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 5,
+      selectedIndex: 6,
       headerTitle: "Detalji žalbe",
       headerDescription: "Ovdje možete pregledati detalje žalbe.",
       backButton: ZalbeScreen(),
@@ -155,7 +155,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
             namedColumn(Text("${zalba.korisnik?.korisnickoIme}"), "Korisnik"),
             namedColumn(
                 Text(
-                    "${DateFormat('yyyy/MM/dd hh:mm').format(zalba.datumKreiranja!)}"),
+                    "${DateFormat('dd/MM/yyyy hh:mm').format(zalba.datumKreiranja!)}"),
                 "Datum kreiranja"),
           ],
         ),

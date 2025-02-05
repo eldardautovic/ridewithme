@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:ridewithme_admin/main.dart';
+import 'package:ridewithme_admin/screens/dogadjaji_screen.dart';
+import 'package:ridewithme_admin/screens/faq_screen.dart';
 import 'package:ridewithme_admin/screens/gradovi_screen.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/screens/kuponi_screen.dart';
@@ -51,6 +53,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       'route': VoznjeListScreen()
     },
     {
+      'title': 'Događaji',
+      'icon': Icons.event_available_rounded,
+      'route': DogadjajiScreen()
+    },
+    {
       'title': 'Kuponi',
       'icon': Icons.confirmation_num_rounded,
       'route': KuponiScreen()
@@ -76,6 +83,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       'icon': Icons.contact_support_rounded,
       'route': VrstaZalbeScreen()
     },
+    {'title': 'FAQ', 'icon': Icons.quiz_rounded, 'route': FaqScreen()},
   ];
 
   @override

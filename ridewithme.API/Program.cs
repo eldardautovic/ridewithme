@@ -29,6 +29,8 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IDogadjaji, DogadjajiService>();
 builder.Services.AddTransient<IObavjestenjaService, ObavjestenjaService>();
 builder.Services.AddTransient<IStatistikaService,  StatistikaService>();
+builder.Services.AddTransient<IFAQService, FAQService>();
+
 
 //State machine
 builder.Services.AddTransient<BaseVoznjeState>();

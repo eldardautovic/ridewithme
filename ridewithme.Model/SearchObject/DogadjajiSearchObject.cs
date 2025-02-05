@@ -11,5 +11,7 @@ namespace ridewithme.Model.SearchObject
         public DateTime? DatumPocetka { get; set; }
         public DateTime? DatumZavrsetka { get; set; }
 
+        public string? OrderBy { get; set; }
+
     }
 }

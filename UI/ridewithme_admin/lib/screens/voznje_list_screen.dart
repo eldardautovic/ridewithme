@@ -307,7 +307,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
           ),
         ),
         buildDataCell(e.datumVrijemePocetka != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumVrijemePocetka!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumVrijemePocetka!)
             : "N/A"),
         buildDataCell(e.datumVrijemeZavrsetka?.toString()),
         buildDataCell("${e.cijena} KM"),

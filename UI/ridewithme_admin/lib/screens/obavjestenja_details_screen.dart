@@ -164,7 +164,7 @@ class _ObavjestenjaDetailsScreenState extends State<ObavjestenjaDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        selectedIndex: 7,
+        selectedIndex: 8,
         backButton: ObavjestenjaScreen(),
         headerTitle: widget.obavjestenje != null
             ? "Detalji obavještenja"

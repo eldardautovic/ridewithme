@@ -88,7 +88,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 7,
+      selectedIndex: 8,
       headerTitle: "Obavještenja",
       headerDescription: "Ovdje možete vidjeti listu obavještenja",
       child: Container(
@@ -274,10 +274,10 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
         buildDataCell(e.naslov),
         buildDataCell(e.podnaslov),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumZavrsetka != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumZavrsetka!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
             : "N/A"),
         DataCell(
           Badge(

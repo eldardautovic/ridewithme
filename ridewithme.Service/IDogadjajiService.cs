@@ -11,5 +11,7 @@ namespace ridewithme.Service
 {
     public interface IDogadjaji : ICRUDService<Dogadjaji, DogadjajiSearchObejct, DogadjajiUpsertRequest, DogadjajiUpsertRequest>
     {
+        public Model.Dogadjaji Delete(int id);
+
     }
 }

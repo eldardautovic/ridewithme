@@ -2,28 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:ridewithme_admin/models/reklama.dart';
+import 'package:ridewithme_admin/models/dogadjaj.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
-import 'package:ridewithme_admin/providers/reklame_provider.dart';
-import 'package:ridewithme_admin/screens/gradovi_details_screen.dart';
-import 'package:ridewithme_admin/screens/reklame_details_screen.dart';
+import 'package:ridewithme_admin/providers/dogadjaji_provider.dart';
+import 'package:ridewithme_admin/screens/dogadjaji_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
-class ReklameScreen extends StatefulWidget {
-  const ReklameScreen({super.key});
+class DogadjajiScreen extends StatefulWidget {
+  const DogadjajiScreen({super.key});
 
   @override
-  State<ReklameScreen> createState() => _ReklameScreenState();
+  State<DogadjajiScreen> createState() => _DogadjajiScreenState();
 }
 
-class _ReklameScreenState extends State<ReklameScreen> {
-  late ReklameProvider _reklameProvider;
+class _DogadjajiScreenState extends State<DogadjajiScreen> {
+  late DogadjajiProvider _dogadjajiProvider;
 
-  SearchResult<Reklama>? reklameResult;
+  SearchResult<Dogadjaj>? dogadjajiResult;
 
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -31,11 +30,11 @@ class _ReklameScreenState extends State<ReklameScreen> {
 
   final List<Map<String, dynamic>> columnData = [
     {"label": "ID", "numeric": true},
-    {"label": "Klijent"},
-    {"label": "Naziv kampanje"},
-    {"label": "Kreirao"},
+    {"label": "Naziv"},
     {"label": "Datum kreiranja"},
     {"label": "Datum izmjene"},
+    {"label": "Početak"},
+    {"label": "Završetak"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
@@ -43,16 +42,20 @@ class _ReklameScreenState extends State<ReklameScreen> {
   void initState() {
     super.initState();
 
-    _reklameProvider = context.read<ReklameProvider>();
+    _dogadjajiProvider = context.read<DogadjajiProvider>();
 
     initTable();
   }
 
   Future initTable() async {
-    reklameResult = await _reklameProvider.get(filter: {
-      "NazivKlijentaGTE": _formKey.currentState?.value['NazivKlijentaGTE'],
-      "NazivKampanjeGTE": _formKey.currentState?.value['NazivKampanjeGTE'],
-      "IsKorisniciIncluded": true
+    String orderByField = _formKey.currentState?.value['OrderByField'] ?? "id";
+    String orderByDirection =
+        _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
+
+    dogadjajiResult = await _dogadjajiProvider.get(filter: {
+      "NazivGTE": _formKey.currentState?.value['NazivGTE'],
+      "OpisGTE": _formKey.currentState?.value['OpisGTE'],
+      'OrderBy': "$orderByField $orderByDirection",
     });
 
     setState(() {
@@ -71,14 +74,14 @@ class _ReklameScreenState extends State<ReklameScreen> {
       child: Text("Da"),
       onPressed: () async {
         try {
-          await _reklameProvider.delete(id);
+          await _dogadjajiProvider.delete(id);
 
           Navigator.pop(context, true);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text("Uspješno ste obrisali reklamu ID $id."),
+              content: Text("Uspješno ste obrisali događaj ID $id."),
               action: SnackBarAction(
                 label: "U redu",
                 onPressed: () =>
@@ -110,7 +113,7 @@ class _ReklameScreenState extends State<ReklameScreen> {
 
     AlertDialog alert = AlertDialog(
       title: Text("Upozorenje"),
-      content: Text("Da li ste sigurni da želite da obrišete reklamu ID $id ?"),
+      content: Text("Da li ste sigurni da želite da obrišete događaj ID $id ?"),
       actions: [
         cancelButton,
         continueButton,
@@ -128,16 +131,13 @@ class _ReklameScreenState extends State<ReklameScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        selectedIndex: 7,
-        headerTitle: "Reklame",
-        headerDescription: "Ovdje možete pregledati listu reklama.",
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSearch(),
-            isLoading ? LoadingSpinnerWidget() : _buildResultView()
-          ],
-        ));
+        selectedIndex: 4,
+        headerTitle: "Događaji",
+        headerDescription: "Ovdje možete pregledati listu događaja.",
+        child: Column(children: [
+          _buildSearch(),
+          isLoading ? LoadingSpinnerWidget() : _buildResultView(),
+        ]));
   }
 
   Widget _buildSearch() {
@@ -150,32 +150,67 @@ class _ReklameScreenState extends State<ReklameScreen> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width / 3,
           child: Row(
             spacing: 10,
             children: [
               Expanded(
                   child: FormBuilderTextField(
-                name: "NazivKlijentaGTE",
+                name: "NazivGTE",
                 decoration: buildTextFieldDecoration(
-                    hintText: "Klijent...",
-                    labelText: "Klijent",
+                    hintText: "Naziv...",
+                    labelText: "Naziv",
                     prefixIcon: Icon(Icons.abc_rounded)),
               )),
               Expanded(
                   child: FormBuilderTextField(
-                name: "NazivKampanjeGTE",
+                name: "OpisGTE",
                 decoration: buildTextFieldDecoration(
-                    hintText: "Kampanja...",
-                    labelText: "Kampanja",
+                    hintText: "Opis...",
+                    labelText: "Opis",
                     prefixIcon: Icon(Icons.abc_rounded)),
               )),
+              Expanded(
+                child: buildDropdown(
+                  name: "OrderByField",
+                  labelText: "Sortiraj po",
+                  initialValue: "id",
+                  prefixIcon: Icon(Icons.sort_by_alpha_rounded),
+                  items: const [
+                    DropdownMenuItem(value: "id", child: Text("ID")),
+                    DropdownMenuItem(
+                        value: "DatumKreiranja",
+                        child: Text("Datum kreiranja")),
+                    DropdownMenuItem(
+                        value: "DatumIzmjene", child: Text("Datum izmjene")),
+                    DropdownMenuItem(
+                        value: "DatumZavrsetka",
+                        child: Text("Datum završetka")),
+                    DropdownMenuItem(
+                        value: "DatumPocetka", child: Text("Datum početka")),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: buildDropdown(
+                  name: "OrderByDirection",
+                  labelText: "Smjer",
+                  initialValue: "ASC",
+                  prefixIcon:
+                      _formKey.currentState?.value['OrderByDirection'] == "ASC"
+                          ? Icon(Icons.arrow_upward_rounded)
+                          : Icon(Icons.arrow_downward_rounded),
+                  items: const [
+                    DropdownMenuItem(value: "ASC", child: Text("Rastuće")),
+                    DropdownMenuItem(value: "DESC", child: Text("Opadajuće")),
+                  ],
+                ),
+              ),
               CustomButtonWidget(
-                buttonText: "Dodaj reklamu",
+                buttonText: "Dodaj događaj",
                 onPress: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ReklameDetailsScreen(),
+                      builder: (context) => DogadjajiDetailsScreen(),
                     ),
                   );
                 },
@@ -187,34 +222,39 @@ class _ReklameScreenState extends State<ReklameScreen> {
     );
   }
 
-  DataRow _buildDataRow(Reklama e, BuildContext context) {
+  DataRow _buildDataRow(Dogadjaj e, BuildContext context) {
     return DataRow(
       cells: [
         buildDataCell(e.id?.toString()),
-        buildDataCell(e.nazivKlijenta),
-        buildDataCell(e.nazivKampanje),
-        buildDataCell("${e.korisnik?.ime} ${e.korisnik?.prezime}"),
+        buildDataCell(e.naziv),
         buildDataCell(e.datumKreiranja != null
             ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumIzmjene != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumIzmjene!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
+            : "N/A"),
+        buildDataCell(e.datumPocetka != null
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
+            : "N/A"),
+        buildDataCell(e.datumZavrsetka != null
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
             : "N/A"),
         DataCell(Row(
           children: [
             IconButton(
+              iconSize: 17,
               onPressed: () {
                 showAlertDialog(context, e.id ?? 0);
               },
               icon: const Icon(Icons.delete),
-              iconSize: 17,
             ),
             IconButton(
               onPressed: () {
                 Navigator.of(context)
                     .push(
                       MaterialPageRoute(
-                        builder: (context) => ReklameDetailsScreen(reklama: e),
+                        builder: (context) =>
+                            DogadjajiDetailsScreen(dogadjaj: e),
                       ),
                     )
                     .then((value) => setState(() {}));
@@ -230,14 +270,13 @@ class _ReklameScreenState extends State<ReklameScreen> {
 
   Widget _buildResultView() {
     if (isLoading == false &&
-        reklameResult != null &&
-        reklameResult?.count == 0) {
+        dogadjajiResult != null &&
+        dogadjajiResult?.count == 0) {
       return Text("Nema rezultata.");
     }
-
     return Expanded(
       child: SizedBox(
-        width: MediaQuery.of(context).size.width / 2, // Expands to full width
+        width: double.infinity,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -260,7 +299,7 @@ class _ReklameScreenState extends State<ReklameScreen> {
                   numeric: col["numeric"] ?? false,
                 );
               }).toList(),
-              rows: reklameResult?.result
+              rows: dogadjajiResult?.result
                       .map((e) => _buildDataRow(e, context))
                       .toList()
                       .cast<DataRow>() ??

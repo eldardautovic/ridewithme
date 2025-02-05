@@ -12,14 +12,14 @@ namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReklameController : BaseCRUDController<Model.Reklame, ReklameSearchObject, ReklameUpsertRequest, ReklameUpsertRequest>
+    public class ReklameController : BaseCRUDController<Model.Reklame, ReklameSearchObject, ReklameInsertRequest, ReklameUpdateRequest>
     {
         public ReklameController(IReklameService service) : base(service)
         {
         }
 
         [Authorize(Roles = "Administrator")]
-        public override Reklame Insert(ReklameUpsertRequest request)
+        public override Reklame Insert(ReklameInsertRequest request)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -29,9 +29,17 @@ namespace ridewithme.API.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        public override Reklame Update(int id, ReklameUpsertRequest request)
+        public override Reklame Update(int id, ReklameUpdateRequest request)
         {
             return base.Update(id, request);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpDelete("{id}/delete")]
+
+        public Model.Reklame Delete(int id)
+        {
+            return (_service as IReklameService).Delete(id);
         }
 
         [AllowAnonymous]

@@ -56,7 +56,7 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      selectedIndex: 9,
+      selectedIndex: 10,
       headerTitle: "Vrste žalbe",
       headerDescription: "Ovdje možete pogledati vrste žalbe.",
       child: Column(
@@ -114,7 +114,7 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
         buildDataCell(e.id?.toString()),
         buildDataCell(e.naziv.toString()),
         buildDataCell(e.datumIzmjene != null
-            ? DateFormat('yyyy/MM/dd hh:mm').format(e.datumIzmjene!)
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumIzmjene!)
             : "N/A"),
         DataCell(Row(
           children: [
