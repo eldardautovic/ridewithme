@@ -38,6 +38,7 @@ class _FaqDetailsScreenState extends State<FaqDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       selectedIndex: 11,
+      backButton: FaqScreen(),
       headerTitle: widget.faq != null ? "Detalji FAQ" : "Dodavanje FAQ",
       headerDescription: widget.faq != null
           ? "Ovdje možete da pregledate/izmjenite FAQ."
