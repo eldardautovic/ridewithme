@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ridewithme.Service.Database;
 
@@ -16,29 +17,20 @@ public partial class RidewithmeContext : DbContext
         : base(options)
     {
     }
-
     public virtual DbSet<Korisnici> Korisnicis { get; set; }
-
     public virtual DbSet<Uloge> Uloge { get; set; }
-
     public virtual DbSet<Voznje> Voznje { get; set; }
-
     public virtual DbSet<Gradovi> Gradovi { get; set; }
-
     public virtual DbSet<KorisniciUloge> KorisniciUloge { get; set; }
-
     public virtual DbSet<Kuponi> Kuponi { get; set; }
-
     public virtual DbSet<VrstaZalbe> VrstaZalbe { get; set; }
-
     public virtual DbSet<Zalbe> Zalbe { get; set; }
     public virtual DbSet<Reklame> Reklame { get; set; }
     public virtual DbSet<Dogadjaji> Dogadjaji { get; set; }
-
     public virtual DbSet<Obavjestenja> Obavjestenja { get; set; }
-
     public virtual DbSet<FAQ> FAQs { get; set; }
-
+    public virtual DbSet<KorisniciDostignuca> KorisniciDostignuca { get; set; }
+    public virtual DbSet<Dostignuca> Dostignuca { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
@@ -112,6 +104,45 @@ public partial class RidewithmeContext : DbContext
                new KorisniciUloge { Id = 1, DatumIzmjene = DateTime.Now, KorisnikId = 1, UlogaId = 1 },
                new KorisniciUloge { Id = 2, DatumIzmjene = DateTime.Now, KorisnikId = 2, UlogaId = 2 });
 
+        });
+
+        modelBuilder.Entity<Dostignuca>(entity =>
+        {
+            entity.ToTable("Dostignuca");
+
+            entity.Property(e => e.Naziv)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.HasData(
+               new Dostignuca { Id = 1, Naziv = "Prva vožnja", Opis= "Završio si svoju prvu vožnju! Dobrodošli u zajednicu!",
+                   Slika= Convert.FromBase64String("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMzIgMzIiPjxwYXRoIGZpbGw9IiNGQkMwMkQiIGQ9Ik0xNiAyQTExIDExIDAgMCAwIDUgMTN2MTZhMSAxIDAgMCAwIC4zOC43OSAxIDEgMCAwIDAgLjg2LjE4bDguNzYtMi4yVjI0YTEgMSAwIDAgMSAyIDB2My44MUwyNS43NiAzMHEuMTIuMDE1LjI0IDBhMSAxIDAgMCAwIDEtMVYxM0ExMSAxMSAwIDAgMCAxNiAyIi8+PHBhdGggZmlsbD0iI0ZERDgzNSIgZD0iTTUgMTN2MTZhMSAxIDAgMCAwIC4zOC43OSAxIDEgMCAwIDAgLjg2LjE4TDE1IDI3LjhWMjRhMSAxIDAgMCAxIC45My0xVjJBMTEgMTEgMCAwIDAgNSAxMyIvPjxwYXRoIGZpbGw9IiNDMjE4NUIiIGQ9Ik0yMi44NyAxMC45MmExIDEgMCAwIDAtLjgxLS42OGwtMy42LS41My0xLjYxLTMuMjZhMSAxIDAgMCAwLTEuOCAwbC0xLjYxIDMuMjYtMy42LjUzYTEgMSAwIDAgMC0uNTUgMS43bDIuNiAyLjU0LS42MSAzLjU5YTEgMSAwIDAgMCAuOTA5IDEuMTkyIDEgMSAwIDAgMCAuNTQxLS4xMTJMMTYgMTcuNDNsMy4yMiAxLjdjLjE0Ny4wNy4zMDcuMTA4LjQ3LjExYTEgMSAwIDAgMCAuOTI2LS42MzIgMSAxIDAgMCAwIC4wNTQtLjU1OEwyMCAxNC40OGwyLjYtMi41NGExIDEgMCAwIDAgLjI3LTEuMDIiLz48cGF0aCBmaWxsPSIjRUM0MDdBIiBkPSJtMTUuMDUgNi40NS0xLjYxIDMuMjYtMy42LjUyYTEgMSAwIDAgMC0uODEuNjkgMSAxIDAgMCAwIC4yNiAxbDIuNiAyLjU0LS42MSAzLjU5YTEgMSAwIDAgMCAxLjQ1IDEuMDVMMTYgMTcuNDNWNS45NGExIDEgMCAwIDAtLjk1LjUxIi8+PHBhdGggZmlsbD0iIzI2MzIzOCIgZD0iTTE2IDJBMTEgMTEgMCAwIDAgNSAxM3YxNmExIDEgMCAwIDAgLjM4Ljc5IDEgMSAwIDAgMCAuODYuMThMMTYgMjcuNTMgMjUuNzYgMzBxLjEyLjAxNS4yNCAwYTEgMSAwIDAgMCAxLTFWMTNBMTEgMTEgMCAwIDAgMTYgMm0wIDJhOSA5IDAgMSAxIDAgMTggOSA5IDAgMCAxIDAtMThNNyAyNy43MXYtOC40M2ExMSAxMSAwIDAgMCA4IDQuNjV2MS43OHptMTggMC04LTJ2LTEuOGExMSAxMSAwIDAgMCA4LTQuNjV6Ii8+PC9zdmc+")
+               });
+        });
+
+        modelBuilder.Entity<KorisniciDostignuca>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("KorisniciDostignuca");
+
+            entity.Property(e => e.Id).HasColumnName("Id");
+            entity.Property(e => e.DatumKreiranja).HasColumnType("datetime");
+            entity.Property(e => e.KorisnikId).HasColumnName("KorisnikId");
+            entity.Property(e => e.DostignuceId).HasColumnName("DostignuceId");
+
+            entity.HasOne(d => d.Korisnik).WithMany(p => p.KorisniciDostignuca)
+                .HasForeignKey(d => d.KorisnikId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_KorisniciDostignuca_Korisnici");
+
+            entity.HasOne(d => d.Dostignuce).WithMany(p => p.KorisniciDostignuca)
+                .HasForeignKey(d => d.DostignuceId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_KorisniciDostignuca_Dostignuca");
+
+            entity.HasData(
+               new KorisniciDostignuca { Id = 1, DatumKreiranja = DateTime.Now, DostignuceId = 1, KorisnikId = 1 });
         });
 
         modelBuilder.Entity<Gradovi>(entity =>
@@ -221,4 +252,6 @@ public partial class RidewithmeContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
+
 }

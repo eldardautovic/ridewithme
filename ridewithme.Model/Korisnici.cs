@@ -17,6 +17,8 @@ namespace ridewithme.Model
         public string Email { get; set; } = null!;
         public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 
+        public virtual ICollection<KorisniciDostignuca> KorisniciDostignuca { get; set; }
+
         public DateTime? DatumKreiranja { get; set; }
 
     }

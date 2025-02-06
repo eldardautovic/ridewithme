@@ -36,6 +36,10 @@ namespace ridewithme.Service
             {
                 query = query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
             }
+            if (searchObject.IsDostignucaIncluded == true)
+            {
+                query = query.Include(x => x.KorisniciDostignuca).ThenInclude(x => x.Dostignuce);
+            }
 
             if (!string.IsNullOrWhiteSpace(searchObject?.ImeGTE))
             {

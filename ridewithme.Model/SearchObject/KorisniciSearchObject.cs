@@ -8,13 +8,10 @@ namespace ridewithme.Model.SearchObject
     {
         public string? ImeGTE { get; set; }
         public string? PrezimeGTE { get; set; }
-
         public string? KorisnickoIme { get; set; }
-
         public string? Email { get; set; }
-
         public bool? IsKorisniciIncluded { get; set; }
-        public bool? IsVoznjeVozacIncluded { get; set; }
+        public bool? IsDostignucaIncluded { get; set; }
         public string? OrderBy { get; set; }
     }
 }

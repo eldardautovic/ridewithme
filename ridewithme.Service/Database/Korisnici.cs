@@ -23,4 +23,7 @@ public partial class Korisnici
 
     public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 
+    public virtual ICollection<KorisniciDostignuca> KorisniciDostignuca { get; set; }
+
+
 }
