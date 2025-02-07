@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:ridewithme_admin/main.dart';
+import 'package:ridewithme_admin/screens/analitika_screen.dart';
 import 'package:ridewithme_admin/screens/dogadjaji_screen.dart';
 import 'package:ridewithme_admin/screens/faq_screen.dart';
 import 'package:ridewithme_admin/screens/gradovi_screen.dart';
@@ -40,7 +41,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     {
       'title': 'Analitika',
       'icon': Icons.pie_chart_rounded,
-      'route': VoznjeListScreen()
+      'route': AnalitikaScreen()
     },
     {
       'title': 'Korisnici',

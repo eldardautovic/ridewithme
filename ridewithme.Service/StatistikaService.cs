@@ -38,14 +38,23 @@ namespace ridewithme.Service
         public UkupnaStatistika GetMonthlyStatistics()
         {
             var voznjePoMjesecu = context.Voznje
-                .Where(x => x.DatumVrijemePocetka != null)
-                .GroupBy(x => x.DatumVrijemePocetka.Value.Month)
-                .Select(g => new MjesecnaStatistika { Mjesec = g.Key, BrojVoznji = g.Count() })
+             .Where(x => x.DatumVrijemePocetka != null)
+             .GroupBy(x => x.DatumVrijemePocetka.Value.Month)
+             .Select(g => new { Mjesec = g.Key, BrojVoznji = g.Count() })
+             .ToDictionary(x => x.Mjesec, x => x.BrojVoznji);
+
+            var sviMjeseci = Enumerable.Range(1, 12)
+                .Select(m => new MjesecnaStatistika
+                {
+                    Mjesec = m,
+                    BrojVoznji = voznjePoMjesecu.ContainsKey(m) ? voznjePoMjesecu[m] : 0
+                })
                 .ToList();
+
 
             var UkupnaStatistika = new UkupnaStatistika()
             {
-                MjesecnaStatistika = voznjePoMjesecu,
+                MjesecnaStatistika = sviMjeseci,
                 Statistika = new Statistika
                 {
                     BrojIskoristenihKupona = context.Kuponi.Count(x => x.BrojIskoristivosti == 0),

@@ -8,11 +8,15 @@ class Statistika {
   int? brojRegistrovanihKorisnika;
   int? brojIskoristenihKupona;
   int? brojKreiranihVoznji;
+  int? brojVozaca;
+  int? brojZakazanihVoznji;
 
   Statistika(
     this.brojRegistrovanihKorisnika,
     this.brojIskoristenihKupona,
     this.brojKreiranihVoznji,
+    this.brojVozaca,
+    this.brojZakazanihVoznji,
   );
 
   factory Statistika.fromJson(Map<String, dynamic> json) =>
