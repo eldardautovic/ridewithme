@@ -12,5 +12,9 @@ namespace ridewithme.Model
 
         public int BrojKreiranihVoznji { get; set; }
 
+        public int BrojVozaca { get; set; }
+
+        public int BrojZakazanihVoznji { get; set; }
+
     }
 }

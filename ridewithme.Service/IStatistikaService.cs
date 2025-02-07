@@ -10,5 +10,7 @@ namespace ridewithme.Service
     public interface IStatistikaService
     {
         public PagedResult<Statistika> GetList();
+
+        public UkupnaStatistika GetMonthlyStatistics();
     }
 }

@@ -21,5 +21,12 @@ namespace ridewithme.API.Controllers
         {
             return _service.GetList();
         }
+
+        [HttpGet("monthly")]
+
+        public UkupnaStatistika GetMonthlyStatistics()
+        {
+            return _service.GetMonthlyStatistics();
+        }
     }
 }
