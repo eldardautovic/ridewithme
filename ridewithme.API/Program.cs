@@ -31,6 +31,7 @@ builder.Services.AddTransient<IObavjestenjaService, ObavjestenjaService>();
 builder.Services.AddTransient<IStatistikaService,  StatistikaService>();
 builder.Services.AddTransient<IFAQService, FAQService>();
 builder.Services.AddTransient<IDostignucaService, DostignucaService>();
+builder.Services.AddTransient<IRecenzijaService, RecenzijaService>();
 
 //State machine
 builder.Services.AddTransient<BaseVoznjeState>();

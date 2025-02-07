@@ -30,4 +30,8 @@
     <ProjectReference Include="..\ridewithme.Service\ridewithme.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

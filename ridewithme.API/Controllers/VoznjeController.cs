@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ridewithme.Model;
 using ridewithme.Model.Requests;
@@ -25,9 +26,16 @@ namespace ridewithme.API.Controllers
 
         [HttpPut("{id}/book")]
 
-        public Model.Voznje Book(int id)
+        public Model.Voznje Book(int id, VoznjeBookRequest request)
         {
-            return (_service as IVoznjeService).Book(id);
+            if (request.KlijentId == null)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                request.KlijentId = userId;
+            }
+
+            return (_service as IVoznjeService).Book(id, request);
         }
 
         [HttpPut("{id}/edit")]

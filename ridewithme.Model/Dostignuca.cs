@@ -12,7 +12,5 @@ namespace ridewithme.Model
 
         public string Opis { get; set; }
 
-        public byte[] Slika { get; set; }
-
     }
 }

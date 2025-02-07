@@ -14,8 +14,6 @@ namespace ridewithme.Service.Database
 
         public string Opis { get; set; }
 
-        public byte[] Slika { get; set; }
-
         public virtual ICollection<KorisniciDostignuca> KorisniciDostignuca { get; set; }
 
     }

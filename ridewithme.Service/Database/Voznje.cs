@@ -10,7 +10,6 @@ public partial class Voznje
     public DateTime? DatumVrijemePocetka { get; set; }
     public DateTime? DatumVrijemeZavrsetka { get; set; }
     public string? Napomena { get; set; }
-    public int? Ocjena { get; set; }
     public double Cijena { get; set; }
     public int GradOdId { get; set; }
     public int GradDoId { get; set; }
@@ -23,6 +22,5 @@ public partial class Voznje
     public virtual Korisnici Vozac { get; set; }
     public virtual Korisnici? Klijent { get; set; }
     public virtual Kuponi? Kupon { get; set; }
-
     public virtual Dogadjaji? Dogadjaj { get; set; }
 }

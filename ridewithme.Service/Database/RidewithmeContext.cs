@@ -31,6 +31,7 @@ public partial class RidewithmeContext : DbContext
     public virtual DbSet<FAQ> FAQs { get; set; }
     public virtual DbSet<KorisniciDostignuca> KorisniciDostignuca { get; set; }
     public virtual DbSet<Dostignuca> Dostignuca { get; set; }
+    public virtual DbSet<Recenzija> Recenzije { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
@@ -113,11 +114,22 @@ public partial class RidewithmeContext : DbContext
             entity.Property(e => e.Naziv)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-
             entity.HasData(
-               new Dostignuca { Id = 1, Naziv = "Prva vožnja", Opis= "Završio si svoju prvu vožnju! Dobrodošli u zajednicu!",
-                   Slika= Convert.FromBase64String("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMzIgMzIiPjxwYXRoIGZpbGw9IiNGQkMwMkQiIGQ9Ik0xNiAyQTExIDExIDAgMCAwIDUgMTN2MTZhMSAxIDAgMCAwIC4zOC43OSAxIDEgMCAwIDAgLjg2LjE4bDguNzYtMi4yVjI0YTEgMSAwIDAgMSAyIDB2My44MUwyNS43NiAzMHEuMTIuMDE1LjI0IDBhMSAxIDAgMCAwIDEtMVYxM0ExMSAxMSAwIDAgMCAxNiAyIi8+PHBhdGggZmlsbD0iI0ZERDgzNSIgZD0iTTUgMTN2MTZhMSAxIDAgMCAwIC4zOC43OSAxIDEgMCAwIDAgLjg2LjE4TDE1IDI3LjhWMjRhMSAxIDAgMCAxIC45My0xVjJBMTEgMTEgMCAwIDAgNSAxMyIvPjxwYXRoIGZpbGw9IiNDMjE4NUIiIGQ9Ik0yMi44NyAxMC45MmExIDEgMCAwIDAtLjgxLS42OGwtMy42LS41My0xLjYxLTMuMjZhMSAxIDAgMCAwLTEuOCAwbC0xLjYxIDMuMjYtMy42LjUzYTEgMSAwIDAgMC0uNTUgMS43bDIuNiAyLjU0LS42MSAzLjU5YTEgMSAwIDAgMCAuOTA5IDEuMTkyIDEgMSAwIDAgMCAuNTQxLS4xMTJMMTYgMTcuNDNsMy4yMiAxLjdjLjE0Ny4wNy4zMDcuMTA4LjQ3LjExYTEgMSAwIDAgMCAuOTI2LS42MzIgMSAxIDAgMCAwIC4wNTQtLjU1OEwyMCAxNC40OGwyLjYtMi41NGExIDEgMCAwIDAgLjI3LTEuMDIiLz48cGF0aCBmaWxsPSIjRUM0MDdBIiBkPSJtMTUuMDUgNi40NS0xLjYxIDMuMjYtMy42LjUyYTEgMSAwIDAgMC0uODEuNjkgMSAxIDAgMCAwIC4yNiAxbDIuNiAyLjU0LS42MSAzLjU5YTEgMSAwIDAgMCAxLjQ1IDEuMDVMMTYgMTcuNDNWNS45NGExIDEgMCAwIDAtLjk1LjUxIi8+PHBhdGggZmlsbD0iIzI2MzIzOCIgZD0iTTE2IDJBMTEgMTEgMCAwIDAgNSAxM3YxNmExIDEgMCAwIDAgLjM4Ljc5IDEgMSAwIDAgMCAuODYuMThMMTYgMjcuNTMgMjUuNzYgMzBxLjEyLjAxNS4yNCAwYTEgMSAwIDAgMCAxLTFWMTNBMTEgMTEgMCAwIDAgMTYgMm0wIDJhOSA5IDAgMSAxIDAgMTggOSA5IDAgMCAxIDAtMThNNyAyNy43MXYtOC40M2ExMSAxMSAwIDAgMCA4IDQuNjV2MS43OHptMTggMC04LTJ2LTEuOGExMSAxMSAwIDAgMCA4LTQuNjV6Ii8+PC9zdmc+")
-               });
+                new Dostignuca { Id = 1, Naziv = "Prva vožnja", Opis = "Završio si svoju prvu vožnju! Dobrodošao u zajednicu!" },
+                new Dostignuca { Id = 2, Naziv = "Desetka!", Opis = "Odradio si 10 vožnji! Postaješ pravi profesionalac!" },
+                new Dostignuca { Id = 3, Naziv = "Carpool majstor", Opis = "50 vožnji! Već si legenda na putu!" },
+                new Dostignuca { Id = 4, Naziv = "Legenda na cesti", Opis = "100 vožnji! Tvoj auto sada zna put napamet!" },
+                new Dostignuca { Id = 5, Naziv = "Putni veteran", Opis = "500 vožnji! Obišao si pola zemlje!" },
+                new Dostignuca { Id = 6, Naziv = "Putevi su moj dom", Opis = "1000 vožnji! Jesi li siguran da ne živiš u autu?" },
+                new Dostignuca { Id = 7, Naziv = "Pet zvjezdica, molim!", Opis = "5/5 ocjena! Samo rijetki uspiju ovako!" },
+                new Dostignuca { Id = 8, Naziv = "Noćna ptica", Opis = "Vozio si se najmanje 10 puta između ponoći i 5 ujutro!" },
+                new Dostignuca { Id = 9, Naziv = "Pustolov na putu", Opis = "Vozio si se u 10 različitih gradova! Avantura te zove!" },
+                new Dostignuca { Id = 10, Naziv = "ridewithme beba", Opis = "Godinu dana na platformi! Početak sjajne priče!" },
+                new Dostignuca { Id = 11, Naziv = "ridewithme pro", Opis = "5 godina vožnji! Pravi si veteran zajednice!" },
+                new Dostignuca { Id = 12, Naziv = "Nestali saputnik", Opis = "Otkazao si vožnju u zadnji čas! Sljedeći put dolaziš?" },
+                new Dostignuca { Id = 13, Naziv = "BlaBla influencer", Opis = "Tvoj profil je pregledan preko 1000 puta! Ljudi žele putovati s tobom!" }
+        );
+
         });
 
         modelBuilder.Entity<KorisniciDostignuca>(entity =>

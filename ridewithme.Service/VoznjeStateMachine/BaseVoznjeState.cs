@@ -59,7 +59,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Voznje Book(int id)
+        public virtual Model.Voznje Book(int id, VoznjeBookRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
