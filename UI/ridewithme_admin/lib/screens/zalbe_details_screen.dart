@@ -101,6 +101,12 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
 
               showSnackBar(
                   "Uspješno ste odgovorili na žalbu ID ${widget.zalba.id}.");
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ZalbeScreen(),
+                ),
+              );
             }
             break;
           }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ridewithme.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class DostignucaSeed : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -435,8 +435,8 @@ namespace ridewithme.Service.Migrations
                 columns: new[] { "Id", "DatumKreiranja", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "Prezime" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 7, 10, 56, 49, 452, DateTimeKind.Local).AddTicks(5259), "test@gmail.com", "Test", "test", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" },
-                    { 2, new DateTime(2025, 2, 7, 10, 56, 49, 452, DateTimeKind.Local).AddTicks(5345), "admin@gmail.com", "Admin", "admin", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" }
+                    { 1, new DateTime(2025, 2, 10, 21, 34, 35, 924, DateTimeKind.Local).AddTicks(9744), "test@gmail.com", "Test", "test", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" },
+                    { 2, new DateTime(2025, 2, 10, 21, 34, 35, 924, DateTimeKind.Local).AddTicks(9807), "admin@gmail.com", "Admin", "admin", "KaiUaS4zfaZiZnbuv7TN0r5OfeM=", "AglQFeC8HyIM/UV2yFOa0w==", "Korisnik" }
                 });
 
             migrationBuilder.InsertData(
@@ -451,15 +451,15 @@ namespace ridewithme.Service.Migrations
             migrationBuilder.InsertData(
                 table: "KorisniciDostignuca",
                 columns: new[] { "Id", "DatumKreiranja", "DostignuceId", "KorisnikId" },
-                values: new object[] { 1, new DateTime(2025, 2, 7, 10, 56, 49, 453, DateTimeKind.Local).AddTicks(6272), 1, 1 });
+                values: new object[] { 1, new DateTime(2025, 2, 10, 21, 34, 35, 925, DateTimeKind.Local).AddTicks(5069), 1, 1 });
 
             migrationBuilder.InsertData(
                 table: "KorisniciUloge",
                 columns: new[] { "Id", "DatumIzmjene", "KorisnikId", "UlogaId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 7, 10, 56, 49, 453, DateTimeKind.Local).AddTicks(1230), 1, 1 },
-                    { 2, new DateTime(2025, 2, 7, 10, 56, 49, 453, DateTimeKind.Local).AddTicks(1259), 2, 2 }
+                    { 1, new DateTime(2025, 2, 10, 21, 34, 35, 925, DateTimeKind.Local).AddTicks(2438), 1, 1 },
+                    { 2, new DateTime(2025, 2, 10, 21, 34, 35, 925, DateTimeKind.Local).AddTicks(2459), 2, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -467,8 +467,8 @@ namespace ridewithme.Service.Migrations
                 columns: new[] { "Id", "BrojIskoristivosti", "DatumIzmjene", "DatumPocetka", "Kod", "KorisnikId", "Naziv", "Popust", "StateMachine" },
                 values: new object[,]
                 {
-                    { 1, 5, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9316), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9321), "TESTNI-KOD", 1, "Testni kod", 0.10000000000000001, "draft" },
-                    { 2, 10, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9327), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9330), "WELCOME", 1, "Popust dobrodošlice", 0.5, "active" }
+                    { 1, 5, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1272), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1274), "TESTNI-KOD", 1, "Testni kod", 0.10000000000000001, "draft" },
+                    { 2, 10, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1278), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1279), "WELCOME", 1, "Popust dobrodošlice", 0.5, "active" }
                 });
 
             migrationBuilder.InsertData(
@@ -476,9 +476,9 @@ namespace ridewithme.Service.Migrations
                 columns: new[] { "Id", "DatumIzmjene", "DatumKreiranja", "DatumZavrsetka", "KorisnikId", "Naslov", "Opis", "Podnaslov", "StateMachine" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9456), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9460), new DateTime(2025, 2, 9, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9463), 2, "Ažuriranje pravila privatnosti", "Ažurirali smo naša pravila privatnosti kako bi ti pružili veću transparentnost i kontrolu nad tvojim podacima. Pregledaj nove postavke privatnosti u aplikaciji i prilagodi ih svojim potrebama.", "Više kontrole nad tvojim podacima", "active" },
-                    { 2, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9475), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9477), new DateTime(2025, 2, 7, 12, 56, 49, 454, DateTimeKind.Local).AddTicks(9480), 2, "Stigli su novi alati za bolje iskustvo!", "RideWithMe je bogatiji za nove funkcionalnosti! Sada možeš lakše planirati putovanja, pratiti svoje vožnje i komunicirati s vozačima direktno iz aplikacije. Ažuriraj aplikaciju i isprobaj nove mogućnosti!", "Otkrij nove funkcije aplikacije", "active" },
-                    { 3, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9485), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9487), new DateTime(2025, 2, 7, 15, 56, 49, 454, DateTimeKind.Local).AddTicks(9490), 2, "Poboljšana korisnička podrška", "Uveli smo nove opcije podrške u aplikaciji, uključujući chat uživo i detaljniji centar za pomoć. Kontaktiraj nas jednostavno putem aplikacije za bilo kakva pitanja ili sugestije!", "Brže rješenje tvojih upita", "active" }
+                    { 1, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1359), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1361), new DateTime(2025, 2, 12, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1362), 2, "Ažuriranje pravila privatnosti", "Ažurirali smo naša pravila privatnosti kako bi ti pružili veću transparentnost i kontrolu nad tvojim podacima. Pregledaj nove postavke privatnosti u aplikaciji i prilagodi ih svojim potrebama.", "Više kontrole nad tvojim podacima", "active" },
+                    { 2, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1367), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1368), new DateTime(2025, 2, 10, 23, 34, 35, 926, DateTimeKind.Local).AddTicks(1369), 2, "Stigli su novi alati za bolje iskustvo!", "RideWithMe je bogatiji za nove funkcionalnosti! Sada možeš lakše planirati putovanja, pratiti svoje vožnje i komunicirati s vozačima direktno iz aplikacije. Ažuriraj aplikaciju i isprobaj nove mogućnosti!", "Otkrij nove funkcije aplikacije", "active" },
+                    { 3, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1372), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1373), new DateTime(2025, 2, 11, 2, 34, 35, 926, DateTimeKind.Local).AddTicks(1374), 2, "Poboljšana korisnička podrška", "Uveli smo nove opcije podrške u aplikaciji, uključujući chat uživo i detaljniji centar za pomoć. Kontaktiraj nas jednostavno putem aplikacije za bilo kakva pitanja ili sugestije!", "Brže rješenje tvojih upita", "active" }
                 });
 
             migrationBuilder.InsertData(
@@ -486,10 +486,10 @@ namespace ridewithme.Service.Migrations
                 columns: new[] { "Id", "DatumIzmjene", "KorisnikId", "Naziv" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9216), 1, "Na vožnju" },
-                    { 2, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9240), 1, "Na vozača" },
-                    { 3, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9245), 1, "Na aplikaciju" },
-                    { 4, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9249), 1, "Ostalo" }
+                    { 1, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1213), 1, "Na vožnju" },
+                    { 2, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1226), 1, "Na vozača" },
+                    { 3, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1227), 1, "Na aplikaciju" },
+                    { 4, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1229), 1, "Ostalo" }
                 });
 
             migrationBuilder.InsertData(
@@ -497,10 +497,10 @@ namespace ridewithme.Service.Migrations
                 columns: new[] { "Id", "AdministratorId", "DatumIzmjene", "DatumKreiranja", "DatumPreuzimanja", "KorisnikId", "Naslov", "OdgovorNaZalbu", "Sadrzaj", "StateMachine", "VrstaZalbeId" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9374), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9377), null, 1, "Problem prilikom prijave", null, "Prilikom pokušaja prijave na aplikaciju, ne mogu da se prijavim iako unosim ispravne podatke.", "active", 3 },
-                    { 2, null, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9383), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9386), null, 1, "Vozač ne uzvraća poruke", null, "Potrebno je da dogovorim lokaciju polaska sa vozačem vožnje ID: 2 ali ne mogu da dobijem povratnu informaciju od vozača.", "active", 2 },
-                    { 3, null, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9391), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9393), null, 1, "Vožnja nije bila do navedene lokacije", null, "Vožnja je naznačena da je do Sarajeva, a vozili smo se do Kaknja, molim za povrat novca.", "active", 1 },
-                    { 4, null, new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9398), new DateTime(2025, 2, 7, 10, 56, 49, 454, DateTimeKind.Local).AddTicks(9400), null, 1, "Neiskoristiv kupon", null, "Naznačeno je da koristimo kupon 'WELCOME', ali on ne radi.", "active", 4 }
+                    { 1, null, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1306), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1308), null, 1, "Problem prilikom prijave", null, "Prilikom pokušaja prijave na aplikaciju, ne mogu da se prijavim iako unosim ispravne podatke.", "active", 3 },
+                    { 2, null, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1311), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1312), null, 1, "Vozač ne uzvraća poruke", null, "Potrebno je da dogovorim lokaciju polaska sa vozačem vožnje ID: 2 ali ne mogu da dobijem povratnu informaciju od vozača.", "active", 2 },
+                    { 3, null, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1314), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1316), null, 1, "Vožnja nije bila do navedene lokacije", null, "Vožnja je naznačena da je do Sarajeva, a vozili smo se do Kaknja, molim za povrat novca.", "active", 1 },
+                    { 4, null, new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1317), new DateTime(2025, 2, 10, 21, 34, 35, 926, DateTimeKind.Local).AddTicks(1319), null, 1, "Neiskoristiv kupon", null, "Naznačeno je da koristimo kupon 'WELCOME', ali on ne radi.", "active", 4 }
                 });
 
             migrationBuilder.CreateIndex(
