@@ -103,7 +103,7 @@ namespace ridewithme.Service
                         .Count(x => x.DatumKreiranja.Year == year),
 
                     PrihodiVozaca = context.Voznje
-                        .Where(x => x.DatumKreiranja.Year == year)
+                        .Where(x => x.DatumKreiranja.Year == year && x.StateMachine == "completed")
                         .Sum(x => x.Cijena)
                 };
 
