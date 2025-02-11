@@ -19,7 +19,7 @@ public partial class Korisnici
 
     public string LozinkaSalt { get; set; }
 
-    public DateTime? DatumKreiranja { get; set; }
+    public DateTime DatumKreiranja { get; set; }
 
     public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 

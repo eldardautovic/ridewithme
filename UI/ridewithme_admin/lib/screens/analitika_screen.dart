@@ -1,8 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:ridewithme_admin/models/card_item_model.dart';
 import 'package:ridewithme_admin/models/ukupna_statistika.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
+import 'package:ridewithme_admin/screens/poslovni_izvjestaj_screen.dart';
+import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
+import 'package:ridewithme_admin/widgets/info_card_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
@@ -21,6 +26,19 @@ class _AnalitikaScreenState extends State<AnalitikaScreen> {
   bool isLoading = true;
 
   int najveciBrojVoznji = 0;
+
+  var _cardItems = [
+    CardItemModel(
+        title: "Korisnici",
+        subtitle: "Ukupno registrovanih korisnika",
+        value: "150,000"),
+    CardItemModel(
+        title: "Aktivne vožnje",
+        subtitle: "Broj aktivnih kreiranih vožnji",
+        value: "154"),
+    CardItemModel(
+        title: "Kuponi", subtitle: "Broj iskorištenih kupona", value: "55")
+  ];
 
   @override
   void initState() {
@@ -42,6 +60,29 @@ class _AnalitikaScreenState extends State<AnalitikaScreen> {
               .reduce((a, b) => a! > b! ? a : b) ??
           0;
     });
+
+    _cardItems = [
+      CardItemModel(
+          title: "Korisnici",
+          subtitle: "Ukupno registrovanih korisnika",
+          value: rezultat!.statistika!.brojRegistrovanihKorisnika.toString()),
+      CardItemModel(
+          title: "Vožnje",
+          subtitle: "Broj kreiranih vožnji",
+          value: rezultat!.statistika!.brojKreiranihVoznji.toString()),
+      CardItemModel(
+          title: "Kuponi",
+          subtitle: "Broj iskorištenih kupona",
+          value: rezultat!.statistika!.brojIskoristenihKupona.toString()),
+      CardItemModel(
+          title: "Vozači",
+          subtitle: "Broj vozača",
+          value: rezultat!.statistika!.brojVozaca.toString()),
+      CardItemModel(
+          title: "Zakazane vožnje",
+          subtitle: "Broj zakazanih vožnji",
+          value: rezultat!.statistika!.brojZakazanihVoznji.toString()),
+    ];
   }
 
   @override
@@ -51,31 +92,100 @@ class _AnalitikaScreenState extends State<AnalitikaScreen> {
       headerTitle: "Analitika",
       headerDescription: "Ovdje možete pregledati analitiku platforme.",
       child: Column(
+        spacing: 10,
         children: [
-          isLoading
-              ? LoadingSpinnerWidget()
-              : Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Color(0x21C3CBCA)),
-                  constraints:
-                      BoxConstraints(maxWidth: double.infinity, maxHeight: 350),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: BarChart(
-                      BarChartData(
-                        barTouchData: barTouchData,
-                        titlesData: titlesData,
-                        borderData: borderData,
-                        barGroups: barGroups,
-                        gridData: const FlGridData(show: false),
-                        alignment: BarChartAlignment.spaceAround,
-                        maxY: najveciBrojVoznji.toDouble() + 10,
-                      ),
+          _buildBusinessReportNav(),
+          isLoading ? LoadingSpinnerWidget() : _buildAnalitics(),
+          _buildCards()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBusinessReportNav() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        CustomButtonWidget(
+            buttonText: "Poslovni izvještaj",
+            onPress: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PoslovniIzvjestajScreen(),
+                ),
+              );
+            })
+      ],
+    );
+  }
+
+  Widget _buildAnalitics() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Color(0x21C3CBCA),
+      ),
+      constraints: BoxConstraints(maxWidth: double.infinity, maxHeight: 340),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(bottom: 15, top: 15, left: 20, right: 20),
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Poravnanje teksta lijevo
+          children: [
+            Text(
+              "Broj vožnji po mjesecima",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF072220),
+              ),
+            ),
+            SizedBox(height: 10), // Razmak između teksta i grafa
+            Expanded(
+              child: BarChart(
+                BarChartData(
+                  barTouchData: barTouchData,
+                  titlesData: titlesData,
+                  borderData: borderData,
+                  barGroups: barGroups,
+                  gridData: const FlGridData(show: false),
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: najveciBrojVoznji.toDouble() + 10,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCards() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            StaggeredGrid.count(
+              crossAxisCount: 16,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 20,
+              children: [
+                ..._cardItems.map(
+                  (e) => StaggeredGridTile.count(
+                    crossAxisCellCount: 4,
+                    mainAxisCellCount: 2,
+                    child: InfoCardWidget(
+                      cardTitle: e.title,
+                      cardSubtitle: e.subtitle,
+                      cardValue: e.value,
                     ),
                   ),
                 ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

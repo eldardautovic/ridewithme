@@ -12,5 +12,7 @@ namespace ridewithme.Service
         public PagedResult<Statistika> GetList();
 
         public UkupnaStatistika GetMonthlyStatistics();
+
+        public List<PoslovniIzvjestaj> GetBusinessReport();
     }
 }

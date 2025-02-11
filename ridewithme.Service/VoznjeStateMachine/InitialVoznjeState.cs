@@ -62,6 +62,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             Mapper.Config.Default.IgnoreNullValues(false);
 
             entity.StateMachine = "draft";
+            entity.DatumKreiranja = DateTime.Now;
 
             voznjeSet.Add(entity);
 

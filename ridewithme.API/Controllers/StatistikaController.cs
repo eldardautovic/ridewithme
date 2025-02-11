@@ -28,5 +28,12 @@ namespace ridewithme.API.Controllers
         {
             return _service.GetMonthlyStatistics();
         }
+
+        [HttpGet("business")]
+
+        public List<PoslovniIzvjestaj> GetBusinessReport()
+        {
+            return _service.GetBusinessReport();
+        }
     }
 }

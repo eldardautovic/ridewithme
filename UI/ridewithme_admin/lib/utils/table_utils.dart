@@ -15,3 +15,13 @@ final TextStyle columnTextStyle = TextStyle(
 DataCell buildDataCell(String? text) {
   return DataCell(Text(text ?? "N/A", style: tableTextStyle));
 }
+
+const TextStyle reportTextStyle = TextStyle(
+  color: Color(0xFF072220),
+  fontFamily: "Inter",
+  fontSize: 14,
+);
+
+DataCell buildReportCell(String? text) {
+  return DataCell(Text(text ?? "N/A", style: reportTextStyle));
+}

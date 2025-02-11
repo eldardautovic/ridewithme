@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using ridewithme.Model;
 using ridewithme.Service.Database;
 using System;
@@ -68,5 +69,49 @@ namespace ridewithme.Service
             return UkupnaStatistika;
 
         }
+
+        public List<PoslovniIzvjestaj> GetBusinessReport()
+        {
+            int currentYear = DateTime.Now.Year;
+
+            var reports = new List<PoslovniIzvjestaj>();
+
+            for (int year = currentYear - 2; year <= currentYear; year++)
+            {
+                var report = new PoslovniIzvjestaj()
+                {
+                    Godina = year,
+                    BrojAdministratora = context.Korisnicis
+                        .Include(x => x.KorisniciUloge)
+                        .ThenInclude(y => y.Uloga)
+                        .Where(z => z.KorisniciUloge.Any(x => x.Uloga.Naziv == "Administrator") && z.DatumKreiranja.Year == year)
+                        .Count(),
+
+                    BrojIskoristenihKupona = context.Kuponi
+                        .Count(x => x.BrojIskoristivosti == 0 && x.DatumPocetka.Year == year),
+
+                    BrojKorisnika = context.Korisnicis
+                        .Include(x => x.KorisniciUloge)
+                        .ThenInclude(y => y.Uloga)
+                        .Where(z => z.KorisniciUloge.Any(x => x.Uloga.Naziv == "Korisnik") && z.DatumKreiranja.Year == year)
+                        .Count(),
+
+                    BrojKreiranihKupona = context.Kuponi
+                        .Count(x => x.DatumPocetka.Year == year),
+
+                    BrojVoznji = context.Voznje
+                        .Count(x => x.DatumKreiranja.Year == year),
+
+                    PrihodiVozaca = context.Voznje
+                        .Where(x => x.DatumKreiranja.Year == year)
+                        .Sum(x => x.Cijena)
+                };
+
+                reports.Add(report);
+            }
+
+            return reports;
+        }
+
     }
 }

@@ -19,7 +19,7 @@ namespace ridewithme.Model
 
         public virtual ICollection<KorisniciDostignuca> KorisniciDostignuca { get; set; }
 
-        public DateTime? DatumKreiranja { get; set; }
+        public DateTime DatumKreiranja { get; set; }
 
     }
 }

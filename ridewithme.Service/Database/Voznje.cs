@@ -9,6 +9,7 @@ public partial class Voznje
     public string StateMachine { get; set; }
     public DateTime? DatumVrijemePocetka { get; set; }
     public DateTime? DatumVrijemeZavrsetka { get; set; }
+    public DateTime DatumKreiranja { get; set; }
     public string? Napomena { get; set; }
     public double Cijena { get; set; }
     public int GradOdId { get; set; }
