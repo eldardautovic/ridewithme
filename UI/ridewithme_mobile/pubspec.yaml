@@ -48,6 +48,7 @@ dependencies:
   path_provider: ^2.1.5
   open_file: ^3.5.10
   localstorage: ^4.0.0+1
+  persistent_bottom_nav_bar: ^6.2.1
   
 
 dev_dependencies:
