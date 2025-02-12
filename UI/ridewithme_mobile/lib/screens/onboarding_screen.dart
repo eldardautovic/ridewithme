@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:ridewithme_mobile/main.dart';
+import 'package:ridewithme_mobile/screens/login_screen.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 
 class OnboardingScreen extends StatefulWidget {
