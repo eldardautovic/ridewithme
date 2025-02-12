@@ -3,14 +3,14 @@ import 'dart:typed_data';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/poslovni_izvjestaj.dart';
 import 'package:ridewithme_admin/models/ukupna_statistika.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/screens/analitika_screen.dart';
+import 'package:ridewithme_admin/utils/chart_utils.dart';
+import 'package:ridewithme_admin/utils/file_utils.dart';
+import 'package:ridewithme_admin/utils/pdf_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
@@ -81,73 +81,44 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
         children: [
           _buildPrintButton(),
           _buildResultView(),
-          isLoading ? LoadingSpinnerWidget() : _buildPieChart(context)
+          isLoading ? LoadingSpinnerWidget() : _buildPieChart()
         ],
       ),
     );
   }
 
-  Widget _buildPieChart(BuildContext context) {
+  Widget _buildPieChart() {
     return Expanded(
-      child: Align(
-        alignment: Alignment.topLeft, // Postavlja chart na početak (levo)
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: PieChart(
-            PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  setState(() {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      touchedIndex = -1;
-                      return;
-                    }
-                    touchedIndex =
-                        pieTouchResponse.touchedSection!.touchedSectionIndex;
-                  });
-                },
-              ),
-              startDegreeOffset: 90,
-              borderData: FlBorderData(
-                show: false,
-              ),
-              sectionsSpace: 4,
-              centerSpaceRadius: 0,
-              sections: showingSections(),
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: PieChart(
+          PieChartData(
+            pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                setState(() {
+                  touchedIndex = event.isInterestedForInteractions &&
+                          pieTouchResponse?.touchedSection != null
+                      ? pieTouchResponse!.touchedSection!.touchedSectionIndex
+                      : -1;
+                });
+              },
             ),
+            startDegreeOffset: 90,
+            sectionsSpace: 4,
+            centerSpaceRadius: 0,
+            sections: _showingSections(),
           ),
         ),
       ),
     );
   }
 
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> _showingSections() {
     return [
-      PieChartSectionData(
-        color: Color(0xff39D5C3),
-        value: izvjestajResult?[2].brojKorisnika?.toDouble() ?? 0,
-        title:
-            'Korisnici - ${izvjestajResult![2].brojKorisnika!.isNaN ? 0 : izvjestajResult![2].brojKorisnika}',
-        radius: 130,
-        titlePositionPercentageOffset: 0.55,
-        borderSide: touchedIndex == 0
-            ? const BorderSide(color: Colors.white, width: 2)
-            : BorderSide(
-                color: Color.fromARGB(171, 57, 213, 195).withAlpha(97)),
-      ),
-      PieChartSectionData(
-        color: Color(0xFF7463DE).withAlpha(97),
-        value: izvjestajResult![2].brojAdministratora!.toDouble(),
-        title:
-            'Administratori - ${izvjestajResult![2].brojAdministratora!.isNaN ? 0 : izvjestajResult![2].brojAdministratora}',
-        radius: 130,
-        titlePositionPercentageOffset: 0.55,
-        borderSide: touchedIndex == 1
-            ? const BorderSide(color: Colors.white, width: 2)
-            : BorderSide(color: Color(0xFF7463DE).withAlpha(97)),
-      ),
+      buildPieSection(
+          "Korisnici", Color(0xff39D5C3), izvjestajResult?[2].brojKorisnika),
+      buildPieSection("Administratori", Color(0xFF7463DE),
+          izvjestajResult?[2].brojAdministratora),
     ];
   }
 
@@ -243,7 +214,7 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
 
     final PdfGrid grid = getGrid();
 
-    final PdfLayoutResult result = drawHeader(page, pageSize, grid);
+    final PdfLayoutResult result = drawHeader(page, pageSize, grid, fontData);
 
     drawGrid(page, grid, result);
     drawFooter(page, pageSize);
@@ -253,59 +224,6 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
     document.dispose();
 
     await saveAndLaunchFile(bytes, 'ridewithme_poslovni_izvjestaj.pdf');
-  }
-
-  Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
-    try {
-      final Directory directory = await getApplicationDocumentsDirectory();
-      final String filePath = '${directory.path}/$fileName';
-
-      final File file = File(filePath);
-      await file.writeAsBytes(bytes);
-
-      await OpenFile.open(filePath);
-    } catch (e) {
-      print("Greška pri čuvanju i otvaranju fajla: $e");
-    }
-  }
-
-  PdfLayoutResult drawHeader(PdfPage page, Size pageSize, PdfGrid grid) {
-    page.graphics.drawRectangle(
-        brush: PdfSolidBrush(PdfColor(68, 114, 196)),
-        bounds: Rect.fromLTWH(0, 0, pageSize.width - 115, 90));
-
-    page.graphics.drawString('ridewithme', PdfTrueTypeFont(fontData, 15),
-        brush: PdfBrushes.white,
-        bounds: Rect.fromLTWH(25, 0, pageSize.width - 115, 90),
-        format: PdfStringFormat(lineAlignment: PdfVerticalAlignment.middle));
-
-    page.graphics.drawString('IZVJEŠTAJ', PdfTrueTypeFont(fontData, 30),
-        brush: PdfBrushes.white,
-        bounds: Rect.fromLTWH(25, 20, pageSize.width - 115, 90),
-        format: PdfStringFormat(lineAlignment: PdfVerticalAlignment.middle));
-
-    final PdfFont contentFont = PdfTrueTypeFont(fontData, 9);
-
-    final DateFormat format = DateFormat('dd.MM.yyyy.');
-    final String invoiceNumber = 'Datum: ${format.format(DateTime.now())}';
-    final Size contentSize = contentFont.measureString(invoiceNumber);
-
-    PdfTextElement(text: invoiceNumber, font: contentFont).draw(
-        page: page,
-        bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 120,
-            contentSize.width + 30, pageSize.height - 120));
-
-    return PdfTextElement(
-            text:
-                "Poslovni izvještaj ridewithme platforme u posljednje tri godine.",
-            font: contentFont)
-        .draw(
-            page: page,
-            bounds: Rect.fromLTWH(
-                30,
-                120,
-                pageSize.width - (contentSize.width + 30),
-                pageSize.height - 120))!;
   }
 
   void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result) {
@@ -348,15 +266,10 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
     headerRow.style.textBrush = PdfBrushes.white;
 
     headerRow.cells[0].style.font = PdfTrueTypeFont(fontData, 7);
-
     headerRow.cells[1].style.font = PdfTrueTypeFont(fontData, 7);
-
     headerRow.cells[2].style.font = PdfTrueTypeFont(fontData, 7);
-
     headerRow.cells[3].style.font = PdfTrueTypeFont(fontData, 7);
-
     headerRow.cells[4].style.font = PdfTrueTypeFont(fontData, 7);
-
     headerRow.cells[5].style.font = PdfTrueTypeFont(fontData, 7);
     headerRow.cells[6].style.font = PdfTrueTypeFont(fontData, 7);
 
@@ -382,7 +295,6 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
       }
     }
 
-    //Apply the table built-in style
     grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
 
     for (int i = 0; i < headerRow.cells.count; i++) {
