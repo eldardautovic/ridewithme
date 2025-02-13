@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
+import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/onboarding_screen.dart';
 
 Future<void> main() async {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF39D5C3)),
         useMaterial3: true,
       ),
-      home: OnboardingScreen(),
+      home: HomeScreen(),
     );
   }
 }

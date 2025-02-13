@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ridewithme_mobile/screens/home_screen.dart';
 
 class MasterLayout extends StatefulWidget {
   Widget? child;
@@ -10,8 +12,22 @@ class MasterLayout extends StatefulWidget {
 }
 
 class _MasterLayoutState extends State<MasterLayout> {
+  final List<Map<String, dynamic>> menuItems = [
+    {'title': 'Početna', 'icon': Icons.home_rounded, 'route': HomeScreen()},
+    {
+      'title': 'Vožnje',
+      'icon': Icons.directions_car_filled_rounded,
+      'route': HomeScreen()
+    },
+    {'title': '', 'icon': Icons.add_circle, 'route': HomeScreen(), 'size': 50},
+    {'title': 'Ocjene', 'icon': Icons.star_rate_rounded, 'route': HomeScreen()},
+    {'title': 'Profil', 'icon': Icons.person_2_rounded, 'route': HomeScreen()},
+  ];
+
   void _onItemTapped(int index) {
-    print("tapped");
+    Navigator.of(context).push(CupertinoPageRoute(
+      builder: (context) => menuItems[index]['route'] as Widget,
+    ));
   }
 
   @override
@@ -21,33 +37,25 @@ class _MasterLayoutState extends State<MasterLayout> {
         padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
         child: widget.child,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded), label: 'Početna'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.directions_car_filled_rounded), label: 'Vožnje'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add_circle,
-                size: 50,
-              ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.star_rate_rounded), label: 'Ocjene'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
+      bottomNavigationBar: CupertinoTabBar(
+        items: menuItems
+            .map((e) => BottomNavigationBarItem(
+                  icon: Icon(
+                    e['icon'],
+                    size: e['title'] == "" ? 45 : 30,
+                  ),
+                  activeIcon: Icon(
+                    e['icon'],
+                    color: Color(0xFF7463DE),
+                    size: e['title'] == "" ? 45 : 30,
+                  ),
+                  label: e['title'],
+                ))
+            .toList(),
+        inactiveColor: Color(0xFF848388),
         currentIndex: widget.selectedIndex,
-        selectedItemColor: Color(0xFF7463DE),
-        unselectedItemColor: Color(0xFF848388),
-        unselectedLabelStyle: TextStyle(color: Color(0xFF848388)),
-        type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: TextStyle(color: Colors.black),
-        onTap: _onItemTapped,
-        backgroundColor: Colors.white,
-        useLegacyColorScheme: false,
-        showUnselectedLabels: true,
-        iconSize: 30,
+        onTap: (value) => _onItemTapped(value),
+        activeColor: Color(0xFF000000),
       ),
     );
   }
