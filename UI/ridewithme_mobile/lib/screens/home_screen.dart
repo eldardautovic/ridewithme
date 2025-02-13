@@ -90,20 +90,23 @@ class _HomeScreenState extends State<HomeScreen> {
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Vožnje koje bi vas mogle zanimati:",
-          style: TextStyle(
-              fontFamily: "Inter",
-              color: Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w500),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            "Vožnje koje bi vas mogle zanimati:",
+            style: TextStyle(
+                fontFamily: "Inter",
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w500),
+          ),
         ),
         CarouselSlider(
           options: CarouselOptions(
             height: 160,
             enableInfiniteScroll: true,
             autoPlay: false,
-            viewportFraction: 0.6,
+            viewportFraction: 0.55,
             enlargeStrategy: CenterPageEnlargeStrategy.scale,
           ),
           items: rides.map((voznja) {
@@ -119,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildWelcomeCard() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),

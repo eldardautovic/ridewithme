@@ -48,45 +48,42 @@ class _MasterLayoutState extends State<MasterLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
-        child: Column(
-          spacing: 10,
-          children: [
-            if (widget.header != null &&
-                widget.headerDescription != null &&
-                widget.headerColor != null)
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: widget.headerColor?.withAlpha(50)),
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(widget.header ?? '',
-                          style: TextStyle(
-                              fontFamily: "Inter",
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: widget.headerColor),
-                          overflow: TextOverflow.ellipsis),
-                      Text(widget.headerDescription ?? '',
-                          style: TextStyle(
-                              fontFamily: "Inter",
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xFF072220)),
-                          overflow: TextOverflow.ellipsis),
-                    ],
-                  ),
+      body: Column(
+        spacing: 10,
+        children: [
+          if (widget.header != null &&
+              widget.headerDescription != null &&
+              widget.headerColor != null)
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: widget.headerColor?.withAlpha(50)),
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.header ?? '',
+                        style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: widget.headerColor),
+                        overflow: TextOverflow.ellipsis),
+                    Text(widget.headerDescription ?? '',
+                        style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                            color: Color(0xFF072220)),
+                        overflow: TextOverflow.ellipsis),
+                  ],
                 ),
               ),
-            widget.child
-          ],
-        ),
+            ),
+          widget.child
+        ],
       ),
       bottomNavigationBar: CupertinoTabBar(
         items: menuItems
