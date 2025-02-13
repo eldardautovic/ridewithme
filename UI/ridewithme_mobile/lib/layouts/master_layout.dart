@@ -1,11 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
+import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 
 class MasterLayout extends StatefulWidget {
-  Widget? child;
+  final Widget child;
   final int selectedIndex;
-  MasterLayout({super.key, this.child, required this.selectedIndex});
+  String? header;
+  String? headerDescription;
+  Color? headerColor;
+  MasterLayout(
+      {super.key,
+      required this.child,
+      required this.selectedIndex,
+      this.header,
+      this.headerDescription,
+      this.headerColor});
 
   @override
   State<MasterLayout> createState() => _MasterLayoutState();
@@ -17,7 +27,7 @@ class _MasterLayoutState extends State<MasterLayout> {
     {
       'title': 'Vožnje',
       'icon': Icons.directions_car_filled_rounded,
-      'route': HomeScreen()
+      'route': VoznjeScreen()
     },
     {'title': '', 'icon': Icons.add_circle, 'route': HomeScreen(), 'size': 50},
     {'title': 'Ocjene', 'icon': Icons.star_rate_rounded, 'route': HomeScreen()},
@@ -25,9 +35,14 @@ class _MasterLayoutState extends State<MasterLayout> {
   ];
 
   void _onItemTapped(int index) {
-    Navigator.of(context).push(CupertinoPageRoute(
-      builder: (context) => menuItems[index]['route'] as Widget,
-    ));
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) =>
+            menuItems[index]['route'] as Widget,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
   }
 
   @override
@@ -35,7 +50,43 @@ class _MasterLayoutState extends State<MasterLayout> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
-        child: widget.child,
+        child: Column(
+          spacing: 10,
+          children: [
+            if (widget.header != null &&
+                widget.headerDescription != null &&
+                widget.headerColor != null)
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: widget.headerColor?.withAlpha(50)),
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.header ?? '',
+                          style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: widget.headerColor),
+                          overflow: TextOverflow.ellipsis),
+                      Text(widget.headerDescription ?? '',
+                          style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                              color: Color(0xFF072220)),
+                          overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
+                ),
+              ),
+            widget.child
+          ],
+        ),
       ),
       bottomNavigationBar: CupertinoTabBar(
         items: menuItems
