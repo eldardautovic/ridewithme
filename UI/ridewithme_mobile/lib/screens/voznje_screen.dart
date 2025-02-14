@@ -73,7 +73,8 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
             spacing: 15,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20, bottom: 10.0, top: 10),
+                padding: const EdgeInsets.only(
+                    left: 20, bottom: 10.0, top: 10, right: 20),
                 child: CupertinoSearchTextField(
                   placeholder: "Pretraži vožnje...",
                   onTap: () {
