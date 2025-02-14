@@ -72,26 +72,30 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
           child: Column(
             spacing: 15,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, bottom: 10.0, top: 10, right: 20),
-                child: CupertinoSearchTextField(
-                  placeholder: "Pretraži vožnje...",
-                  onTap: () {
-                    print("Vodi do voznje search ekrana");
-                  },
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFFE3E3E3), width: 1),
-                    color: Color(0xFFF3FCFC),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-              ),
+              _buildSearch(),
               _buildTownList(),
               _buildRecentRides(),
               _buildCheapRides(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearch() {
+    return Padding(
+      padding:
+          const EdgeInsets.only(left: 20, bottom: 10.0, top: 10, right: 20),
+      child: CupertinoSearchTextField(
+        placeholder: "Pretraži vožnje...",
+        onTap: () {
+          print("Vodi do voznje search ekrana");
+        },
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xFFE3E3E3), width: 1),
+          color: Color(0xFFF3FCFC),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
     );
