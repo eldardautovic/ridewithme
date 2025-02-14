@@ -15,8 +15,11 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://10.0.2.2:5284/api/");
+        defaultValue: "http://localhost:5284/api/");
   }
+
+  //http://10.0.2.2:5284/api/ - za mobile
+  //http://localhost:5284/api/
 
   Future<SearchResult<T>> get({dynamic filter}) async {
     var url = "$_baseUrl$_endpoint";
@@ -101,14 +104,11 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
-    print(response.body);
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
-      print(response.body);
       throw new Exception("Unauthorized");
     } else {
-      print(response.body);
       throw new Exception("Something bad happened please try again");
     }
   }

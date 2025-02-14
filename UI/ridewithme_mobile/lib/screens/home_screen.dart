@@ -1,12 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/models/grad.dart';
 import 'package:ridewithme_mobile/models/korisnik.dart';
 import 'package:ridewithme_mobile/models/kupon.dart';
 import 'package:ridewithme_mobile/models/obavjestenje.dart';
+import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
+import 'package:ridewithme_mobile/providers/obavjestenja_provider.dart';
+import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
+import 'package:ridewithme_mobile/widgets/avatar_widget.dart';
+import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
+import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_mobile/widgets/notice_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 
@@ -18,72 +25,131 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late VoznjeProvider _voznjeProvider;
+  late ObavjestenjaProvider _obavjestenjaProvider;
+
+  bool recommendedRidesLoading = true;
+  bool cheapRidesLoading = true;
+  bool noticesLoading = true;
+
+  SearchResult<Voznja>? recommendedRides;
+  SearchResult<Voznja>? cheapRides;
+  SearchResult<Obavjestenje>? notices;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _voznjeProvider = context.read<VoznjeProvider>();
+    _obavjestenjaProvider = context.read<ObavjestenjaProvider>();
+
+    initHomepage();
+  }
+
+  Future initHomepage() async {
+    recommendedRides = await _voznjeProvider.get(filter: {
+      "IsGradoviIncluded": true,
+      //  "Status": "active"
+    });
+
+    cheapRides = await _voznjeProvider.get(filter: {
+      "IsGradoviIncluded": true,
+      "OrderBy": "Cijena asc",
+      // "Status": "active"
+    });
+
+    notices = await _obavjestenjaProvider.get();
+
+    setState(() {
+      recommendedRidesLoading = false;
+      cheapRidesLoading = false;
+      noticesLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterLayout(
       selectedIndex: 0,
-      child: Column(
-        spacing: 15,
-        children: [
-          _buildWelcomeCard(),
-          _buildRecommendedRides(),
-          _buildNotices()
-        ],
+      child: Flexible(
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 15,
+            children: [
+              _buildWelcomeCard(),
+              _buildRecommendedRides(),
+              _buildNotices(),
+              _buildPopularDrivers(),
+              _buildCheapRides(),
+              _buildSorryScreen()
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildSorryScreen() {
+    if (recommendedRides?.count == 0 &&
+        cheapRides?.count == 0 &&
+        !recommendedRidesLoading &&
+        !cheapRidesLoading) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 50,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Trenutno nema dostupnih vožnji.',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          CustomButtonWidget(
+            buttonText: "Kreiraj vožnju",
+            onPress: () {},
+            fontSize: 12,
+          ) //TODO: Dodaj navigator do kreiranja
+        ],
+      );
+    }
+
+    return SizedBox.shrink();
   }
 
   Widget _buildNotices() {
-    List<Obavjestenje> obavjestenja = List.generate(
-      3,
-      (index) => Obavjestenje(index, 'active', 'Neki naslov obavjestenja',
-          "Neki podnaslov", null, null, null, null, null),
-    );
+    if (!noticesLoading && notices?.count == 0) {
+      return Container();
+    }
 
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 160,
-        enableInfiniteScroll: true,
-        viewportFraction: 0.9,
-        enlargeStrategy: CenterPageEnlargeStrategy.scale,
-      ),
-      items: obavjestenja.map((obavjestenje) {
-        return NoticeWidget(
-          obavjestenje: obavjestenje,
-          boxColor: Color(0xFFFCFC00),
-        );
-      }).toList(),
-    );
+    return noticesLoading
+        ? LoadingSpinnerWidget(height: 170)
+        : CarouselSlider(
+            options: CarouselOptions(
+              height: 170,
+              enableInfiniteScroll: true,
+              viewportFraction: 0.9,
+              enlargeStrategy: CenterPageEnlargeStrategy.scale,
+            ),
+            items: notices?.result.map((obavjestenje) {
+                  return NoticeWidget(
+                    obavjestenje: obavjestenje,
+                    boxColor: Color(0xFFFCFC00),
+                  );
+                }).toList() ??
+                [],
+          );
   }
 
-  Widget _buildRecommendedRides() {
-    List<Voznja> rides = List.generate(
-      3,
-      (index) => Voznja(
-        1,
-        "active",
-        DateTime.now(),
-        DateTime.now(),
-        1,
-        50,
-        "Hi",
-        Gradovi(1, "Travnik", 1323, 4242),
-        Gradovi(2, "Sarajevo", 2324, 5252),
-        Korisnik(1, "Eldar", "Prezime", null, null, null, null),
-        Korisnik(2, "Drugi", "Prezime", null, null, null, null),
-        Kupon(
-          1,
-          "KOD",
-          "Naziv kupona",
-          DateTime.now(),
-          5,
-          'active',
-          0.9,
-          Korisnik(1, "Eldar", "Prezime", null, null, null, null),
-          DateTime.now(),
-        ),
-        null,
-      ),
+  Widget _buildPopularDrivers() {
+    List<Korisnik> korisnici = List.generate(
+      5,
+      (index) => Korisnik(index, "Eldar", "Prezime", null, null, null, null),
     );
 
     return Column(
@@ -91,9 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(bottom: 10.0, top: 10, left: 20),
           child: Text(
-            "Vožnje koje bi vas mogle zanimati:",
+            "Popularni vozači:",
             style: TextStyle(
                 fontFamily: "Inter",
                 color: Colors.black,
@@ -103,26 +169,115 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         CarouselSlider(
           options: CarouselOptions(
-            height: 160,
+            height: 65,
             enableInfiniteScroll: true,
-            autoPlay: false,
-            viewportFraction: 0.55,
+            viewportFraction: 0.4,
             enlargeStrategy: CenterPageEnlargeStrategy.scale,
           ),
-          items: rides.map((voznja) {
-            return RideWidget(
-              voznja: voznja,
-              boxColor: Color(0xFF8E9EE6),
+          items: korisnici.map((korisnik) {
+            return AvatarWidget(
+              korisnik: korisnik,
             );
           }).toList(),
-        ),
+        )
       ],
+    );
+  }
+
+  Widget _buildRecommendedRides() {
+    if (!recommendedRidesLoading && recommendedRides?.count == 0) {
+      return Container();
+    }
+
+    return Column(
+      spacing: 10,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0, top: 10, left: 20),
+          child: Text(
+            "Vožnje koje bi vas mogle zanimati:",
+            style: TextStyle(
+                fontFamily: "Inter",
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w500),
+          ),
+        ),
+        recommendedRidesLoading
+            ? LoadingSpinnerWidget(
+                height: 160,
+              )
+            : CarouselSlider(
+                options: CarouselOptions(
+                  height: 160,
+                  enableInfiniteScroll: true,
+                  autoPlay: false,
+                  viewportFraction: 0.55,
+                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                ),
+                items: recommendedRides?.result.map((voznja) {
+                      return RideWidget(
+                        voznja: voznja,
+                        boxColor: Color(0xFF8E9EE6),
+                      );
+                    }).toList() ??
+                    [],
+              ),
+      ],
+    );
+  }
+
+  Widget _buildCheapRides() {
+    if (!cheapRidesLoading && cheapRides?.count == 0) {
+      return Container();
+    }
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0, top: 10, left: 20),
+            child: Text(
+              "Jeftine vožnje:",
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+          cheapRidesLoading
+              ? LoadingSpinnerWidget(
+                  height: 160,
+                )
+              : CarouselSlider(
+                  options: CarouselOptions(
+                    height: 160,
+                    enableInfiniteScroll: true,
+                    autoPlay: false,
+                    viewportFraction: 0.55,
+                    enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                  ),
+                  items: cheapRides?.result.map((voznja) {
+                        return RideWidget(
+                          voznja: voznja,
+                          boxColor: Color(0xFF39D5C3),
+                        );
+                      }).toList() ??
+                      [],
+                ),
+        ],
+      ),
     );
   }
 
   Widget _buildWelcomeCard() {
     return Padding(
-      padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),

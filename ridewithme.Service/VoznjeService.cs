@@ -66,6 +66,11 @@ namespace ridewithme.Service
                 filteredQuery = filteredQuery.Where(x => x.GradOdId == searchObject.GradOdId.Value);
             }
 
+            if (searchObject?.CijenaDo.HasValue == true)
+            {
+                filteredQuery = filteredQuery.Where(x => x.Cijena <= searchObject.CijenaDo);
+            }
+
             if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))
             {
                 var items = searchObject.OrderBy.Split(' ');

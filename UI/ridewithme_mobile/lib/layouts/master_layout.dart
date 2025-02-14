@@ -55,6 +55,7 @@ class _MasterLayoutState extends State<MasterLayout> {
               widget.headerDescription != null &&
               widget.headerColor != null)
             Container(
+              margin: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: widget.headerColor?.withAlpha(50)),

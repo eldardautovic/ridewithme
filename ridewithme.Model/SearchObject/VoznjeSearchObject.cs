@@ -11,7 +11,7 @@ namespace ridewithme.Model.SearchObject
         public int? KlijentId { get; set; }
         public int? GradOdId { get; set; }
         public int? GradDoId { get; set; }
-
+        public int? CijenaDo { get; set; }
         public DateTime? DatumVrijemePocetka { get; set; }
 
         public DateTime? DatumVrijemeZavrsetka { get; set; }
