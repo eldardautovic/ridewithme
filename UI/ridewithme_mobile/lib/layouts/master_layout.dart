@@ -47,64 +47,67 @@ class _MasterLayoutState extends State<MasterLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        spacing: 10,
-        children: [
-          if (widget.header != null &&
-              widget.headerDescription != null &&
-              widget.headerColor != null)
-            Container(
-              margin: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: widget.headerColor?.withAlpha(50)),
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.header ?? '',
-                        style: TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: widget.headerColor),
-                        overflow: TextOverflow.ellipsis),
-                    Text(widget.headerDescription ?? '',
-                        style: TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 13,
-                            fontWeight: FontWeight.normal,
-                            color: Color(0xFF072220)),
-                        overflow: TextOverflow.ellipsis),
-                  ],
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Column(
+          spacing: 10,
+          children: [
+            if (widget.header != null &&
+                widget.headerDescription != null &&
+                widget.headerColor != null)
+              Container(
+                margin: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: widget.headerColor?.withAlpha(50)),
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.header ?? '',
+                          style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: widget.headerColor),
+                          overflow: TextOverflow.ellipsis),
+                      Text(widget.headerDescription ?? '',
+                          style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                              color: Color(0xFF072220)),
+                          overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          widget.child
-        ],
-      ),
-      bottomNavigationBar: CupertinoTabBar(
-        items: menuItems
-            .map((e) => BottomNavigationBarItem(
-                  icon: Icon(
-                    e['icon'],
-                    size: e['title'] == "" ? 45 : 30,
-                  ),
-                  activeIcon: Icon(
-                    e['icon'],
-                    color: Color(0xFF7463DE),
-                    size: e['title'] == "" ? 45 : 30,
-                  ),
-                  label: e['title'],
-                ))
-            .toList(),
-        inactiveColor: Color(0xFF848388),
-        currentIndex: widget.selectedIndex,
-        onTap: (value) => _onItemTapped(value),
-        activeColor: Color(0xFF000000),
+            widget.child
+          ],
+        ),
+        bottomNavigationBar: CupertinoTabBar(
+          items: menuItems
+              .map((e) => BottomNavigationBarItem(
+                    icon: Icon(
+                      e['icon'],
+                      size: e['title'] == "" ? 45 : 30,
+                    ),
+                    activeIcon: Icon(
+                      e['icon'],
+                      color: Color(0xFF7463DE),
+                      size: e['title'] == "" ? 45 : 30,
+                    ),
+                    label: e['title'],
+                  ))
+              .toList(),
+          inactiveColor: Color(0xFF848388),
+          currentIndex: widget.selectedIndex,
+          onTap: (value) => _onItemTapped(value),
+          activeColor: Color(0xFF000000),
+        ),
       ),
     );
   }

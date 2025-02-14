@@ -28,7 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     var onBoardedValue = await storage.getItem("onBoarded");
 
     if (onBoardedValue != null && int.tryParse(onBoardedValue) == 1) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => LoginPage(),
         ),
@@ -146,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       buttonText: "Nastavi",
                       onPress: () async {
                         await storage.setItem("onBoarded", '1');
-                        Navigator.of(context).push(
+                        Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => LoginPage(),
                           ),
