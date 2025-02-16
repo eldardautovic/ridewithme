@@ -218,5 +218,13 @@ namespace ridewithme.Service
 
             return Mapper.Map<Model.Korisnici>(entity);
         }
+
+        public Model.PovjerljivVozac Trusted(int id)
+        {
+
+            var brojObavljenihVoznji = Context.Voznje.Where(x => x.VozacId == id && x.StateMachine == "completed").Count();
+
+            return new PovjerljivVozac() {  BrojZavrsenihVoznji = brojObavljenihVoznji};
+        }
     }
 }

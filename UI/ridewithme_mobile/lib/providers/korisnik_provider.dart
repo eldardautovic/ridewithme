@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:ridewithme_mobile/models/korisnik.dart';
+import 'package:ridewithme_mobile/models/povjerljiv_vozac_model.dart';
 import 'package:ridewithme_mobile/providers/base_provider.dart';
 
 class KorisnikProvider extends BaseProvider<Korisnik> {
@@ -27,6 +28,24 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
       var data = jsonDecode(response.body);
 
       return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+    // print("response: ${response.request} ${response.statusCode}, ${response.body}");
+  }
+
+  Future<int> trusted(int id) async {
+    var url = "$fullUrl/${id}/trusted";
+
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return data['brojZavrsenihVoznji'];
     } else {
       throw new Exception("Unknown error");
     }

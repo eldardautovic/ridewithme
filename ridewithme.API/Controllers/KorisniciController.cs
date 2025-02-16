@@ -22,6 +22,12 @@ namespace ridewithme.API.Controllers
             context = ridewithmecontext;
         }
 
+        [HttpGet("{id}/trusted")]
+        public Model.PovjerljivVozac Trusted(int id)
+        {
+            return (_service as IKorisniciService).Trusted(id);
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public Model.Korisnici Login(string username, string password)

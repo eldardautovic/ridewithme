@@ -15,5 +15,7 @@ namespace ridewithme.Service
 
         Model.Korisnici GetLoggedInUser(string username);
 
+        Model.PovjerljivVozac Trusted(int id);
+
     }
 }
