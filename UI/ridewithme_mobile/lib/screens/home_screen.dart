@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // "Status": "active"
     });
 
-    notices = await _obavjestenjaProvider.get();
+    notices = await _obavjestenjaProvider.get(filter: {"Status": "active"});
 
     setState(() {
       recommendedRidesLoading = false;
@@ -134,8 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
         : CarouselSlider(
             options: CarouselOptions(
               height: 170,
-              enableInfiniteScroll: true,
-              viewportFraction: 0.9,
+              enableInfiniteScroll: notices!.count > 1,
+              viewportFraction: notices!.count > 1 ? 0.9 : 1,
               enlargeStrategy: CenterPageEnlargeStrategy.scale,
             ),
             items: notices?.result.map((obavjestenje) {

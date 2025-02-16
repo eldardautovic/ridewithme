@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:ridewithme_mobile/models/korisnik.dart';
-import 'package:ridewithme_mobile/models/povjerljiv_vozac_model.dart';
 import 'package:ridewithme_mobile/providers/base_provider.dart';
 
 class KorisnikProvider extends BaseProvider<Korisnik> {

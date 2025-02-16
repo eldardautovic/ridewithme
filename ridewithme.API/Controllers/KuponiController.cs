@@ -50,6 +50,13 @@ namespace ridewithme.API.Controllers
             return (_service as IKuponiService).Activate(id);
         }
 
+        [HttpGet("check")]
+
+        public Model.ProvjerenKupon Check(string kod)
+        {
+            return (_service as IKuponiService).Check(kod);
+        }
+
         [HttpPut("{id}/hide")]
 
         public Model.Kuponi Hide(int id)

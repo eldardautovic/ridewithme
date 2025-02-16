@@ -17,6 +17,7 @@ namespace ridewithme.Service
 
         public Kuponi Delete(int id);
 
+        public ProvjerenKupon Check(string kod);
         public List<string> AllowedActions(int id);
     }
 }

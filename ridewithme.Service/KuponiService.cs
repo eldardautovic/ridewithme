@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
@@ -38,7 +39,25 @@ namespace ridewithme.Service
             return state.Delete(id);
         }
 
-        public override IQueryable<Kuponi> AddFilter(KuponiSearchObject searchObject, IQueryable<Kuponi> query)
+        public Model.ProvjerenKupon Check(string kod)
+        {
+            var kupon = Context.Kuponi.FirstOrDefault(x => x.Kod == kod);
+
+            var ispravnostKupona = new Model.ProvjerenKupon();
+
+            if(kupon == null || kupon.StateMachine == "used" || kupon.BrojIskoristivosti == 0)
+            {
+                ispravnostKupona.ispravanKupon = false;
+                return ispravnostKupona;
+            }
+
+            ispravnostKupona.ispravanKupon = true;
+            ispravnostKupona.Kupon = Mapper.Map<Model.Kuponi>(kupon);
+
+            return ispravnostKupona;
+        }
+
+        public override IQueryable<Database.Kuponi> AddFilter(KuponiSearchObject searchObject, IQueryable<Database.Kuponi> query)
         {
             if(searchObject.KuponId.HasValue)
             {

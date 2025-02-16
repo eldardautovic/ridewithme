@@ -5,6 +5,7 @@ import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 import 'package:ridewithme_mobile/widgets/rides_filter_widget.dart';
 
@@ -62,9 +63,38 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
       headerColor: Color(0xFF7463DE),
       child: Column(
         spacing: 15,
-        children: [_buildSearch(), _buildResults()],
+        children: [_buildSearch(), _buildResults(), _buildSorryScreen()],
       ),
     );
+  }
+
+  Widget _buildSorryScreen() {
+    if (isLoading == false && voznjeResults?.count == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 50,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Nema rezultata pretrage.',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          CustomButtonWidget(
+            buttonText: "Kreiraj vožnju",
+            onPress: () {},
+            fontSize: 12,
+          ) //TODO: Dodaj navigator do kreiranja
+        ],
+      );
+    }
+
+    return SizedBox.shrink();
   }
 
   Widget _buildSearch() {

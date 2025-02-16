@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
+import 'package:ridewithme_mobile/models/kupon_check.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
+import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
+import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
 
 class VoznjeDetailsScreen extends StatefulWidget {
@@ -19,10 +23,17 @@ class VoznjeDetailsScreen extends StatefulWidget {
 class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   late VoznjeProvider _voznjeProvider;
   late KorisnikProvider _korisnikProvider;
+  late KuponiProvider _kuponiProvider;
+
+  TextEditingController _kuponController = TextEditingController();
 
   bool isLoading = true;
 
   bool isTrusted = false;
+
+  IspravanKupon? isCouponCorrect;
+
+  double totalPrice = 0.0;
 
   @override
   void initState() {
@@ -30,13 +41,15 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     super.initState();
     _voznjeProvider = context.read<VoznjeProvider>();
     _korisnikProvider = context.read<KorisnikProvider>();
+    _kuponiProvider = context.read<KuponiProvider>();
+
+    totalPrice = (widget.voznja.cijena ?? 0) + 2;
 
     initTrusted();
   }
 
   Future initTrusted() async {
     var result = await _korisnikProvider.trusted(widget.voznja.vozac?.id ?? 0);
-    print(result);
 
     if (result > 0) {
       isTrusted = true;
@@ -51,15 +64,24 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterLayout(
         selectedIndex: 1,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              _buildInfo(),
-              isLoading ? LoadingSpinnerWidget(height: 100) : _buildTrusted()
-            ],
+        child: Flexible(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(),
+                  _buildInfo(),
+                  isLoading
+                      ? LoadingSpinnerWidget(height: 100)
+                      : _buildTrusted(),
+                  _buildCouponCheck(),
+                  _buildPrices(),
+                  _pay()
+                ],
+              ),
+            ),
           ),
         ));
   }
@@ -155,7 +177,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
               children: [
                 TextSpan(
                     text:
-                        " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())}",
+                        " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())} sati",
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 13,
@@ -186,6 +208,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         child: Stack(
           children: [
             Positioned(
+              bottom: -20,
+              right: 10,
               child: Icon(
                 isTrusted
                     ? Icons.sentiment_satisfied_rounded
@@ -193,8 +217,6 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                 size: 100,
                 color: Colors.black.withAlpha(20),
               ),
-              bottom: -20,
-              right: 10,
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -226,6 +248,193 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             )
           ],
         ));
+  }
+
+  Widget _buildPrices() {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      child: Column(
+        spacing: 12,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+                text: "Cijena:",
+                children: [
+                  TextSpan(
+                      text: " ${widget.voznja.cijena} KM",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal))
+                ],
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ),
+          if (isCouponCorrect?.ispravanKupon == true &&
+              isCouponCorrect?.kupon != null)
+            RichText(
+              text: TextSpan(
+                  text: "Popust na kupon:",
+                  children: [
+                    TextSpan(
+                        text:
+                            " -${(widget.voznja.cijena! - (widget.voznja.cijena! * (1 - (isCouponCorrect?.kupon?.popust ?? 0)))).toStringAsFixed(2)} KM",
+                        style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 13,
+                            color: Color(0xFFE14040),
+                            fontWeight: FontWeight.normal))
+                  ],
+                  style: TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 13,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+            ),
+          RichText(
+            text: TextSpan(
+                text: "Popust na Rank:",
+                children: [
+                  TextSpan(
+                      text: " -${widget.voznja.cijena} KM",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Color(0xFFE14040),
+                          fontWeight: FontWeight.normal))
+                ],
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ),
+          RichText(
+            text: TextSpan(
+                text: "Provizija na pronalazak:",
+                children: [
+                  TextSpan(
+                      text: " 2.0 KM",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal))
+                ],
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 2,
+            child: Container(
+              decoration: BoxDecoration(color: Colors.black),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+                text: "Ukupno:",
+                children: [
+                  TextSpan(
+                      text: " ${totalPrice} KM",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal))
+                ],
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _pay() {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      child: CustomButtonWidget(
+        buttonText: "Plati vožnju",
+        onPress: () {},
+        fontSize: 12,
+      ),
+    );
+  }
+
+  Widget _buildCouponCheck() {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      child: SizedBox(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 30,
+              child: Row(
+                children: [
+                  Expanded(
+                    // Ograničava širinu unutar Row
+                    child: CustomInputField(
+                      labelText: "Kupon",
+                      fontSize: 10,
+                      controller: _kuponController,
+                    ),
+                  ),
+                  SizedBox(width: 10), // Razmak između inputa i dugmeta
+                  SizedBox(
+                    width: 100,
+                    child: CustomButtonWidget(
+                      buttonText: "Provjeri",
+                      onPress: () async {
+                        isCouponCorrect =
+                            await _kuponiProvider.check(_kuponController.text);
+
+                        if (isCouponCorrect?.kupon != null) {
+                          totalPrice = totalPrice -
+                              (widget.voznja.cijena! -
+                                  (widget.voznja.cijena! *
+                                      (1 -
+                                          (isCouponCorrect?.kupon?.popust ??
+                                              0))));
+                        } else {
+                          totalPrice = widget.voznja.cijena! + 2;
+                        }
+
+                        setState(() {});
+                      },
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            _kuponController.text.isNotEmpty && isCouponCorrect != null
+                ? Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      isCouponCorrect!.ispravanKupon
+                          ? "Kupon je uredan."
+                          : "Kupon nije uredan.",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  )
+                : Container()
+          ],
+        ),
+      ),
+    );
   }
 
   TextStyle _buildTextStyle() {

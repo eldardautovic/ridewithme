@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
+import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/onboarding_screen.dart';
@@ -15,6 +16,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => VoznjeProvider()),
       ChangeNotifierProvider(create: (_) => ObavjestenjaProvider()),
       ChangeNotifierProvider(create: (_) => GradoviProvider()),
+      ChangeNotifierProvider(create: (_) => KuponiProvider()),
     ],
     child: const RideWithMeMobile(),
   ));

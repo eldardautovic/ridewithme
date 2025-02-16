@@ -37,12 +37,8 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
     _initialValue = {
       'IsGradoviIncluded': widget.initialFilters['IsGradoviIncluded'],
       'IsKorisniciIncluded': widget.initialFilters['IsKorisniciIncluded'],
-      'GradOdId': widget.initialFilters['GradOdId'] != null
-          ? widget.initialFilters['GradOdId'].toString()
-          : null,
-      'GradDoId': widget.initialFilters['GradDoId'] != null
-          ? widget.initialFilters['GradDoId'].toString()
-          : null,
+      'GradOdId': widget.initialFilters['GradOdId']?.toString(),
+      'GradDoId': widget.initialFilters['GradDoId']?.toString(),
       'OrderBy': widget.initialFilters['OrderBy'] ?? "DatumVrijemePocetka ASC",
       'Status': widget.initialFilters['Status'] ?? null
     };
@@ -90,26 +86,16 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
               name: "GradOdId",
               labelText: "Grad od",
               prefixIcon: Icon(Icons.location_city_rounded),
-              initialValue: _initialValue['GradOdId'] != null
-                  ? _initialValue['GradOdId'].toString()
-                  : null,
+              initialValue: _initialValue['GradOdId']?.toString(),
               items: _buildGradoviDropdownItems(),
-              onClear: () {
-                _formKey.currentState!.fields['GradOdId']?.reset();
-              },
             ),
             buildDropdown(
               name: "GradDoId",
               labelText: "Grad do",
               hintText: "Grad do",
-              initialValue: _initialValue['GradDoId'] != null
-                  ? _initialValue['GradDoId'].toString()
-                  : null,
+              initialValue: _initialValue['GradDoId']?.toString(),
               prefixIcon: Icon(Icons.location_city_rounded),
               items: _buildGradoviDropdownItems(),
-              onClear: () {
-                _formKey.currentState!.fields['GradDoId']?.reset();
-              },
             ),
             buildDropdown(
               name: "OrderByField",
@@ -142,6 +128,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
               spacing: 10,
               children: [
                 CustomButtonWidget(
+                  fontSize: 14,
                   buttonText: "Pretraga",
                   onPress: () {
                     String orderByField =
@@ -149,14 +136,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
                     String orderByDirection =
                         _formKey.currentState?.value['OrderByDirection'] ??
                             "ASC";
-                    print({
-                      'IsGradoviIncluded': true,
-                      'IsKorisniciIncluded': true,
-                      'GradOdId': _formKey.currentState?.value['GradOdId'],
-                      'GradDoId': _formKey.currentState?.value['GradDoId'],
-                      'OrderBy': "$orderByField $orderByDirection",
-                      'Status': _formKey.currentState?.value['Status'],
-                    });
+
                     Navigator.pop(context, {
                       'IsGradoviIncluded': true,
                       'IsKorisniciIncluded': true,
@@ -168,6 +148,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
                   },
                 ),
                 CustomButtonWidget(
+                  fontSize: 14,
                   buttonText: "Očisti filtere",
                   buttonColor: Colors.white,
                   onPress: () {

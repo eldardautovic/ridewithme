@@ -85,7 +85,7 @@ class RideWidget extends StatelessWidget {
                         text: "Cijena:",
                         children: [
                           TextSpan(
-                              text: " ${voznja.cijena?.toInt().toString()}0 KM",
+                              text: " ${voznja.cijena} KM",
                               style: TextStyle(
                                   fontFamily: "Inter",
                                   fontSize: 11,
