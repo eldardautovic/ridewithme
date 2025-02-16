@@ -9,6 +9,7 @@ import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/screens/voznje_search_screen.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 import 'package:ridewithme_mobile/widgets/town_widget.dart';
@@ -43,6 +44,8 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
   Future initPage() async {
     recentRides = await _voznjeProvider.get(filter: {
       "IsGradoviIncluded": true,
+      'IsKorisniciIncluded': true,
+
       //  "Status": "active",
       "OrderBy": "DatumKreiranja DESC"
     });
@@ -50,6 +53,8 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
     cheapRides = await _voznjeProvider.get(filter: {
       "IsGradoviIncluded": true,
       "OrderBy": "Cijena asc",
+      'IsKorisniciIncluded': true,
+
       // "Status": "active"
     });
 
@@ -85,12 +90,24 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
 
   Widget _buildSearch() {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 20, bottom: 10.0, top: 10, right: 20),
-      child: CupertinoSearchTextField(
+      padding: const EdgeInsets.only(left: 20, bottom: 10.0, right: 20),
+      child: CupertinoTextField(
         placeholder: "Pretraži vožnje...",
+        prefix: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(6, 0, 0, 3),
+          child: Icon(
+            CupertinoIcons.search,
+            color: Color(0xFF898989),
+          ),
+        ),
+        placeholderStyle: TextStyle(color: Color(0xFF898989)),
+        readOnly: true,
         onTap: () {
-          print("Vodi do voznje search ekrana");
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const VoznjeSearchScreen(),
+            ),
+          );
         },
         decoration: BoxDecoration(
           border: Border.all(color: Color(0xFFE3E3E3), width: 1),

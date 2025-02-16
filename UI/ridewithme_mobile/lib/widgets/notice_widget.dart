@@ -13,7 +13,7 @@ class NoticeWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: boxColor.withAlpha(50),
+          color: boxColor.withAlpha(60),
           borderRadius: BorderRadius.circular(15)),
       child: Stack(
         children: [

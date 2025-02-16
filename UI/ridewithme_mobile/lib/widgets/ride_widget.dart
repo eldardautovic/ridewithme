@@ -14,8 +14,9 @@ class RideWidget extends StatelessWidget {
       constraints: BoxConstraints(
           minWidth: 200, minHeight: 160, maxHeight: 160, maxWidth: 200),
       decoration: BoxDecoration(
-          color: boxColor.withAlpha(50),
-          borderRadius: BorderRadius.circular(15)),
+        color: boxColor.withAlpha(60),
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(

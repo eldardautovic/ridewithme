@@ -50,12 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Future initHomepage() async {
     recommendedRides = await _voznjeProvider.get(filter: {
       "IsGradoviIncluded": true,
+      'IsKorisniciIncluded': true,
+
       //  "Status": "active"
     });
 
     cheapRides = await _voznjeProvider.get(filter: {
       "IsGradoviIncluded": true,
       "OrderBy": "Cijena asc",
+      'IsKorisniciIncluded': true,
+
       // "Status": "active"
     });
 
@@ -219,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 items: recommendedRides?.result.map((voznja) {
                       return RideWidget(
                         voznja: voznja,
-                        boxColor: Color(0xFF8E9EE6),
+                        boxColor: Color(0xFF7463DE),
                       );
                     }).toList() ??
                     [],
