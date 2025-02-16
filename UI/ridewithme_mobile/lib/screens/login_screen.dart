@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/models/korisnik.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
+import 'package:ridewithme_mobile/screens/register_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
@@ -155,12 +156,6 @@ class LoginPage extends StatelessWidget {
                                           SnackBar(
                                             behavior: SnackBarBehavior.floating,
                                             content: Text("Uspješna prijava."),
-                                            action: SnackBarAction(
-                                                label: "U redu",
-                                                onPressed: () =>
-                                                    ScaffoldMessenger.of(
-                                                        context)
-                                                      ..removeCurrentSnackBar()),
                                           ),
                                         );
                                       } on Exception catch (e) {
@@ -182,7 +177,14 @@ class LoginPage extends StatelessWidget {
                                   },
                                 ),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegisterScreen(),
+                                        ),
+                                      );
+                                    },
                                     child: Text(
                                       "Nemate nalog?",
                                       style: TextStyle(
