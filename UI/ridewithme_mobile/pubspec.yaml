@@ -50,6 +50,8 @@ dependencies:
   localstorage: ^4.0.0+1
   persistent_bottom_nav_bar: ^6.2.1
   carousel_slider: ^5.0.0
+  flutter_stripe: ^11.4.0
+  flutter_dotenv: ^5.2.1
   
 
 dev_dependencies:
@@ -78,6 +80,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/.env
 
   fonts:
     - family: Inter

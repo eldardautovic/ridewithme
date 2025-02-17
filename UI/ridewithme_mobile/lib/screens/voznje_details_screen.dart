@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
@@ -11,6 +15,7 @@ import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
+import 'package:http/http.dart' as http;
 
 class VoznjeDetailsScreen extends StatefulWidget {
   Voznja voznja;
@@ -21,7 +26,8 @@ class VoznjeDetailsScreen extends StatefulWidget {
 }
 
 class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
-  late VoznjeProvider _voznjeProvider;
+  Map<String, dynamic>? paymentIntent;
+
   late KorisnikProvider _korisnikProvider;
   late KuponiProvider _kuponiProvider;
 
@@ -33,17 +39,16 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   IspravanKupon? isCouponCorrect;
 
-  double totalPrice = 0.0;
+  double totalPrice = 2.0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _voznjeProvider = context.read<VoznjeProvider>();
     _korisnikProvider = context.read<KorisnikProvider>();
     _kuponiProvider = context.read<KuponiProvider>();
 
-    totalPrice = (widget.voznja.cijena ?? 0) + 2;
+    totalPrice += (widget.voznja.cijena ?? 0);
 
     initTrusted();
   }
@@ -367,7 +372,9 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       margin: EdgeInsets.only(top: 20),
       child: CustomButtonWidget(
         buttonText: "Plati vožnju",
-        onPress: () {},
+        onPress: () {
+          makePayment();
+        },
         fontSize: 12,
       ),
     );
@@ -435,6 +442,54 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> makePayment() async {
+    try {
+      paymentIntent =
+          await createPaymentIntent((totalPrice).toStringAsFixed(2), "BAM");
+
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          merchantDisplayName: "RideWithMe",
+        ),
+      );
+
+      await Stripe.instance.presentPaymentSheet();
+
+      print("Plaćanje uspešno!"); //TODO: Dodaj prebacivanje na success page
+      setState(() {
+        paymentIntent = null;
+      });
+    } catch (e) {
+      print("Greška pri plaćanju: $e"); //TODO: izbaci snackbar da je neuspjesno
+    }
+  }
+
+  Future<Map<String, dynamic>> createPaymentIntent(
+      String amount, String currency) async {
+    try {
+      String secretKey = dotenv.env["STRIPE__SECRETKEY"]!;
+
+      final response = await http.post(
+        Uri.parse("https://api.stripe.com/v1/payment_intents"),
+        headers: {
+          "Authorization": "Bearer $secretKey",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {
+          "amount": ((double.parse(amount) * 100).toInt()).toString(),
+          "currency": currency,
+          "payment_method_types[]": "card",
+        },
+      );
+
+      return json.decode(response.body);
+    } catch (e) {
+      print("Greška pri kreiranju PaymentIntent-a: $e");
+      throw Exception(e);
+    }
   }
 
   TextStyle _buildTextStyle() {
