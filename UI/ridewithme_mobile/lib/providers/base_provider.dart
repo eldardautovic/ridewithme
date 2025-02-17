@@ -104,13 +104,27 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
+    print(response.body); // Debug ispis
+
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
-      throw new Exception("Unauthorized");
+      throw Exception("Unauthorized");
     } else {
-      throw new Exception("Something bad happened please try again");
+      var data = jsonDecode(response.body);
+
+      if (data is Map && data.containsKey('errors')) {
+        // Dobijamo sve greške iz `errors` objekta
+        var errorMessages = (data['errors'] as Map<String, dynamic>)
+            .values
+            .expand((e) => e as List)
+            .join("\n"); // Spajamo u jedan string
+
+        throw Exception(errorMessages);
+      }
     }
+
+    return true;
   }
 
   Map<String, String> createHeaders() {

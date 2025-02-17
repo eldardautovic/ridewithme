@@ -12,6 +12,8 @@ import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/screens/payment_success.dart';
+import 'package:ridewithme_mobile/utils/auth_util.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
@@ -26,9 +28,8 @@ class VoznjeDetailsScreen extends StatefulWidget {
 }
 
 class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
-  Map<String, dynamic>? paymentIntent;
-
   late KorisnikProvider _korisnikProvider;
+  late VoznjeProvider _voznjeProvider;
   late KuponiProvider _kuponiProvider;
 
   TextEditingController _kuponController = TextEditingController();
@@ -47,6 +48,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     super.initState();
     _korisnikProvider = context.read<KorisnikProvider>();
     _kuponiProvider = context.read<KuponiProvider>();
+    _voznjeProvider = context.read<VoznjeProvider>();
 
     totalPrice += (widget.voznja.cijena ?? 0);
 
@@ -80,10 +82,18 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   _buildInfo(),
                   isLoading
                       ? LoadingSpinnerWidget(height: 100)
-                      : _buildTrusted(),
-                  _buildCouponCheck(),
-                  _buildPrices(),
-                  _pay()
+                      : Authorization.id == widget.voznja.vozac?.id
+                          ? Container()
+                          : _buildTrusted(),
+                  Authorization.id == widget.voznja.vozac?.id
+                      ? Container()
+                      : _buildCouponCheck(),
+                  Authorization.id == widget.voznja.vozac?.id
+                      ? Container()
+                      : _buildPrices(),
+                  Authorization.id == widget.voznja.vozac?.id
+                      ? Container()
+                      : _pay()
                 ],
               ),
             ),
@@ -195,6 +205,38 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   color: Colors.black,
                   fontWeight: FontWeight.bold)),
         ),
+        SizedBox(
+          height: 10,
+        ),
+        if (Authorization.id == widget.voznja.vozac?.id)
+          RichText(
+            text: TextSpan(
+                text: "Cijena:",
+                children: [
+                  TextSpan(
+                      text: " ${widget.voznja.cijena}KM",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal))
+                ],
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ),
+        SizedBox(
+          height: 10,
+        ),
+        if (Authorization.id == widget.voznja.vozac?.id)
+          Text("Vi ste vozač ove vožnje.",
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  fontSize: 13,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold)),
         SizedBox(
           height: 20,
         ),
@@ -404,6 +446,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                     width: 100,
                     child: CustomButtonWidget(
                       buttonText: "Provjeri",
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 24),
                       onPress: () async {
                         isCouponCorrect =
                             await _kuponiProvider.check(_kuponController.text);
@@ -421,7 +465,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
                         setState(() {});
                       },
-                      fontSize: 12,
+                      fontSize: 10,
                     ),
                   ),
                 ],
@@ -446,24 +490,38 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   Future<void> makePayment() async {
     try {
-      paymentIntent =
+      var paymentIntent =
           await createPaymentIntent((totalPrice).toStringAsFixed(2), "BAM");
 
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          paymentIntentClientSecret: paymentIntent['client_secret'],
           merchantDisplayName: "RideWithMe",
         ),
       );
 
       await Stripe.instance.presentPaymentSheet();
 
-      print("Plaćanje uspešno!"); //TODO: Dodaj prebacivanje na success page
-      setState(() {
-        paymentIntent = null;
+      await _voznjeProvider.book(widget.voznja.id ?? 0, {
+        "kuponId": _kuponController.text.isEmpty ? null : _kuponController.text
       });
+
+      Navigator.of(context).pushReplacement(
+        CupertinoPageRoute(
+          builder: (context) => PaymentSuccess(),
+        ),
+      );
     } catch (e) {
-      print("Greška pri plaćanju: $e"); //TODO: izbaci snackbar da je neuspjesno
+      if (e is StripeException) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(e.toString()),
+        ),
+      );
     }
   }
 

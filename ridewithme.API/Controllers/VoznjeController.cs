@@ -28,7 +28,7 @@ namespace ridewithme.API.Controllers
 
         public Model.Voznje Book(int id, VoznjeBookRequest request)
         {
-            if (request.KlijentId == null)
+            if (request.KlijentId == null || request.KlijentId == 0)
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 

@@ -101,14 +101,22 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
+    print(response.body);
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
-      print(response.body);
-      throw new Exception("Unauthorized");
+      throw Exception("Unauthorized");
     } else {
-      print(response.body);
-      throw new Exception("Something bad happened please try again");
+      try {
+        var data = jsonDecode(response.body);
+        if (data is Map && data.containsKey('errors')) {
+          var errorMessages =
+              (data['errors'] as Map).values.expand((e) => e).join("\n");
+          throw Exception(errorMessages);
+        }
+      } catch (e) {
+        throw Exception("Something bad happened, please try again.");
+      }
     }
   }
 

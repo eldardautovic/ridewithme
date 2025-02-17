@@ -57,6 +57,18 @@ namespace ridewithme.Service.VoznjeStateMachine
                     throw new UserException("Već ste klijent/vozač u drugoj bukiranoj/aktivnoj vožnji.");
                 }
 
+                if(request.Kod != null)
+                {
+                    var kupon = Context.Kuponi.FirstOrDefault(x => x.Kod  == request.Kod);
+
+                    if(kupon == null || kupon.BrojIskoristivosti == 0)  {
+                        throw new UserException("Kupon nije validan.");
+                    }
+
+                    entity.KuponId = kupon.Id;
+
+                }
+ 
                 entity.KlijentId = request.KlijentId;
                 
                 entity.StateMachine = "booked";

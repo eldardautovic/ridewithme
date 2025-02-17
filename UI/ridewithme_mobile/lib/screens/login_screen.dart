@@ -163,7 +163,8 @@ class LoginPage extends StatelessWidget {
                                             .showSnackBar(
                                           SnackBar(
                                             behavior: SnackBarBehavior.floating,
-                                            content: Text(e.toString()),
+                                            content: Text(
+                                                "Neispravni kredencijali."),
                                             action: SnackBarAction(
                                                 label: "U redu",
                                                 onPressed: () =>
