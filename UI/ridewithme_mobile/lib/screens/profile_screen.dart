@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
+import 'package:ridewithme_mobile/screens/edit_profile_screen.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/login_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
@@ -78,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'title': 'Uredi profil',
           'icon': Icons.edit_rounded,
           'iconColor': Color(0xFFE98CD2),
-          'route': HomeScreen(),
+          'route': EditProfileScreen(),
         },
         {
           'title': 'Žalbe',
@@ -120,12 +123,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           spacing: 15,
           children: [
             Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(100)),
-            ),
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(100)),
+                child: Authorization.slika != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.memory(
+                          base64Decode(Authorization.slika ?? ''),
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Icon(Icons.account_circle)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 8,
@@ -151,7 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => EditProfileScreen()),
                     );
                   },
                   child: Row(

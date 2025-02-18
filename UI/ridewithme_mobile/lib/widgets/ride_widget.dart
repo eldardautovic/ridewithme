@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -108,6 +110,15 @@ class RideWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.amber,
                         borderRadius: BorderRadius.circular(100)),
+                    child: voznja.vozac?.slika != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.memory(
+                              base64Decode(voznja.vozac!.slika ?? ''),
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Icon(Icons.account_circle),
                   ),
                   SizedBox(
                     width: 5,

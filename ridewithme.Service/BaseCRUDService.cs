@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Mapster;
+using MapsterMapper;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
@@ -50,7 +51,11 @@ namespace ridewithme.Service
 
             var entity = set.Find(id);
 
+            Mapper.Config.Default.IgnoreNullValues(true);
+
             Mapper.Map(request, entity);
+
+            Mapper.Config.Default.IgnoreNullValues(false);
 
             BeforeUpdate(request, entity);
 

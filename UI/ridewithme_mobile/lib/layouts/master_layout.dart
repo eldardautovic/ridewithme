@@ -11,6 +11,8 @@ class MasterLayout extends StatefulWidget {
   String? headerDescription;
   Color? headerColor;
   Color? headerTextColor;
+  Widget? backButton;
+
   MasterLayout(
       {super.key,
       required this.child,
@@ -18,7 +20,8 @@ class MasterLayout extends StatefulWidget {
       this.header,
       this.headerDescription,
       this.headerColor,
-      this.headerTextColor});
+      this.headerTextColor,
+      this.backButton});
 
   @override
   State<MasterLayout> createState() => _MasterLayoutState();
@@ -58,8 +61,23 @@ class _MasterLayoutState extends State<MasterLayout> {
       canPop: false,
       child: Scaffold(
         body: Column(
-          spacing: 10,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (widget.backButton != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 10),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => widget.backButton!,
+                      ),
+                    );
+                  },
+                  iconSize: 30,
+                  icon: Icon(Icons.chevron_left),
+                ),
+              ),
             if (widget.header != null &&
                 widget.headerDescription != null &&
                 widget.headerColor != null)

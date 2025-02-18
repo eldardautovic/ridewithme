@@ -151,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildPopularDrivers() {
     List<Korisnik> korisnici = List.generate(
       5,
-      (index) => Korisnik(index, "Eldar", "Prezime", null, null, null, null),
+      (index) =>
+          Korisnik(index, "Eldar", "Prezime", null, null, null, null, null),
     );
 
     return Column(

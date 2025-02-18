@@ -13,16 +13,10 @@ class Korisnik {
   String? email;
   List<KorisnikUloga>? korisniciUloge;
   DateTime? datumKreiranja;
+  String? slika;
 
-  Korisnik(
-    this.id,
-    this.ime,
-    this.prezime,
-    this.korisnickoIme,
-    this.email,
-    this.korisniciUloge,
-    this.datumKreiranja,
-  );
+  Korisnik(this.id, this.ime, this.prezime, this.korisnickoIme, this.email,
+      this.korisniciUloge, this.datumKreiranja, this.slika);
 
   factory Korisnik.fromJson(Map<String, dynamic> json) =>
       _$KorisnikFromJson(json);

@@ -106,6 +106,29 @@ namespace ridewithme.Service
             base.BeforeInsert(request, entity);
         }
 
+
+        public override void BeforeUpdate(KorisniciUpdateRequest request, Database.Korisnici entity)
+        {
+            if (request.Lozinka != request.LozinkaPotvrda)
+            {
+                throw new Exception("Lozinka i LozinkaPotvrda se moraju podudarati.");
+            }
+
+            if (!IsValidEmail(request.Email))
+            {
+                throw new UserException("E-mail adresa nije u validnom formatu.");
+            }
+
+            if(request.Lozinka != null)
+            {
+                entity.LozinkaSalt = GenerateSalt();
+                entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Lozinka);
+            }
+
+
+            base.BeforeUpdate(request, entity);
+        }
+
         public override void AfterInsert(Database.Korisnici entity, KorisniciInsertRequest request)
         {
             var korisnikRole = Context.Uloge.FirstOrDefault(x => x.Naziv == "Korisnik");

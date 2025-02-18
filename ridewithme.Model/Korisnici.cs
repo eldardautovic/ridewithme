@@ -14,6 +14,8 @@ namespace ridewithme.Model
 
         public string KorisnickoIme { get; set; } = null!;
 
+        public byte[]? Slika { get; set; }
+
         public string Email { get; set; } = null!;
         public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }
 

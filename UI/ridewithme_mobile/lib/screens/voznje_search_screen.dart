@@ -5,6 +5,7 @@ import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 import 'package:ridewithme_mobile/widgets/rides_filter_widget.dart';
@@ -58,6 +59,7 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
   Widget build(BuildContext context) {
     return MasterLayout(
       selectedIndex: 1,
+      backButton: VoznjeScreen(),
       header: "Vožnje",
       headerDescription: "Ovdje možete da pretražite vožnje",
       headerColor: Color(0xFF7463DE),

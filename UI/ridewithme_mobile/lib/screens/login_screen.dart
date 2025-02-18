@@ -146,6 +146,8 @@ class LoginPage extends StatelessWidget {
 
                                         Authorization.email = result.email;
 
+                                        Authorization.slika = result.slika;
+
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                             builder: (context) =>

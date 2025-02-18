@@ -118,41 +118,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Positioned(
               left: 30,
               bottom: 100,
-              child: Column(
-                spacing: 10,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 350,
-                    child: Text(
-                      "Hajde da počnemo.",
-                      softWrap: true,
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 350),
+                child: Column(
+                  spacing: 10,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 350,
+                      child: Text(
+                        "Hajde da počnemo.",
+                        softWrap: true,
+                        style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 64,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF072220)),
+                      ),
+                    ),
+                    Text(
+                      "Spajajmo ljude i destinacije!",
                       style: TextStyle(
                           fontFamily: "Inter",
-                          fontSize: 64,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 24,
+                          fontWeight: FontWeight.normal,
                           color: Color(0xFF072220)),
                     ),
-                  ),
-                  Text(
-                    "Spajajmo ljude i destinacije!",
-                    style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 24,
-                        fontWeight: FontWeight.normal,
-                        color: Color(0xFF072220)),
-                  ),
-                  CustomButtonWidget(
-                      buttonText: "Nastavi",
-                      onPress: () async {
-                        await storage.setItem("onBoarded", '1');
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => LoginPage(),
-                          ),
-                        );
-                      })
-                ],
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 350),
+                      child: CustomButtonWidget(
+                          isFullWidth: true,
+                          buttonText: "Nastavi",
+                          onPress: () async {
+                            await storage.setItem("onBoarded", '1');
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          }),
+                    )
+                  ],
+                ),
               )),
         ],
       ),

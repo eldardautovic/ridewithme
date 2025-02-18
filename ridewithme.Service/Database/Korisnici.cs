@@ -19,6 +19,8 @@ public partial class Korisnici
 
     public string LozinkaSalt { get; set; }
 
+    public byte[]? Slika { get; set; }
+
     public DateTime DatumKreiranja { get; set; }
 
     public virtual ICollection<KorisniciUloge> KorisniciUloge { get; set; }

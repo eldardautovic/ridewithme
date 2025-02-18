@@ -13,6 +13,7 @@ import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/payment_success.dart';
+import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
@@ -75,6 +76,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   Widget build(BuildContext context) {
     return MasterLayout(
       selectedIndex: 1,
+      backButton: VoznjeScreen(),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -144,12 +146,20 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   width: 5,
                 ),
                 Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(100)),
-                ),
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(100)),
+                    child: widget.voznja.vozac?.slika != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.memory(
+                              base64Decode(widget.voznja.vozac!.slika ?? ''),
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Icon(Icons.account_circle)),
                 SizedBox(
                   width: 5,
                 ),
@@ -295,8 +305,9 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   Widget _pay() {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 40),
       child: CustomButtonWidget(
+        isFullWidth: true,
         buttonText: "Plati vožnju",
         onPress: () {
           makePayment();
