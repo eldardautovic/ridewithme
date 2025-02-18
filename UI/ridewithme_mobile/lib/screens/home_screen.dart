@@ -45,25 +45,27 @@ class _HomeScreenState extends State<HomeScreen> {
     initHomepage();
   }
 
-  Future initHomepage() async {
-    recommendedRides = await _voznjeProvider.get(filter: {
-      "IsGradoviIncluded": true,
-      'IsKorisniciIncluded': true,
-
-      //  "Status": "active"
-    });
-
-    cheapRides = await _voznjeProvider.get(filter: {
-      "IsGradoviIncluded": true,
-      "OrderBy": "Cijena asc",
-      'IsKorisniciIncluded': true,
-
-      // "Status": "active"
-    });
-
-    notices = await _obavjestenjaProvider.get(filter: {"Status": "active"});
+  Future<void> initHomepage() async {
+    final results = await Future.wait([
+      _voznjeProvider.get(filter: {
+        "IsGradoviIncluded": true,
+        'IsKorisniciIncluded': true,
+        'Status': 'active'
+      }),
+      _voznjeProvider.get(filter: {
+        "IsGradoviIncluded": true,
+        "OrderBy": "Cijena asc",
+        'IsKorisniciIncluded': true,
+        'Status': 'active'
+      }),
+      _obavjestenjaProvider.get(filter: {"Status": "active"}),
+    ]);
 
     setState(() {
+      recommendedRides = results[0] as SearchResult<Voznja>?;
+      cheapRides = results[1] as SearchResult<Voznja>?;
+      notices = results[2] as SearchResult<Obavjestenje>?;
+
       recommendedRidesLoading = false;
       cheapRidesLoading = false;
       noticesLoading = false;

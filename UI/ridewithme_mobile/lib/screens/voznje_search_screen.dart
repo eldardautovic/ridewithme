@@ -30,7 +30,7 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
     'GradOdId': null,
     'GradDoId': null,
     'OrderBy': 'DatumVrijemePocetka ASC',
-    'Status': null
+    'Status': 'active'
   };
 
   @override

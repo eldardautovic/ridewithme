@@ -5,6 +5,8 @@ import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/screens/edit_profile_screen.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/login_screen.dart';
+import 'package:ridewithme_mobile/screens/traveler_rides_screen.dart';
+import 'package:ridewithme_mobile/screens/your_rides_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -63,13 +65,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         {
           'title': 'Vaše vožnje',
           'icon': Icons.directions_car_filled_rounded,
-          'route': HomeScreen(),
+          'route': YourRidesScreen(),
           'iconColor': Color(0xFF39D5C3)
         },
         {
           'title': 'Vožnje u kojima ste (bili) putnici',
           'icon': Icons.airport_shuttle_rounded,
-          'route': HomeScreen(),
+          'route': TravelerRidesScreen(),
           'iconColor': Color(0xFF7463DE)
         },
       ]
@@ -132,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(100)),
                 child: Authorization.slika != null
                     ? ClipRRect(
@@ -142,7 +144,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fit: BoxFit.cover,
                         ),
                       )
-                    : Icon(Icons.account_circle)),
+                    : Icon(
+                        Icons.account_circle,
+                        size: 40,
+                        color: Colors.blueGrey,
+                      )),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 8,

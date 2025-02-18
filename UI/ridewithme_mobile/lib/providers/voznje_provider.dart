@@ -24,6 +24,40 @@ class VoznjeProvider extends BaseProvider<Voznja> {
     }
   }
 
+  Future<Voznja> start(int id, dynamic request) async {
+    var url = "$fullUrl/$id/start";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var jsonRequest = jsonEncode(request);
+
+    var response = await http.put(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
+  Future<Voznja> complete(int id, dynamic request) async {
+    var url = "$fullUrl/$id/complete";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var jsonRequest = jsonEncode(request);
+
+    var response = await http.put(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
   Future<List<String>> allowedActions(int id) async {
     var url = "$fullUrl/$id/allowedActions";
 

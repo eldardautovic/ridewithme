@@ -25,6 +25,8 @@ namespace ridewithme.Service
 
         public List<Korisnici> GetParticipants(int id);
         public Voznje Book(int id, VoznjeBookRequest request);
+        public Voznje Start(int id, VoznjeStartRequest request);
+        public Voznje Complete(int id, VoznjeCompleteRequest request);
 
     }
 }

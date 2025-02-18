@@ -28,6 +28,8 @@ enum VoznjaActions {
   Edit("Omogući uređivanje", Color(0xFF64B5F6),
       Color(0xFF072220)), // Pastelno plava
   Update("Uredi", Color(0xFF64B5F6), Color(0xFF072220)), // Pastelno plava
+  Start("Započni", Color(0xFF4CAF50), Color(0xFF072220)), // Pastelno plava
+  Complete("Završi", Color(0xFFFF7043), Color(0xFF072220)), // Pastelno plava
   NonExisting("", Colors.transparent,
       Color(0xFF072220)); // Transparentna za nepostojeće akcije
 

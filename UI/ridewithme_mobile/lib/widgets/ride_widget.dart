@@ -108,7 +108,7 @@ class RideWidget extends StatelessWidget {
                     width: 25,
                     height: 25,
                     decoration: BoxDecoration(
-                        color: Colors.amber,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(100)),
                     child: voznja.vozac?.slika != null
                         ? ClipRRect(
@@ -118,7 +118,11 @@ class RideWidget extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           )
-                        : Icon(Icons.account_circle),
+                        : Icon(
+                            Icons.account_circle,
+                            size: 25,
+                            color: Colors.blueGrey,
+                          ),
                   ),
                   SizedBox(
                     width: 5,

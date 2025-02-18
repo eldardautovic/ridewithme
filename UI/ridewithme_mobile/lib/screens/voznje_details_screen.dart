@@ -41,6 +41,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   bool isTrusted = false;
   bool isDriver = false;
+  bool isClient = false;
   int brojVoznji = 0;
   List<String>? allowedActions;
 
@@ -58,6 +59,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
     totalPrice += (widget.voznja.cijena ?? 0);
     isDriver = Authorization.id == widget.voznja.vozac?.id;
+    isClient = Authorization.id == widget.voznja.klijent?.id;
 
     initTrusted();
   }
@@ -70,7 +72,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       brojVoznji = result;
     }
 
-    if (isDriver == true) {
+    if (isDriver == true && widget.voznja.stateMachine != 'completed') {
       allowedActions =
           await _voznjeProvider.allowedActions(widget.voznja.id ?? 0);
     }
@@ -112,6 +114,30 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             await _voznjeProvider.activate(widget.voznja.id ?? 0);
 
             showSnackBar("Uspješno ste aktivirali vožnju.");
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => VoznjeScreen(),
+              ),
+            );
+            break;
+          }
+        case "Start":
+          {
+            await _voznjeProvider.start(widget.voznja.id ?? 0, {});
+
+            showSnackBar("Uspješno ste započeli vožnju.");
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => VoznjeScreen(),
+              ),
+            );
+            break;
+          }
+        case "Complete":
+          {
+            await _voznjeProvider.complete(widget.voznja.id ?? 0, {});
+
+            showSnackBar("Uspješno ste završili vožnju.");
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
                 builder: (context) => VoznjeScreen(),
@@ -163,8 +189,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             if (isDriver) ...[_buildAllowedActions()],
             _buildHeader(),
             _buildInfo(),
-            if (isLoading) LoadingSpinnerWidget(height: 100),
-            if (!isDriver) ...[
+            if (isLoading) LoadingSpinnerWidget(height: 50),
+            if (!isDriver && !isClient && !isLoading) ...[
               _buildTrusted(),
               _buildCouponCheck(),
               _buildPrices(),
@@ -190,6 +216,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             final action = VoznjaActions.fromString(e);
             return CustomButtonWidget(
               fontSize: 12,
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               buttonText: action!.naziv,
               onPress: () => executeAction(e),
               buttonColor: action.boja,
@@ -255,7 +282,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                     width: 25,
                     height: 25,
                     decoration: BoxDecoration(
-                        color: Colors.amber,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(100)),
                     child: widget.voznja.vozac?.slika != null
                         ? ClipRRect(
@@ -265,7 +292,11 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                               fit: BoxFit.cover,
                             ),
                           )
-                        : Icon(Icons.account_circle)),
+                        : Icon(
+                            Icons.account_circle,
+                            size: 25,
+                            color: Colors.blueGrey,
+                          )),
                 SizedBox(
                   width: 5,
                 ),
@@ -309,13 +340,50 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         SizedBox(
           height: 10,
         ),
-        if (Authorization.id == widget.voznja.vozac?.id)
+        if (Authorization.id == widget.voznja.vozac?.id) ...[
           Text("Vi ste vozač ove vožnje.",
               style: TextStyle(
                   fontFamily: "Inter",
                   fontSize: 13,
                   color: Colors.black,
                   fontWeight: FontWeight.bold)),
+          if (widget.voznja.stateMachine == 'completed')
+            Text("Ova vožnja je završena.",
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+        ],
+        if (isClient) ...[
+          Text("Vi ste putnik ove vožnje.",
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  fontSize: 13,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold)),
+          if (widget.voznja.stateMachine == 'completed')
+            Text("Ova vožnja je završena.",
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          if (widget.voznja.stateMachine == 'inprogress')
+            Text("Ova vožnja je u toku.",
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+          if (widget.voznja.stateMachine == 'booked')
+            Text("Ova vožnja je zakazana.",
+                style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+        ]
       ],
     );
   }

@@ -1,6 +1,4 @@
-﻿using EasyNetQ;
-using MapsterMapper;
-using ridewithme.Model.Messages;
+﻿using MapsterMapper;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
 using System;
@@ -11,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace ridewithme.Service.VoznjeStateMachine
 {
-    public class BookedVoznjeState : BaseVoznjeState
+    public class InProgressVoznjeState : BaseVoznjeState
     {
-        public BookedVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
+        public InProgressVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
         {
         }
-
-        public override Model.Voznje Start(int id, VoznjeStartRequest request)
+        public override Model.Voznje Complete(int id, VoznjeCompleteRequest request)
         {
             var set = Context.Set<Database.Voznje>();
 
             var entity = set.Find(id);
 
-            entity.StateMachine = "inprogress";
+            entity.StateMachine = "completed";
+            entity.DatumVrijemeZavrsetka = DateTime.Now;
 
             var mappedEntity = Mapper.Map<Model.Voznje>(entity);
 
@@ -34,9 +32,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
         public override List<string> AllowedActions(Database.Voznje entity)
         {
-            return new List<string>() { nameof(Start) };
+            return new List<string>() { nameof(Complete) };
         }
-
-
     }
 }

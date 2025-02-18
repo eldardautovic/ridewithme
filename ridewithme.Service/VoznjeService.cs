@@ -36,7 +36,17 @@ namespace ridewithme.Service
                 filteredQuery = filteredQuery.Where(x => x.Id == searchObject.VoznjaId.Value);
             }
 
-            if(searchObject?.IsVoznjaActivated == true)
+            if (searchObject?.VozacId.HasValue == true)
+            {
+                filteredQuery = filteredQuery.Where(x => x.VozacId == searchObject.VozacId.Value);
+            }
+
+            if (searchObject?.KlijentId.HasValue == true)
+            {
+                filteredQuery = filteredQuery.Where(x => x.KlijentId == searchObject.KlijentId.Value);
+            }
+
+            if (searchObject?.IsVoznjaActivated == true)
             {
                 filteredQuery = filteredQuery.Where(x => x.StateMachine == "active");
             }
@@ -122,6 +132,21 @@ namespace ridewithme.Service
             var state = BaseVoznjeState.CreateState(entity.StateMachine);
 
             return state.Update(id, request);
+        }
+
+        public Model.Voznje Start(int id, VoznjeStartRequest request)
+        {
+            var entity = GetById(id);
+            var state = BaseVoznjeState.CreateState(entity.StateMachine);
+
+            return state.Start(id, request);
+        }
+        public Model.Voznje Complete(int id, VoznjeCompleteRequest request)
+        {
+            var entity = GetById(id);
+            var state = BaseVoznjeState.CreateState(entity.StateMachine);
+
+            return state.Complete(id, request);
         }
 
         public Model.Voznje Activate(int id)

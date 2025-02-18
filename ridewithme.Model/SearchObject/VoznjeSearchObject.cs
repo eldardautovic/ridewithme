@@ -7,7 +7,7 @@ namespace ridewithme.Model.SearchObject
     public class VoznjeSearchObject : BaseSearchObject
     {
         public int? VoznjaId { get; set; }
-
+        public int? VozacId { get; set; }
         public int? KlijentId { get; set; }
         public int? GradOdId { get; set; }
         public int? GradDoId { get; set; }

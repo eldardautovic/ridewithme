@@ -41,26 +41,26 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
     initPage();
   }
 
-  Future initPage() async {
-    recentRides = await _voznjeProvider.get(filter: {
-      "IsGradoviIncluded": true,
-      'IsKorisniciIncluded': true,
-
-      //  "Status": "active",
-      "OrderBy": "DatumKreiranja DESC"
-    });
-
-    cheapRides = await _voznjeProvider.get(filter: {
-      "IsGradoviIncluded": true,
-      "OrderBy": "Cijena asc",
-      'IsKorisniciIncluded': true,
-
-      // "Status": "active"
-    });
-
-    gradoviResults = await _gradoviProvider.get();
+  Future<void> initPage() async {
+    final results = await Future.wait([
+      _voznjeProvider.get(filter: {
+        "IsGradoviIncluded": true,
+        'IsKorisniciIncluded': true,
+        "OrderBy": "DatumKreiranja DESC"
+      }),
+      _voznjeProvider.get(filter: {
+        "IsGradoviIncluded": true,
+        "OrderBy": "Cijena asc",
+        'IsKorisniciIncluded': true,
+      }),
+      _gradoviProvider.get(),
+    ]);
 
     setState(() {
+      recentRides = results[0] as SearchResult<Voznja>?;
+      cheapRides = results[1] as SearchResult<Voznja>?;
+      gradoviResults = results[2] as SearchResult<Gradovi>?;
+
       isLoading = false;
     });
   }

@@ -38,6 +38,33 @@ namespace ridewithme.API.Controllers
             return (_service as IVoznjeService).Book(id, request);
         }
 
+        [HttpPut("{id}/start")]
+
+        public Model.Voznje Start(int id, VoznjeStartRequest request)
+        {
+            if (request.VozacId == null || request.VozacId == 0)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                request.VozacId = userId;
+            }
+
+            return (_service as IVoznjeService).Start(id, request);
+        }
+        [HttpPut("{id}/complete")]
+
+        public Model.Voznje Complete(int id, VoznjeCompleteRequest request)
+        {
+            if (request.VozacId == null || request.VozacId == 0)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                request.VozacId = userId;
+            }
+
+            return (_service as IVoznjeService).Complete(id, request);
+        }
+
         [HttpPut("{id}/edit")]
 
         public Model.Voznje Edit(int id)

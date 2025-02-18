@@ -34,7 +34,16 @@ namespace ridewithme.Service.VoznjeStateMachine
         public virtual Model.Voznje Activate(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
-        } 
+        }
+
+        public virtual Model.Voznje Start(int id, VoznjeStartRequest request)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+        public virtual Model.Voznje Complete(int id, VoznjeCompleteRequest request)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
         public virtual Model.Voznje Hide(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
@@ -82,6 +91,9 @@ namespace ridewithme.Service.VoznjeStateMachine
 
                 case "booked":
                     return ServiceProvider.GetService<BookedVoznjeState>();
+                
+                case "inprogress":
+                    return ServiceProvider.GetService<InProgressVoznjeState>();
 
                 default: throw new Exception("State not recognized.");
             }
