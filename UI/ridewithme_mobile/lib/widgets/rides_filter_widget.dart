@@ -171,7 +171,6 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
   }
 
   List<DropdownMenuItem<String>> _buildGradoviDropdownItems() {
-    print(gradoviResults?.result);
     return (gradoviResults?.result ?? [])
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),

@@ -17,8 +17,6 @@ class KuponiProvider extends BaseProvider<Kupon> {
 
     var response = await http.get(uri, headers: headers);
 
-    print(response.body);
-
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
       var kupon = data['kupon'] != null ? Kupon.fromJson(data['kupon']) : null;
@@ -28,7 +26,6 @@ class KuponiProvider extends BaseProvider<Kupon> {
     } else {
       throw new Exception("Unknown error");
     }
-    // print("response: ${response.request} ${response.statusCode}, ${response.body}");
   }
 
   @override

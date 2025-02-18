@@ -37,6 +37,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   bool isLoading = true;
 
   bool isTrusted = false;
+  bool isDriver = false;
+  int brojVoznji = 0;
 
   IspravanKupon? isCouponCorrect;
 
@@ -51,6 +53,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     _voznjeProvider = context.read<VoznjeProvider>();
 
     totalPrice += (widget.voznja.cijena ?? 0);
+    isDriver = Authorization.id == widget.voznja.vozac?.id;
 
     initTrusted();
   }
@@ -60,6 +63,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
     if (result > 0) {
       isTrusted = true;
+      brojVoznji = result;
     }
 
     setState(() {
@@ -70,35 +74,25 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterLayout(
-        selectedIndex: 1,
-        child: Flexible(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  _buildInfo(),
-                  isLoading
-                      ? LoadingSpinnerWidget(height: 100)
-                      : Authorization.id == widget.voznja.vozac?.id
-                          ? Container()
-                          : _buildTrusted(),
-                  Authorization.id == widget.voznja.vozac?.id
-                      ? Container()
-                      : _buildCouponCheck(),
-                  Authorization.id == widget.voznja.vozac?.id
-                      ? Container()
-                      : _buildPrices(),
-                  Authorization.id == widget.voznja.vozac?.id
-                      ? Container()
-                      : _pay()
-                ],
-              ),
-            ),
-          ),
-        ));
+      selectedIndex: 1,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildInfo(),
+            if (isLoading) LoadingSpinnerWidget(height: 100),
+            if (!isDriver) ...[
+              _buildTrusted(),
+              _buildCouponCheck(),
+              _buildPrices(),
+              _pay(),
+            ]
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildHeader() {
@@ -186,47 +180,16 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         SizedBox(
           height: 20,
         ),
-        RichText(
-          text: TextSpan(
-              text: "Polazak:",
-              children: [
-                TextSpan(
-                    text:
-                        " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())} sati",
-                    style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 13,
-                        color: Colors.black,
-                        fontWeight: FontWeight.normal))
-              ],
-              style: TextStyle(
-                  fontFamily: "Inter",
-                  fontSize: 13,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold)),
-        ),
+        _buildDoubleTextLabel(
+            strongText: "Polazak:",
+            text:
+                " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())} sati"),
         SizedBox(
           height: 10,
         ),
         if (Authorization.id == widget.voznja.vozac?.id)
-          RichText(
-            text: TextSpan(
-                text: "Cijena:",
-                children: [
-                  TextSpan(
-                      text: " ${widget.voznja.cijena}KM",
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal))
-                ],
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 13,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
+          _buildDoubleTextLabel(
+              strongText: "Cijena:", text: " ${widget.voznja.cijena} KM"),
         SizedBox(
           height: 10,
         ),
@@ -237,9 +200,6 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   fontSize: 13,
                   color: Colors.black,
                   fontWeight: FontWeight.bold)),
-        SizedBox(
-          height: 20,
-        ),
       ],
     );
   }
@@ -282,7 +242,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   ),
                   Text(
                     isTrusted
-                        ? "Ovaj vozač ima 140 uspješnih vožnji"
+                        ? "Ovaj vozač ima $brojVoznji uspješnih vožnji"
                         : "Ovaj vozač nema nijednu završenu vožnju.",
                     style: TextStyle(
                         fontFamily: "Inter",
@@ -304,81 +264,21 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         spacing: 12,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          RichText(
-            text: TextSpan(
-                text: "Cijena:",
-                children: [
-                  TextSpan(
-                      text: " ${widget.voznja.cijena} KM",
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal))
-                ],
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 13,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
+          _buildDoubleTextLabel(
+              strongText: "Cijena:", text: " ${widget.voznja.cijena} KM"),
           if (isCouponCorrect?.ispravanKupon == true &&
               isCouponCorrect?.kupon != null)
-            RichText(
-              text: TextSpan(
-                  text: "Popust na kupon:",
-                  children: [
-                    TextSpan(
-                        text:
-                            " -${(widget.voznja.cijena! - (widget.voznja.cijena! * (1 - (isCouponCorrect?.kupon?.popust ?? 0)))).toStringAsFixed(2)} KM",
-                        style: TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 13,
-                            color: Color(0xFFE14040),
-                            fontWeight: FontWeight.normal))
-                  ],
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 13,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold)),
-            ),
-          RichText(
-            text: TextSpan(
-                text: "Popust na Rank:",
-                children: [
-                  TextSpan(
-                      text: " -${widget.voznja.cijena} KM",
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 13,
-                          color: Color(0xFFE14040),
-                          fontWeight: FontWeight.normal))
-                ],
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 13,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
-          RichText(
-            text: TextSpan(
-                text: "Provizija na pronalazak:",
-                children: [
-                  TextSpan(
-                      text: " 2.0 KM",
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal))
-                ],
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 13,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
+            _buildDoubleTextLabel(
+                strongText: "Popust na kupon:",
+                text:
+                    " -${(widget.voznja.cijena! - (widget.voznja.cijena! * (1 - (isCouponCorrect?.kupon?.popust ?? 0)))).toStringAsFixed(2)} KM",
+                textColor: Color(0xFFE14040)),
+          _buildDoubleTextLabel(
+              strongText: "Popust na Rank:",
+              text: " -${widget.voznja.cijena} KM",
+              textColor: Color(0xFFE14040)),
+          _buildDoubleTextLabel(
+              strongText: "Provizija na pronalazak:", text: " 2.0 KM"),
           SizedBox(
             width: double.infinity,
             height: 2,
@@ -386,24 +286,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
               decoration: BoxDecoration(color: Colors.black),
             ),
           ),
-          RichText(
-            text: TextSpan(
-                text: "Ukupno:",
-                children: [
-                  TextSpan(
-                      text: " ${totalPrice} KM",
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 13,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal))
-                ],
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 13,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)),
-          ),
+          _buildDoubleTextLabel(
+              strongText: "Ukupno:", text: " ${totalPrice} KM")
         ],
       ),
     );
@@ -496,7 +380,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent['client_secret'],
-          merchantDisplayName: "RideWithMe",
+          merchantDisplayName: "ridewithme",
         ),
       );
 
@@ -545,7 +429,12 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
       return json.decode(response.body);
     } catch (e) {
-      print("Greška pri kreiranju PaymentIntent-a: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Interna greška servera, pokušajte ponovo."),
+        ),
+      );
       throw Exception(e);
     }
   }
@@ -556,5 +445,30 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         fontSize: 30,
         color: Color(0xFF7463DE),
         fontWeight: FontWeight.w900);
+  }
+
+  TextStyle _buildBoldTextStyle(
+      {bool bold = true, Color color = Colors.black}) {
+    return TextStyle(
+        fontFamily: "Inter",
+        fontSize: 13,
+        color: color,
+        fontWeight: bold ? FontWeight.bold : FontWeight.normal);
+  }
+
+  Widget _buildDoubleTextLabel(
+      {String strongText = '',
+      String text = '',
+      Color textColor = Colors.black}) {
+    return RichText(
+      text: TextSpan(
+          text: strongText,
+          children: [
+            TextSpan(
+                text: " $text",
+                style: _buildBoldTextStyle(bold: false, color: textColor))
+          ],
+          style: _buildBoldTextStyle()),
+    );
   }
 }

@@ -15,7 +15,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endpoint) {
     _endpoint = endpoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://10.0.2.2:5284/api/");
+        defaultValue: "http://localhost:5284/api/");
   }
 
   //http://10.0.2.2:5284/api/ - za mobile
@@ -49,7 +49,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
     } else {
       throw new Exception("Unknown error");
     }
-    // print("response: ${response.request} ${response.statusCode}, ${response.body}");
   }
 
   Future<T> insert(dynamic request) async {
@@ -104,8 +103,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
-    print(response.body); // Debug ispis
-
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
@@ -130,8 +127,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
   Map<String, String> createHeaders() {
     String username = Authorization.username ?? "";
     String password = Authorization.password ?? "";
-
-    print("passed creds: $username, $password");
 
     String basicAuth =
         "Basic ${base64Encode(utf8.encode('$username:$password'))}";

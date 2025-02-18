@@ -67,6 +67,13 @@ namespace ridewithme.Service.VoznjeStateMachine
 
                     entity.KuponId = kupon.Id;
 
+                    kupon.BrojIskoristivosti -= 1;
+
+                    if(kupon.BrojIskoristivosti == 0)
+                    {
+                        kupon.StateMachine = "used";
+                    }
+
                 }
  
                 entity.KlijentId = request.KlijentId;
