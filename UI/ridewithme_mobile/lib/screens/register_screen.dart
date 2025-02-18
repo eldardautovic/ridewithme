@@ -255,6 +255,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 SizedBox(height: 30),
                                 CustomButtonWidget(
+                                    isFullWidth: true,
+                                    padding: EdgeInsets.symmetric(vertical: 20),
                                     buttonText: "Registruj se",
                                     onPress: () async {
                                       if (_formKey.currentState!

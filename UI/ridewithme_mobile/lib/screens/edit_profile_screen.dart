@@ -267,6 +267,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       margin: EdgeInsets.only(top: 40, left: 20, right: 20),
       child: CustomButtonWidget(
           isFullWidth: true,
+          padding: EdgeInsets.symmetric(vertical: 20),
           buttonText: "Sačuvaj",
           onPress: () async {
             await handleFormSubmit();

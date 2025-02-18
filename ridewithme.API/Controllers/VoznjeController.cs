@@ -82,7 +82,7 @@ namespace ridewithme.API.Controllers
 
         public override Voznje Insert(VoznjeInsertRequest request)
         {
-            if(request.VozacId == null)
+            if(request.VozacId == null || request.VozacId == 0)
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -90,6 +90,17 @@ namespace ridewithme.API.Controllers
             }
 
             return base.Insert(request);
+        }
+
+        public override Voznje Update(int id, VoznjeUpdateRequest request)
+        {
+            if (request.VozacId == null || request.VozacId == 0)
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                request.VozacId = userId;
+            }
+            return base.Update(id, request);
         }
     }
 }

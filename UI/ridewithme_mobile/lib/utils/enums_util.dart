@@ -19,3 +19,27 @@ enum VoznjaStatus {
     );
   }
 }
+
+enum VoznjaActions {
+  Activate(
+      "Aktiviraj", Color(0xFF4CAF50), Color(0xFF072220)), // Smaragdno zelena
+  Hide("Sakrij", Color(0xFFFFC107), Color(0xFF072220)), // Zlatno žuta
+  Delete("Obriši", Color(0xFFFF7043), Color(0xFF072220)), // Topla narandžasta
+  Edit("Omogući uređivanje", Color(0xFF64B5F6),
+      Color(0xFF072220)), // Pastelno plava
+  Update("Uredi", Color(0xFF64B5F6), Color(0xFF072220)), // Pastelno plava
+  NonExisting("", Colors.transparent,
+      Color(0xFF072220)); // Transparentna za nepostojeće akcije
+
+  final String naziv;
+  final Color boja;
+  final Color textBoja;
+  const VoznjaActions(this.naziv, this.boja, this.textBoja);
+
+  static VoznjaActions? fromString(String? value) {
+    return VoznjaActions.values.firstWhere(
+      (status) => status.name == value,
+      orElse: () => VoznjaActions.NonExisting,
+    );
+  }
+}

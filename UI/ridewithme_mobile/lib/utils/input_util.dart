@@ -38,3 +38,36 @@ Widget buildDropdown(
     items: items,
   );
 }
+
+InputDecoration buildTextFieldDecoration({
+  required String labelText,
+  required String hintText,
+  Icon? prefixIcon,
+  VoidCallback? onClear,
+}) {
+  return InputDecoration(
+    label: Text(labelText),
+    labelStyle: TextStyle(
+      color: Color(0xFF072220),
+      fontFamily: "Inter",
+      fontSize: 12,
+    ),
+    contentPadding: const EdgeInsets.only(left: 5, bottom: 10),
+    hintText: hintText,
+    filled: true,
+    fillColor: Color(0xFFF3FCFC),
+    prefixIcon: prefixIcon,
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+    ),
+    suffix: onClear != null
+        ? IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: onClear,
+          )
+        : null,
+  );
+}

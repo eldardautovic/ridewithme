@@ -148,6 +148,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       constraints: BoxConstraints(maxWidth: 350),
                       child: CustomButtonWidget(
                           isFullWidth: true,
+                          padding: EdgeInsets.symmetric(vertical: 20),
                           buttonText: "Nastavi",
                           onPress: () async {
                             await storage.setItem("onBoarded", '1');

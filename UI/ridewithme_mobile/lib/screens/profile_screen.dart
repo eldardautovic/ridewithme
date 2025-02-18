@@ -90,6 +90,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'route': HomeScreen(),
         },
         {
+          'title': 'FAQ',
+          'icon': Icons.question_answer_rounded,
+          'iconColor': Colors.indigoAccent,
+          'route': HomeScreen(),
+        },
+        {
           'title': 'Odjava',
           'icon': Icons.logout_rounded,
           'iconColor': Color(0xFFE14040),

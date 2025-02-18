@@ -13,8 +13,10 @@ import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/payment_success.dart';
+import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
+import 'package:ridewithme_mobile/utils/enums_util.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
@@ -40,6 +42,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   bool isTrusted = false;
   bool isDriver = false;
   int brojVoznji = 0;
+  List<String>? allowedActions;
 
   IspravanKupon? isCouponCorrect;
 
@@ -67,9 +70,84 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       brojVoznji = result;
     }
 
+    if (isDriver == true) {
+      allowedActions =
+          await _voznjeProvider.allowedActions(widget.voznja.id ?? 0);
+    }
+
     setState(() {
       isLoading = false;
     });
+  }
+
+  void executeAction(String name) async {
+    try {
+      switch (name) {
+        case "Hide":
+          {
+            await _voznjeProvider.hide(widget.voznja.id ?? 0);
+
+            showSnackBar("Uspješno ste sakrili vožnju.");
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => VoznjeScreen(),
+              ),
+            );
+            break;
+          }
+        case "Edit":
+          {
+            await _voznjeProvider.edit(widget.voznja?.id ?? 0);
+
+            showSnackBar("Uspješno ste omogućili uređivanje vožnji.");
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => VoznjeScreen(),
+              ),
+            );
+            break;
+          }
+        case "Activate":
+          {
+            await _voznjeProvider.activate(widget.voznja.id ?? 0);
+
+            showSnackBar("Uspješno ste aktivirali vožnju.");
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => VoznjeScreen(),
+              ),
+            );
+            break;
+          }
+
+        case "Update":
+          {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => VoznjeCreateScreen(
+                  voznja: widget.voznja,
+                ),
+              ),
+            );
+          }
+        default:
+      }
+
+      setState(() {
+        isLoading = true;
+      });
+    } on Exception catch (e) {
+      await showSnackBar("Došlo je do greške: ${e.toString()}");
+    }
+  }
+
+  Future<void> showSnackBar(String message) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(message),
+      ),
+    );
   }
 
   @override
@@ -82,6 +160,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (isDriver) ...[_buildAllowedActions()],
             _buildHeader(),
             _buildInfo(),
             if (isLoading) LoadingSpinnerWidget(height: 100),
@@ -94,6 +173,33 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAllowedActions() {
+    return Column(
+      children: [
+        Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: (allowedActions ?? [])
+              .where((e) =>
+                  VoznjaActions.fromString(e)?.naziv.isNotEmpty ??
+                  false) // Filtriranje praznih
+              .map((e) {
+            final action = VoznjaActions.fromString(e);
+            return CustomButtonWidget(
+              fontSize: 12,
+              buttonText: action!.naziv,
+              onPress: () => executeAction(e),
+              buttonColor: action.boja,
+            );
+          }).toList(),
+        ),
+        SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
 

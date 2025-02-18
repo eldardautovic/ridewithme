@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/profile_screen.dart';
+import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 
 class MasterLayout extends StatefulWidget {
@@ -35,7 +36,12 @@ class _MasterLayoutState extends State<MasterLayout> {
       'icon': Icons.directions_car_filled_rounded,
       'route': VoznjeScreen()
     },
-    {'title': '', 'icon': Icons.add_circle, 'route': HomeScreen(), 'size': 50},
+    {
+      'title': '',
+      'icon': Icons.add_circle,
+      'route': VoznjeCreateScreen(),
+      'size': 50
+    },
     {'title': 'Ocjene', 'icon': Icons.star_rate_rounded, 'route': HomeScreen()},
     {
       'title': 'Profil',
@@ -69,7 +75,7 @@ class _MasterLayoutState extends State<MasterLayout> {
                 child: IconButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (context) => widget.backButton!,
                       ),
                     );
