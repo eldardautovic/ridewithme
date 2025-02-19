@@ -46,7 +46,7 @@ namespace ridewithme.Service.Services
 
             }
 
-            query = query.Include(x => x.Voznja);
+            query = query.Include(x => x.Voznja).ThenInclude(x => x.GradOd).Include(x => x.Voznja).ThenInclude(x => x.GradDo).Include(x => x.Voznja).ThenInclude(x => x.Vozac);
 
             return query;
         }

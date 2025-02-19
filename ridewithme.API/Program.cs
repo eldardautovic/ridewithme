@@ -41,6 +41,7 @@ builder.Services.AddTransient<ActiveVoznjeState>();
 builder.Services.AddTransient<HiddenVoznjeState>();
 builder.Services.AddTransient<BookedVoznjeState>();
 builder.Services.AddTransient<InProgressVoznjeState>();
+builder.Services.AddTransient<CompletedVoznjeState>();
 
 builder.Services.AddTransient<BaseKuponiState>();
 builder.Services.AddTransient<InitialKuponiState>();

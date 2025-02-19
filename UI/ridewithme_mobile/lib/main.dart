@@ -6,17 +6,18 @@ import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/obavjestenja_provider.dart';
+import 'package:ridewithme_mobile/providers/recenzije_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/onboarding_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: "assets/.env");
-  Stripe.publishableKey = dotenv.env["STRIPE__PUBKEY"]!;
-  Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
-  Stripe.urlScheme = 'flutterstripe';
-  await Stripe.instance.applySettings();
+  // await dotenv.load(fileName: "assets/.env");
+  // Stripe.publishableKey = dotenv.env["STRIPE__PUBKEY"]!;
+  // Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
+  // Stripe.urlScheme = 'flutterstripe';
+  // await Stripe.instance.applySettings();
 
   runApp(MultiProvider(
     providers: [
@@ -25,6 +26,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => ObavjestenjaProvider()),
       ChangeNotifierProvider(create: (_) => GradoviProvider()),
       ChangeNotifierProvider(create: (_) => KuponiProvider()),
+      ChangeNotifierProvider(create: (_) => RecenzijeProvider()),
     ],
     child: const RideWithMeMobile(),
   ));

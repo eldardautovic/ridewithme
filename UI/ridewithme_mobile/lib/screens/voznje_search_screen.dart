@@ -5,6 +5,7 @@ import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
@@ -89,7 +90,13 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
           SizedBox(height: 10),
           CustomButtonWidget(
             buttonText: "Kreiraj vožnju",
-            onPress: () {},
+            onPress: () {
+              Navigator.of(context).pushReplacement(
+                CupertinoPageRoute(
+                  builder: (context) => VoznjeCreateScreen(),
+                ),
+              );
+            },
             fontSize: 12,
           ) //TODO: Dodaj navigator do kreiranja
         ],

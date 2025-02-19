@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/profile_screen.dart';
+import 'package:ridewithme_mobile/screens/rate_list_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 
@@ -42,7 +43,11 @@ class _MasterLayoutState extends State<MasterLayout> {
       'route': VoznjeCreateScreen(),
       'size': 50
     },
-    {'title': 'Ocjene', 'icon': Icons.star_rate_rounded, 'route': HomeScreen()},
+    {
+      'title': 'Ocjene',
+      'icon': Icons.star_rate_rounded,
+      'route': RateListScreen()
+    },
     {
       'title': 'Profil',
       'icon': Icons.person_2_rounded,

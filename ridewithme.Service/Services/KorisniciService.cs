@@ -130,7 +130,7 @@ namespace ridewithme.Service.Services
 
             var existingEmail = Context.Korisnicis.FirstOrDefault(x => x.Email == request.Email);
 
-            if (existingEmail != null)
+            if (existingEmail != null && request.Email != entity.Email)
             {
                 throw new UserException("E-mail adresa je već iskorištena od nekog korisnika.");
             }

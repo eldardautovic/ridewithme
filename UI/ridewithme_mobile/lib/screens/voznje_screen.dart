@@ -9,7 +9,9 @@ import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_search_screen.dart';
+import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 import 'package:ridewithme_mobile/widgets/town_widget.dart';
@@ -46,12 +48,14 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
       _voznjeProvider.get(filter: {
         "IsGradoviIncluded": true,
         'IsKorisniciIncluded': true,
-        "OrderBy": "DatumKreiranja DESC"
+        "OrderBy": "DatumKreiranja DESC",
+        "Status": "active"
       }),
       _voznjeProvider.get(filter: {
         "IsGradoviIncluded": true,
         "OrderBy": "Cijena asc",
         'IsKorisniciIncluded': true,
+        "Status": "active"
       }),
       _gradoviProvider.get(),
     ]);
@@ -81,11 +85,49 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
               _buildTownList(),
               _buildRecentRides(),
               _buildCheapRides(),
+              _buildSorryScreen()
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildSorryScreen() {
+    if (recentRides?.count == 0 &&
+        cheapRides?.count == 0 &&
+        isLoading == false) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 50,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Trenutno nema dostupnih vožnji.',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          CustomButtonWidget(
+            buttonText: "Kreiraj vožnju",
+            onPress: () {
+              Navigator.of(context).pushReplacement(
+                CupertinoPageRoute(
+                  builder: (context) => VoznjeCreateScreen(),
+                ),
+              );
+            },
+            fontSize: 12,
+          ) //TODO: Dodaj navigator do kreiranja
+        ],
+      );
+    }
+
+    return SizedBox.shrink();
   }
 
   Widget _buildSearch() {

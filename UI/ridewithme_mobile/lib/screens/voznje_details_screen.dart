@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -8,11 +9,15 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/models/kupon_check.dart';
+import 'package:ridewithme_mobile/models/recenzija.dart';
+import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
+import 'package:ridewithme_mobile/providers/recenzije_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/payment_success.dart';
+import 'package:ridewithme_mobile/screens/rate_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
@@ -34,6 +39,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   late KorisnikProvider _korisnikProvider;
   late VoznjeProvider _voznjeProvider;
   late KuponiProvider _kuponiProvider;
+  late RecenzijeProvider _recenzijeProvider;
 
   TextEditingController _kuponController = TextEditingController();
 
@@ -42,6 +48,9 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   bool isTrusted = false;
   bool isDriver = false;
   bool isClient = false;
+
+  SearchResult<Recenzija>? recenzijeResult;
+
   int brojVoznji = 0;
   List<String>? allowedActions;
 
@@ -56,6 +65,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     _korisnikProvider = context.read<KorisnikProvider>();
     _kuponiProvider = context.read<KuponiProvider>();
     _voznjeProvider = context.read<VoznjeProvider>();
+    _recenzijeProvider = context.read<RecenzijeProvider>();
 
     totalPrice += (widget.voznja.cijena ?? 0);
     isDriver = Authorization.id == widget.voznja.vozac?.id;
@@ -67,14 +77,22 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   Future initTrusted() async {
     var result = await _korisnikProvider.trusted(widget.voznja.vozac?.id ?? 0);
 
+    recenzijeResult =
+        await _recenzijeProvider.get(filter: {"VoznjaId": widget.voznja.id});
+
     if (result > 0) {
       isTrusted = true;
       brojVoznji = result;
     }
 
-    if (isDriver == true && widget.voznja.stateMachine != 'completed') {
+    if ((isDriver == true && widget.voznja.stateMachine != 'completed') ||
+        (isClient == true &&
+            widget.voznja.stateMachine == 'completed' &&
+            recenzijeResult?.result.isEmpty == true)) {
       allowedActions =
           await _voznjeProvider.allowedActions(widget.voznja.id ?? 0);
+
+      print(allowedActions);
     }
 
     setState(() {
@@ -145,7 +163,17 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             );
             break;
           }
-
+        case "Rate":
+          {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute(
+                builder: (context) => RateScreen(
+                  voznja: widget.voznja,
+                ),
+              ),
+            );
+            break;
+          }
         case "Update":
           {
             Navigator.of(context).pushReplacement(
@@ -186,7 +214,11 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (isDriver) ...[_buildAllowedActions()],
+            if (isDriver ||
+                (isClient == true &&
+                    widget.voznja.stateMachine == 'completed')) ...[
+              _buildAllowedActions()
+            ],
             _buildHeader(),
             _buildInfo(),
             if (isLoading) LoadingSpinnerWidget(height: 50),
@@ -331,9 +363,12 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             strongText: "Polazak:",
             text:
                 " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())} sati"),
-        SizedBox(
-          height: 10,
-        ),
+        if (widget.voznja.datumVrijemeZavrsetka != null) ...[
+          _buildDoubleTextLabel(
+              strongText: "Završetak:",
+              text:
+                  " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemeZavrsetka ?? DateTime.now())} sati"),
+        ],
         if (Authorization.id == widget.voznja.vozac?.id)
           _buildDoubleTextLabel(
               strongText: "Cijena:", text: " ${widget.voznja.cijena} KM"),
@@ -383,6 +418,51 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                     fontSize: 13,
                     color: Colors.black,
                     fontWeight: FontWeight.bold)),
+        ],
+        if (recenzijeResult?.result.isNotEmpty == true) ...[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Text("Ocjena vožnje:",
+                  style: TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 13,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              RatingBar.readOnly(
+                alignment: Alignment.center,
+                filledIcon: Icons.star_rounded,
+                emptyIcon: Icons.star_border_rounded,
+                initialRating:
+                    recenzijeResult?.result[0].ocjena?.toDouble() ?? 0.0,
+                maxRating: 5,
+                size: 40,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Komentar:",
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)),
+                  Text(recenzijeResult?.result[0].komentar ?? '',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal)),
+                ],
+              ),
+            ],
+          ),
         ]
       ],
     );

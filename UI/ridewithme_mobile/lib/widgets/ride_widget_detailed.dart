@@ -5,10 +5,11 @@ import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/screens/voznje_details_screen.dart';
 
 class RideWidgetDetailed extends StatefulWidget {
-  const RideWidgetDetailed(
-      {super.key, required this.voznja, required this.boxColor});
+  RideWidgetDetailed(
+      {super.key, required this.voznja, required this.boxColor, this.rating});
   final Voznja voznja;
   final Color boxColor;
+  bool? rating = false;
 
   @override
   State<RideWidgetDetailed> createState() => _RideWidgetDetailedState();
@@ -35,7 +36,7 @@ class _RideWidgetDetailedState extends State<RideWidgetDetailed> {
           padding: const EdgeInsets.all(13.0),
           child: Stack(
             children: [
-              if (widget.voznja.klijent != null) ...[
+              if (widget.voznja.klijent != null && widget.rating == false) ...[
                 Positioned(
                   top: 5,
                   right: 10,
