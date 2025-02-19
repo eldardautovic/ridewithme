@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
@@ -13,7 +14,7 @@ namespace ridewithme.API.Controllers
     [ApiController]
     [Authorize(Roles = "Administrator")]
 
-    public class FAQController : BaseCRUDController<Model.FAQ, FAQSearchObject, FAQInsertRequest, FAQUpdateRequest>
+    public class FAQController : BaseCRUDController<FAQ, FAQSearchObject, FAQInsertRequest, FAQUpdateRequest>
     {
         public FAQController(IFAQService service) : base(service)
         {
@@ -39,7 +40,7 @@ namespace ridewithme.API.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}/delete")]
 
-        public Model.FAQ Delete(int id)
+        public FAQ Delete(int id)
         {
             return (_service as IFAQService).Delete(id);
         }

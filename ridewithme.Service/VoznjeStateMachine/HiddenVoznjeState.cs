@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using ridewithme.Model.Models;
 using ridewithme.Service.Database;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ridewithme.Service.VoznjeStateMachine
         {
         }
 
-        public override Model.Voznje Edit(int id)
+        public override Model.Models.Voznje Edit(int id)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -24,10 +25,10 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return Mapper.Map<Model.Models.Voznje>(entity);
         }
 
-        public override List<string> AllowedActions(Voznje entity)
+        public override List<string> AllowedActions(Database.Voznje entity)
         {
             return new List<string>() { nameof(Edit) };
         }

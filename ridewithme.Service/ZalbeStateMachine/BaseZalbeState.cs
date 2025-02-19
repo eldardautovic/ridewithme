@@ -3,7 +3,7 @@ using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
 
 using Microsoft.Extensions.DependencyInjection;
-using ridewithme.Model;
+using ridewithme.Model.Exceptions;
 
 
 namespace ridewithme.Service.ZalbeStateMachine
@@ -21,32 +21,32 @@ namespace ridewithme.Service.ZalbeStateMachine
             Mapper = mapper;
             ServiceProvider = serviceProvider;
         }
-        public virtual Model.Zalbe Insert(ZalbeInsertRequest request)
+        public virtual Model.Models.Zalbe Insert(ZalbeInsertRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Zalbe Activate(int id)
+        public virtual Model.Models.Zalbe Activate(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Zalbe Complete(int id, ZalbeCompleteRequest request)
+        public virtual Model.Models.Zalbe Complete(int id, ZalbeCompleteRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Zalbe Update(int id, ZalbeUpdateRequest request)
+        public virtual Model.Models.Zalbe Update(int id, ZalbeUpdateRequest request)
         { 
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Zalbe Delete(int id)
+        public virtual Model.Models.Zalbe Delete(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Zalbe Processing(int id, int administratorId)
+        public virtual Model.Models.Zalbe Processing(int id, int administratorId)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }

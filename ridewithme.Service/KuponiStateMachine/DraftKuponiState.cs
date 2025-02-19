@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using MapsterMapper;
+using ridewithme.Model.Exceptions;
 using ridewithme.Model.Requests;
-using ridewithme.Model;
 using ridewithme.Service.Database;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace ridewithme.Service.KuponiStateMachine
         public DraftKuponiState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
         {
         }
-        public override Model.Kuponi Activate(int id)
+        public override Model.Models.Kuponi Activate(int id)
         {
             var set = Context.Set<Database.Kuponi>();
 
@@ -28,7 +28,7 @@ namespace ridewithme.Service.KuponiStateMachine
 
             //var bus = RabbitHutch.CreateBus("host=localhost");
 
-            var mappedEntity = Mapper.Map<Model.Kuponi>(entity);
+            var mappedEntity = Mapper.Map<Model.Models.Kuponi>(entity);
 
             //VoznjeActivated message = new VoznjeActivated{ Voznja = mappedEntity };
 
@@ -39,7 +39,7 @@ namespace ridewithme.Service.KuponiStateMachine
             return mappedEntity;
         }
 
-        public override Model.Kuponi Hide(int id)
+        public override Model.Models.Kuponi Hide(int id)
         {
             var set = Context.Set<Database.Kuponi>();
 
@@ -51,10 +51,10 @@ namespace ridewithme.Service.KuponiStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Kuponi>(entity);
+            return Mapper.Map<Model.Models.Kuponi>(entity);
         }
 
-        public override Model.Kuponi Update(int id, KuponiUpdateRequest request)
+        public override Model.Models.Kuponi Update(int id, KuponiUpdateRequest request)
         {
             var set = Context.Set<Database.Kuponi>();
 
@@ -95,10 +95,10 @@ namespace ridewithme.Service.KuponiStateMachine
 
             Mapper.Config.Default.IgnoreNullValues(false);
 
-            return Mapper.Map<Model.Kuponi>(entity);
+            return Mapper.Map<Model.Models.Kuponi>(entity);
         }
 
-        public override Model.Kuponi Delete(int id)
+        public override Model.Models.Kuponi Delete(int id)
         {
             var set = Context.Set<Database.Kuponi>();
 
@@ -108,7 +108,7 @@ namespace ridewithme.Service.KuponiStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Kuponi>(entity);
+            return Mapper.Map<Model.Models.Kuponi>(entity);
         }
 
         public override List<string> AllowedActions(Database.Kuponi entity)

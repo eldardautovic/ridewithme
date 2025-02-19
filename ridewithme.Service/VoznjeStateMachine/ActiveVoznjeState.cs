@@ -1,7 +1,9 @@
 ﻿using MapsterMapper;
-using ridewithme.Model;
+using Microsoft.EntityFrameworkCore;
+using ridewithme.Model.Exceptions;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
+using ridewithme.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,13 @@ namespace ridewithme.Service.VoznjeStateMachine
 {
     public class ActiveVoznjeState : BaseVoznjeState
     {
-        public ActiveVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
+        private readonly IEmailService _emailService;
+        public ActiveVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider, IEmailService emailService) : base(dbContext, mapper, serviceProvider)
         {
+            _emailService = emailService;
         }
 
-        public override Model.Voznje Hide(int id)
+        public override Model.Models.Voznje Hide(int id)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -26,17 +30,20 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return Mapper.Map<Model.Models.Voznje>(entity);
         }
 
-        public override Model.Voznje Book(int id, VoznjeBookRequest request)
+        public override Model.Models.Voznje Book(int id, VoznjeBookRequest request)
         {
 
-            var set = Context.Set<Database.Voznje>();
+            var set = Context.Set<Database.Voznje>().Include(x => x.Vozac).Include(x => x.GradDo).Include(x => x.GradOd);
 
-            var entity = set.Find(id);
+            var entity = set.FirstOrDefault(x => x.Id == id);
+            var klijent = Context.Korisnicis.Find(request.KlijentId);
+
+            const double provizija = 2.0; 
             
-            var klijent = Context.Korisnicis.Find(id);
+            double totalPrice = entity.Cijena + provizija; 
 
             if(klijent == null)
             {
@@ -69,6 +76,8 @@ namespace ridewithme.Service.VoznjeStateMachine
 
                     kupon.BrojIskoristivosti -= 1;
 
+                    totalPrice = totalPrice * (1 - kupon.Popust);
+
                     if(kupon.BrojIskoristivosti == 0)
                     {
                         kupon.StateMachine = "used";
@@ -80,10 +89,22 @@ namespace ridewithme.Service.VoznjeStateMachine
                 
                 entity.StateMachine = "booked";
 
+                var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
+
+                Model.Messages.VoznjePaid notifikacija = new Model.Messages.VoznjePaid
+                {
+                    Voznja = mappedEntity,
+                    klijentEmail = klijent.Email,
+                    vozacEmail = mappedEntity.Vozac.Email,
+                    totalPrice = totalPrice
+                };
+
+                _emailService.SendingObject(notifikacija);
+
                 Context.SaveChanges();
             }
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return Mapper.Map<Model.Models.Voznje>(entity);
         }
 
         public override List<string> AllowedActions(Database.Voznje entity)

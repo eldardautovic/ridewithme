@@ -3,7 +3,7 @@ using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
 
 using Microsoft.Extensions.DependencyInjection;
-using ridewithme.Model;
+using ridewithme.Model.Exceptions;
 
 
 namespace ridewithme.Service.VoznjeStateMachine
@@ -21,44 +21,44 @@ namespace ridewithme.Service.VoznjeStateMachine
             Mapper = mapper;
             ServiceProvider = serviceProvider;
         }
-        public virtual Model.Voznje Insert(VoznjeInsertRequest request)
+        public virtual Model.Models.Voznje Insert(VoznjeInsertRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Voznje Update(int id, VoznjeUpdateRequest request)
+        public virtual Model.Models.Voznje Update(int id, VoznjeUpdateRequest request)
         { 
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Voznje Activate(int id)
+        public virtual Model.Models.Voznje Activate(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Voznje Start(int id, VoznjeStartRequest request)
+        public virtual Model.Models.Voznje Start(int id, VoznjeStartRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
-        public virtual Model.Voznje Complete(int id, VoznjeCompleteRequest request)
+        public virtual Model.Models.Voznje Complete(int id, VoznjeCompleteRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
-        public virtual Model.Voznje Hide(int id)
+        public virtual Model.Models.Voznje Hide(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
-        public virtual Model.Voznje Edit(int id)
-        {
-            throw new UserException("Metoda nije dozvoljena.");
-        }
-
-        public virtual Model.Voznje Delete(int id)
+        public virtual Model.Models.Voznje Edit(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Voznje Rate(int id, int ocjena)
+        public virtual Model.Models.Voznje Delete(int id)
+        {
+            throw new UserException("Metoda nije dozvoljena.");
+        }
+
+        public virtual Model.Models.Voznje Rate(int id, int ocjena)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
@@ -68,7 +68,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Voznje Book(int id, VoznjeBookRequest request)
+        public virtual Model.Models.Voznje Book(int id, VoznjeBookRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
@@ -95,10 +95,11 @@ namespace ridewithme.Service.VoznjeStateMachine
                 case "inprogress":
                     return ServiceProvider.GetService<InProgressVoznjeState>();
 
+                case "completed":
+                    return ServiceProvider.GetService<CompletedVoznjeState>();
+
                 default: throw new Exception("State not recognized.");
             }
         }
     }
 }
-
-//Initial, draft, active, hidden -> active -> booked -> in progress -> completed

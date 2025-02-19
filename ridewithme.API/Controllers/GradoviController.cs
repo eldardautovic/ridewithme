@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 
 namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Roles = "Administrator")]
     [ApiController]
-    public class GradoviController : BaseCRUDController<Model.Gradovi, GradoviSearchObject, GradoviUpsertRequest, GradoviUpsertRequest>
+    public class GradoviController : BaseCRUDController<Gradovi, GradoviSearchObject, GradoviUpsertRequest, GradoviUpsertRequest>
     {
         public GradoviController(IGradoviService service) : base(service)
         {
@@ -31,7 +32,7 @@ namespace ridewithme.API.Controllers
 
         [HttpDelete("{id}/delete")]
 
-        public Model.Gradovi Delete(int id)
+        public Gradovi Delete(int id)
         {
             return (_service as IGradoviService).Delete(id);
         }

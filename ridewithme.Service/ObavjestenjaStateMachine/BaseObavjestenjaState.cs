@@ -1,7 +1,7 @@
 ﻿using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
+using ridewithme.Model.Exceptions;
 using ridewithme.Model.Requests;
-using ridewithme.Model;
 using ridewithme.Service.Database;
 using System;
 using System.Collections.Generic;
@@ -24,38 +24,38 @@ namespace ridewithme.Service.ObavjestenjaStateMachine
             Mapper = mapper;
             ServiceProvider = serviceProvider;
         }
-        public virtual Model.Obavjestenja Insert(ObavjestenjaInsertRequest request)
+        public virtual Model.Models.Obavjestenja Insert(ObavjestenjaInsertRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Obavjestenja Activate(int id)
+        public virtual Model.Models.Obavjestenja Activate(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Obavjestenja Edit(int id)
+        public virtual Model.Models.Obavjestenja Edit(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
 
-        public virtual Model.Obavjestenja Complete(int id)
+        public virtual Model.Models.Obavjestenja Complete(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Obavjestenja Hide(int id)
+        public virtual Model.Models.Obavjestenja Hide(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Obavjestenja Update(int id, ObavjestenjaUpdateRequest request)
+        public virtual Model.Models.Obavjestenja Update(int id, ObavjestenjaUpdateRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Obavjestenja Delete(int id)
+        public virtual Model.Models.Obavjestenja Delete(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }

@@ -3,7 +3,7 @@ using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
 
 using Microsoft.Extensions.DependencyInjection;
-using ridewithme.Model;
+using ridewithme.Model.Exceptions;
 
 
 namespace ridewithme.Service.KuponiStateMachine
@@ -21,30 +21,30 @@ namespace ridewithme.Service.KuponiStateMachine
             Mapper = mapper;
             ServiceProvider = serviceProvider;
         }
-        public virtual Model.Kuponi Insert(KuponiInsertRequest request)
+        public virtual Model.Models.Kuponi Insert(KuponiInsertRequest request)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Kuponi Delete(int id)
+        public virtual Model.Models.Kuponi Delete(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Kuponi Update(int id, KuponiUpdateRequest request)
+        public virtual Model.Models.Kuponi Update(int id, KuponiUpdateRequest request)
         { 
             throw new UserException("Metoda nije dozvoljena.");
         }
 
-        public virtual Model.Kuponi Activate(int id)
+        public virtual Model.Models.Kuponi Activate(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         } 
-        public virtual Model.Kuponi Hide(int id)
+        public virtual Model.Models.Kuponi Hide(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }
-        public virtual Model.Kuponi Edit(int id)
+        public virtual Model.Models.Kuponi Edit(int id)
         {
             throw new UserException("Metoda nije dozvoljena.");
         }

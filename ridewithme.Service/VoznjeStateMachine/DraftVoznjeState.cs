@@ -3,11 +3,11 @@ using EasyNetQ;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
-using ridewithme.Model;
+using ridewithme.Model.Exceptions;
 using ridewithme.Model.Messages;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
-using ridewithme.Services;
+using ridewithme.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             _emailService = emailService;
         }
 
-        public override Model.Voznje Update(int id, VoznjeUpdateRequest request)
+        public override Model.Models.Voznje Update(int id, VoznjeUpdateRequest request)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -74,10 +74,10 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             Mapper.Config.Default.IgnoreNullValues(false);
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return Mapper.Map<Model.Models.Voznje>(entity);
         }
 
-        public override Model.Voznje Activate(int id)
+        public override Model.Models.Voznje Activate(int id)
         {
             var set = Context.Set<Database.Voznje>().Include(x => x.Vozac).Include(x => x.GradDo).Include(x => x.GradOd);
 
@@ -85,7 +85,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "active";
 
-            var mappedEntity = Mapper.Map<Model.Voznje>(entity);
+            var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
 
             Model.Messages.VoznjeActivated notifikacija = new Model.Messages.VoznjeActivated
             {
@@ -100,7 +100,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             return mappedEntity;
         }
 
-        public override Model.Voznje Hide(int id)
+        public override Model.Models.Voznje Hide(int id)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -110,10 +110,10 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return Mapper.Map<Model.Models.Voznje>(entity);
         }
 
-        public override Model.Voznje Delete(int id)
+        public override Model.Models.Voznje Delete(int id)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -123,7 +123,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Voznje>(entity);
+            return Mapper.Map<Model.Models.Voznje>(entity);
         }
 
         public override List<string> AllowedActions(Database.Voznje entity)

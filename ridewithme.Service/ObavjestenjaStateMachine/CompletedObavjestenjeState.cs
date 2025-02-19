@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using ridewithme.Model.Models;
 using ridewithme.Service.Database;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ridewithme.Service.ObavjestenjaStateMachine
         {
         }
 
-        public override Model.Obavjestenja Delete(int id)
+        public override Model.Models.Obavjestenja Delete(int id)
         {
             var set = Context.Set<Database.Obavjestenja>();
 
@@ -24,10 +25,10 @@ namespace ridewithme.Service.ObavjestenjaStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Obavjestenja>(entity);
+            return Mapper.Map<Model.Models.Obavjestenja>(entity);
         }
 
-        public override List<string> AllowedActions(Obavjestenja entity)
+        public override List<string> AllowedActions(Database.Obavjestenja entity)
         {
             return new List<string>() { nameof(Delete) };
         }

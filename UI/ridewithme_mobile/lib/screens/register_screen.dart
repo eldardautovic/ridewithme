@@ -274,6 +274,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           Authorization.password =
                                               request['lozinka'];
 
+                                          Authorization.email =
+                                              request['email'];
+
                                           Authorization.fullName =
                                               "${result.ime} ${result.prezime}";
 

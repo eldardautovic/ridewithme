@@ -1,14 +1,7 @@
 ﻿using MapsterMapper;
-using ridewithme.Model.Requests;
-using ridewithme.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mapster;
-using Azure.Core;
+using ridewithme.Model.Models;
+using ridewithme.Model.Exceptions;
 
 namespace ridewithme.Service.ZalbeStateMachine
 {

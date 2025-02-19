@@ -17,7 +17,7 @@ namespace ridewithme.Service.VoznjeStateMachine
         {
         }
 
-        public override Model.Voznje Start(int id, VoznjeStartRequest request)
+        public override Model.Models.Voznje Start(int id, VoznjeStartRequest request)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -25,7 +25,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "inprogress";
 
-            var mappedEntity = Mapper.Map<Model.Voznje>(entity);
+            var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
 
             Context.SaveChanges();
 

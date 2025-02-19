@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using ridewithme.Model;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
 using ridewithme.Service.Database;
+using ridewithme.Service.Interfaces;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KorisniciController : BaseCRUDController<Model.Korisnici, KorisniciSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>
+    public class KorisniciController : BaseCRUDController<Model.Models.Korisnici, KorisniciSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>
     {
         public RidewithmeContext context { get; set; }
         public KorisniciController(IKorisniciService service, RidewithmeContext ridewithmecontext) : base(service) {
@@ -23,27 +24,27 @@ namespace ridewithme.API.Controllers
         }
 
         [HttpGet("{id}/trusted")]
-        public Model.PovjerljivVozac Trusted(int id)
+        public PovjerljivVozac Trusted(int id)
         {
             return (_service as IKorisniciService).Trusted(id);
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public Model.Korisnici Login(string username, string password)
+        public Model.Models.Korisnici Login(string username, string password)
         {
             return (_service as IKorisniciService).Login(username, password);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public override Model.Korisnici Insert(KorisniciInsertRequest request)
+        public override Model.Models.Korisnici Insert(KorisniciInsertRequest request)
         {
             return base.Insert(request);
         }
 
         [AllowAnonymous]
-        public override PagedResult<Model.Korisnici> GetList([FromQuery] KorisniciSearchObject searchObject)
+        public override PagedResult<Model.Models.Korisnici> GetList([FromQuery] KorisniciSearchObject searchObject)
         {
             return base.GetList(searchObject);
         }

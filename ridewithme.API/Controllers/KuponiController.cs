@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KuponiController : BaseCRUDController<Model.Kuponi, KuponiSearchObject, KuponiInsertRequest, KuponiUpdateRequest>
+    public class KuponiController : BaseCRUDController<Kuponi, KuponiSearchObject, KuponiInsertRequest, KuponiUpdateRequest>
     {
         public KuponiController(IKuponiService service) : base(service)
         {
@@ -38,35 +38,35 @@ namespace ridewithme.API.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}/delete")]
 
-        public Model.Kuponi Delete(int id)
+        public Kuponi Delete(int id)
         {
             return (_service as IKuponiService).Delete(id);
         }
 
         [HttpPut("{id}/activate")]
 
-        public Model.Kuponi Activate(int id)
+        public Kuponi Activate(int id)
         {
             return (_service as IKuponiService).Activate(id);
         }
 
         [HttpGet("check")]
 
-        public Model.ProvjerenKupon Check(string kod)
+        public ProvjerenKupon Check(string kod)
         {
             return (_service as IKuponiService).Check(kod);
         }
 
         [HttpPut("{id}/hide")]
 
-        public Model.Kuponi Hide(int id)
+        public Kuponi Hide(int id)
         {
             return (_service as IKuponiService).Hide(id);
         }
 
         [HttpPut("{id}/edit")]
 
-        public Model.Kuponi Edit(int id)
+        public Kuponi Edit(int id)
         {
             return (_service as IKuponiService).Edit(id);
         }

@@ -1,8 +1,9 @@
 ﻿using MapsterMapper;
 using ridewithme.Model.Requests;
-using ridewithme.Model;
 using Microsoft.Extensions.Logging;
 using Mapster;
+using ridewithme.Model.Models;
+using ridewithme.Model.Exceptions;
 
 namespace ridewithme.Service.ObavjestenjaStateMachine
 {

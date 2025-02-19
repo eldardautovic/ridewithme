@@ -5,14 +5,14 @@ using Microsoft.OpenApi.Models;
 using Quartz;
 using ridewithme.API;
 using ridewithme.API.Filters;
-using ridewithme.Service;
 using ridewithme.Service.Database;
 using ridewithme.Service.KuponiStateMachine;
 using ridewithme.Service.ObavjestenjaStateMachine;
 using ridewithme.Service.VoznjeStateMachine;
 using ridewithme.Service.ZalbeStateMachine;
-using ridewithme.Services;
 using ridewithme.Service.Jobs;
+using ridewithme.Service.Services;
+using ridewithme.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

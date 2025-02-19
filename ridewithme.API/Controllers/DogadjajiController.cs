@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 
 namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Administrator")]
-    public class DogadjajiController : BaseCRUDController<Model.Dogadjaji, DogadjajiSearchObejct, DogadjajiUpsertRequest, DogadjajiUpsertRequest>
+    public class DogadjajiController : BaseCRUDController<Dogadjaji, DogadjajiSearchObejct, DogadjajiUpsertRequest, DogadjajiUpsertRequest>
     {
         public DogadjajiController(IDogadjaji service) : base(service)
         {
@@ -19,7 +20,7 @@ namespace ridewithme.API.Controllers
 
         [HttpDelete("{id}/delete")]
 
-        public Model.Dogadjaji Delete(int id)
+        public Dogadjaji Delete(int id)
         {
             return (_service as IDogadjaji).Delete(id);
         }

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
@@ -12,7 +13,7 @@ namespace ridewithme.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Administrator")]
-    public class ObavjestenjeController : BaseCRUDController<Model.Obavjestenja, ObavjestenjaSearchObject, ObavjestenjaInsertRequest, ObavjestenjaUpdateRequest>
+    public class ObavjestenjeController : BaseCRUDController<Obavjestenja, ObavjestenjaSearchObject, ObavjestenjaInsertRequest, ObavjestenjaUpdateRequest>
     {
         public ObavjestenjeController(IObavjestenjaService service) : base(service)
         {
@@ -26,35 +27,35 @@ namespace ridewithme.API.Controllers
 
         [HttpPut("{id}/activate")]
 
-        public Model.Obavjestenja Activate(int id)
+        public Obavjestenja Activate(int id)
         {
             return (_service as IObavjestenjaService).Activate(id);
         }
 
         [HttpPut("{id}/complete")]
 
-        public Model.Obavjestenja Complete(int id)
+        public Obavjestenja Complete(int id)
         {
             return (_service as IObavjestenjaService).Complete(id);
         }
 
         [HttpPut("{id}/edit")]
 
-        public Model.Obavjestenja Edit(int id)
+        public Obavjestenja Edit(int id)
         {
             return (_service as IObavjestenjaService).Edit(id);
         }
 
         [HttpDelete("{id}/delete")]
 
-        public Model.Obavjestenja Delete(int id)
+        public Obavjestenja Delete(int id)
         {
             return (_service as IObavjestenjaService).Delete(id);
         }
 
         [HttpPut("{id}/hide")]
 
-        public Model.Obavjestenja Hide(int id)
+        public Obavjestenja Hide(int id)
         {
             return (_service as IObavjestenjaService).Hide(id);
         }

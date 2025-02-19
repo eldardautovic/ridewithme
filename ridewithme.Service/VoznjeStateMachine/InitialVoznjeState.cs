@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using MapsterMapper;
-using ridewithme.Model;
 using ridewithme.Model.Requests;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mapster;
+using ridewithme.Model.Models;
+using ridewithme.Model.Exceptions;
 
 namespace ridewithme.Service.VoznjeStateMachine
 {

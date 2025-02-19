@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
-using ridewithme.Service;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
+using ridewithme.Service.Interfaces;
 
 namespace ridewithme.API.Controllers
 {

@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using ridewithme.Model.Models;
 using ridewithme.Service.Database;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ridewithme.Service.KuponiStateMachine
         {
         }
 
-        public override Model.Kuponi Edit(int id)
+        public override Model.Models.Kuponi Edit(int id)
         {
             var set = Context.Set<Database.Kuponi>();
 
@@ -26,10 +27,10 @@ namespace ridewithme.Service.KuponiStateMachine
 
             Context.SaveChanges();
 
-            return Mapper.Map<Model.Kuponi>(entity);
+            return Mapper.Map<Model.Models.Kuponi>(entity);
         }
 
-        public override List<string> AllowedActions(Kuponi entity)
+        public override List<string> AllowedActions(Database.Kuponi entity)
         {
             return new List<string>() { nameof(Edit) };
         }

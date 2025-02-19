@@ -61,6 +61,7 @@ public class ConsumeRabbitMQHostedService : BackgroundService
                 {
                     bus.PubSub.Subscribe<VoznjeActivated>("activated_rides", HandleMessage);
                     bus.PubSub.Subscribe<ZalbaActivated>("activated_complaint", HandleMessage);
+                    bus.PubSub.Subscribe<VoznjePaid>("paid_ride", HandleMessage);
                     Console.WriteLine("Čekanje na mailove");
                     await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                 }
@@ -134,6 +135,48 @@ public class ConsumeRabbitMQHostedService : BackgroundService
 
 
     }
+
+    private async Task HandleMessage(VoznjePaid mail)
+    {
+        // Email za klijenta - potvrda plaćanja
+        await _emailSender.SendEmailAsync(mail.klijentEmail, "Potvrda plaćanja vožnje",
+            $@"
+        <div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+            <h2 style='color: #39D5C3;'>Poštovani,</h2>
+            <p>Vaše plaćanje za vožnju broj: <b>{mail.Voznja.Id}</b> je uspješno obavljeno.</p>
+            <div style='margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #39D5C3;'>
+                <h3><strong>Detalji vožnje:</strong></h3>
+                <ul style='list-style-type: none; padding-left: 0;'>
+                    <li><p><b>Polazak:</b> {mail.Voznja.GradOd.Naziv}</p></li>
+                    <li><p><b>Odredište:</b> {mail.Voznja.GradDo.Naziv}</p></li>
+                    <li><p><b>Ukupna cijena:</b> {mail.totalPrice} KM</p></li>
+                </ul>
+            </div>
+            <p style='margin-top: 20px;'>Hvala što koristite našu uslugu! Želimo Vam ugodnu vožnju.</p>
+            <hr style='border: none; border-top: 1px solid #ddd; margin: 20px 0;' />
+            <p style='font-size: 0.9em; color: #555;'>Ova poruka je automatski generisana. Molimo Vas da ne odgovarate na ovu poruku.</p>
+        </div>");
+
+        // Email za vozača - obavještenje o novoj vožnji
+        await _emailSender.SendEmailAsync(mail.vozacEmail, "Nova vožnja zakazana",
+            $@"
+        <div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+            <h2 style='color: #39D5C3;'>Poštovani <b>{mail.Voznja.Vozac.Ime} {mail.Voznja.Vozac.Prezime}</b>,</h2>
+            <p>Nova vožnja je uspješno zakazana.</p>
+            <div style='margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #39D5C3;'>
+                <h3><strong>Detalji vožnje:</strong></h3>
+                <ul style='list-style-type: none; padding-left: 0;'>
+                    <li><p><b>Polazak:</b> {mail.Voznja.GradOd.Naziv}</p></li>
+                    <li><p><b>Odredište:</b> {mail.Voznja.GradDo.Naziv}</p></li>
+                    <li><p><b>Ukupna cijena:</b> {mail.totalPrice} KM</p></li>
+                </ul>
+            </div>
+            <p style='margin-top: 20px;'>Molimo Vas da se pripremite za vožnju i kontaktirate klijenta ako je potrebno.</p>
+            <hr style='border: none; border-top: 1px solid #ddd; margin: 20px 0;' />
+            <p style='font-size: 0.9em; color: #555;'>Ova poruka je automatski generisana. Molimo Vas da ne odgovarate na ovu poruku.</p>
+        </div>");
+    }
+
 
     private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }
     private void OnConsumerUnregistered(object sender, ConsumerEventArgs e) { }

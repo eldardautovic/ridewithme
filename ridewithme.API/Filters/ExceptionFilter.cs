@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ridewithme.Model;
+using ridewithme.Model.Exceptions;
 using System.Net;
 
 namespace ridewithme.API.Filters

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ridewithme.Model;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 
 namespace ridewithme.API.Controllers
 {

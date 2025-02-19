@@ -1,6 +1,5 @@
 ﻿using MapsterMapper;
 using ridewithme.Model.Requests;
-using ridewithme.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,9 @@ using Microsoft.Extensions.Logging;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-using ridewithme.Services;
+using ridewithme.Service.Interfaces;
+using ridewithme.Model.Models;
+using ridewithme.Model.Exceptions;
 
 namespace ridewithme.Service.ZalbeStateMachine
 {

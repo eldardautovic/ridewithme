@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ridewithme.Model.Models;
 
 namespace ridewithme.Model.Messages
 {

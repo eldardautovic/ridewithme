@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;

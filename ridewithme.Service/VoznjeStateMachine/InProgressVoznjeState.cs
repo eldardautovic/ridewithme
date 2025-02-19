@@ -14,7 +14,7 @@ namespace ridewithme.Service.VoznjeStateMachine
         public InProgressVoznjeState(RidewithmeContext dbContext, IMapper mapper, IServiceProvider serviceProvider) : base(dbContext, mapper, serviceProvider)
         {
         }
-        public override Model.Voznje Complete(int id, VoznjeCompleteRequest request)
+        public override Model.Models.Voznje Complete(int id, VoznjeCompleteRequest request)
         {
             var set = Context.Set<Database.Voznje>();
 
@@ -23,7 +23,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             entity.StateMachine = "completed";
             entity.DatumVrijemeZavrsetka = DateTime.Now;
 
-            var mappedEntity = Mapper.Map<Model.Voznje>(entity);
+            var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
 
             Context.SaveChanges();
 

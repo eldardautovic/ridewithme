@@ -1,10 +1,10 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
@@ -19,14 +19,14 @@ namespace ridewithme.API.Controllers
 
         [HttpPut("{id}/activate")]
 
-        public Model.Voznje Activate(int id)
+        public Voznje Activate(int id)
         {
             return (_service as IVoznjeService).Activate(id);
         }
 
         [HttpPut("{id}/book")]
 
-        public Model.Voznje Book(int id, VoznjeBookRequest request)
+        public Voznje Book(int id, VoznjeBookRequest request)
         {
             if (request.KlijentId == null || request.KlijentId == 0)
             {
@@ -40,7 +40,7 @@ namespace ridewithme.API.Controllers
 
         [HttpPut("{id}/start")]
 
-        public Model.Voznje Start(int id, VoznjeStartRequest request)
+        public Voznje Start(int id, VoznjeStartRequest request)
         {
             if (request.VozacId == null || request.VozacId == 0)
             {
@@ -53,7 +53,7 @@ namespace ridewithme.API.Controllers
         }
         [HttpPut("{id}/complete")]
 
-        public Model.Voznje Complete(int id, VoznjeCompleteRequest request)
+        public Voznje Complete(int id, VoznjeCompleteRequest request)
         {
             if (request.VozacId == null || request.VozacId == 0)
             {
@@ -67,14 +67,14 @@ namespace ridewithme.API.Controllers
 
         [HttpPut("{id}/edit")]
 
-        public Model.Voznje Edit(int id)
+        public Voznje Edit(int id)
         {
             return (_service as IVoznjeService).Edit(id);
         }
 
         [HttpPut("{id}/hide")]
 
-        public Model.Voznje Hide(int id)
+        public Voznje Hide(int id)
         {
             return (_service as IVoznjeService).Hide(id);
         }
@@ -88,14 +88,14 @@ namespace ridewithme.API.Controllers
 
         [HttpDelete("{id}/delete")]
 
-        public Model.Voznje Delete (int id)
+        public Voznje Delete (int id)
         {
             return (_service as IVoznjeService).Delete(id);
         }
 
         [HttpPut("{id}/rate")]
 
-        public Model.Voznje Rate(int id, int ocjena)
+        public Voznje Rate(int id, int ocjena)
         {
             return (_service as IVoznjeService).Rate(id, ocjena);
         }

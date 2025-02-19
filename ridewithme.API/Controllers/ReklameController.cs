@@ -2,17 +2,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ridewithme.Model;
+using ridewithme.Model.Helpers;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
-using ridewithme.Service;
+using ridewithme.Service.Interfaces;
 using System.Security.Claims;
 
 namespace ridewithme.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReklameController : BaseCRUDController<Model.Reklame, ReklameSearchObject, ReklameInsertRequest, ReklameUpdateRequest>
+    public class ReklameController : BaseCRUDController<Reklame, ReklameSearchObject, ReklameInsertRequest, ReklameUpdateRequest>
     {
         public ReklameController(IReklameService service) : base(service)
         {
@@ -37,7 +38,7 @@ namespace ridewithme.API.Controllers
         [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}/delete")]
 
-        public Model.Reklame Delete(int id)
+        public Reklame Delete(int id)
         {
             return (_service as IReklameService).Delete(id);
         }
