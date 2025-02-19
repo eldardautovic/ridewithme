@@ -101,6 +101,13 @@ namespace ridewithme.Service
                 throw new UserException("E-mail adresa nije u validnom formatu.");
             }
 
+            var existingEmail = Context.Korisnicis.FirstOrDefault(x => x.Email == request.Email);
+
+            if (existingEmail != null)
+            {
+                throw new UserException("E-mail adresa je već iskorištena od nekog korisnika.");
+            }
+
             entity.LozinkaSalt = GenerateSalt();
             entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Lozinka);
             base.BeforeInsert(request, entity);
@@ -119,7 +126,14 @@ namespace ridewithme.Service
                 throw new UserException("E-mail adresa nije u validnom formatu.");
             }
 
-            if(request.Lozinka != null)
+            var existingEmail = Context.Korisnicis.FirstOrDefault(x => x.Email == request.Email);
+
+            if(existingEmail != null)
+            {
+                throw new UserException("E-mail adresa je već iskorištena od nekog korisnika.");
+            }
+
+            if (request.Lozinka != null)
             {
                 entity.LozinkaSalt = GenerateSalt();
                 entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Lozinka);

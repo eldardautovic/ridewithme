@@ -101,7 +101,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   bool isValidResponse(Response response) {
-    print(response.body);
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
@@ -118,6 +117,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
         throw Exception("Something bad happened, please try again.");
       }
     }
+
+    return true;
   }
 
   Map<String, String> createHeaders() {
