@@ -32,6 +32,11 @@ namespace ridewithme.Service.Services
                 query = query.Where(x => x.DatumPreuzimanja == searchObject.DatumPreuzimanja.Value);
             }
 
+            if (searchObject.KorisnikId.HasValue)
+            {
+                query = query.Where(x => x.KorisnikId == searchObject.KorisnikId.Value);
+            }
+
             if (!string.IsNullOrWhiteSpace(searchObject.VrstaZalbeGTE))
             {
                 query = query.Include(x => x.VrstaZalbe).Where(x => x.VrstaZalbe.Naziv.Contains(searchObject.VrstaZalbeGTE));

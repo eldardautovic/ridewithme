@@ -8,6 +8,7 @@ import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/login_screen.dart';
 import 'package:ridewithme_mobile/screens/traveler_rides_screen.dart';
 import 'package:ridewithme_mobile/screens/your_rides_screen.dart';
+import 'package:ridewithme_mobile/screens/zalbe_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'title': 'Žalbe',
           'icon': Icons.support_rounded,
           'iconColor': Colors.blue,
-          'route': HomeScreen(),
+          'route': ZalbeScreen(),
         },
         {
           'title': 'FAQ',

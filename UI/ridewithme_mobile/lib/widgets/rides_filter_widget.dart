@@ -158,7 +158,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
                       'GradOdId': null,
                       'GradDoId': null,
                       'OrderBy': 'id ASC',
-                      'Status': null
+                      'Status': 'active'
                     });
                   },
                 ),

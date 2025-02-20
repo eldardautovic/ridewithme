@@ -9,6 +9,8 @@ import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_mobile/providers/recenzije_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
+import 'package:ridewithme_mobile/providers/vrste_zalbe_provider.dart';
+import 'package:ridewithme_mobile/providers/zalbe_provider.dart';
 import 'package:ridewithme_mobile/screens/onboarding_screen.dart';
 
 Future<void> main() async {
@@ -29,6 +31,8 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => KuponiProvider()),
       ChangeNotifierProvider(create: (_) => RecenzijeProvider()),
       ChangeNotifierProvider(create: (_) => FaqProvider()),
+      ChangeNotifierProvider(create: (_) => ZalbeProvider()),
+      ChangeNotifierProvider(create: (_) => VrsteZalbeProvider()),
     ],
     child: const RideWithMeMobile(),
   ));

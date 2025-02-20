@@ -30,8 +30,6 @@ namespace ridewithme.API.Controllers
 
             return base.Insert(request);
         }
-
-        [Authorize(Roles = "Administrator")]
         public override PagedResult<VrstaZalbe> GetList([FromQuery] VrstaZalbeSearchObject searchObject)
         {
             return base.GetList(searchObject);

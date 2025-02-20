@@ -77,7 +77,10 @@ class _RateListScreenState extends State<RateListScreen> {
         spacing: 10,
         children: recenzijaResults?.result.map((element) {
               return RideWidgetDetailed(
-                  voznja: element.voznja!, boxColor: Color(0xFF39D5C3));
+                voznja: element.voznja!,
+                boxColor: Color(0xFF39D5C3),
+                rating: true,
+              );
             }).toList() ??
             [],
       ),

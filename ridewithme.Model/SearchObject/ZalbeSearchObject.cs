@@ -10,6 +10,8 @@ namespace ridewithme.Model.SearchObject
 
         public DateTime? DatumPreuzimanja { get; set; }
 
+        public int? KorisnikId { get; set; }
+
         public string? VrstaZalbeGTE { get; set; }
 
         public bool? IsKorisnikIncluded { get; set; }
