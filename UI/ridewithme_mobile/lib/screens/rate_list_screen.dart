@@ -59,6 +59,18 @@ class _RateListScreenState extends State<RateListScreen> {
   }
 
   Widget _buildRatingsList() {
+    if (recenzijaResults?.result == null || recenzijaResults!.result.isEmpty) {
+      return const Center(
+        child: Text(
+          "Nemate ocjenjenih vožnji.",
+          style: TextStyle(
+            fontFamily: "Inter",
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(

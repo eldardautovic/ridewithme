@@ -157,6 +157,22 @@ public partial class RidewithmeContext : DbContext
                new KorisniciDostignuca { Id = 1, DatumKreiranja = DateTime.Now, DostignuceId = 1, KorisnikId = 1 });
         });
 
+        modelBuilder.Entity<FAQ>(entity =>
+        {
+            entity.HasData(
+                 new FAQ { Id = 1, KorisnikId = 1, Pitanje = "Kako mogu promijeniti svoju lozinku?", Odgovor = "Lozinku možete promijeniti u postavkama profila pod opcijom 'Uredi profil'.", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now },
+
+                 new FAQ { Id = 3, KorisnikId = 1, Pitanje = "Kako mogu ocijeniti vozača ili saputnika?", Odgovor = "Nakon završene vožnje, možete ostaviti ocjenu i komentar u sekciji 'Vožnje u kojima ste (bili) putnici'.", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now },
+
+                 new FAQ { Id = 4, KorisnikId = 1, Pitanje = "Kako mogu dodati novu vožnju?", Odgovor = "Kliknite na (+) ikonicu, 'Dodaj vožnju', unesite detalje i objavite vožnju.", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now },
+
+                 new FAQ { Id = 5, KorisnikId = 1, Pitanje = "Da li mogu kontaktirati vozača prije vožnje?", Odgovor = "Da, možete poslati poruku vozaču putem chat opcije na platformi.", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now },
+
+                 new FAQ { Id = 6, KorisnikId = 1, Pitanje = "Šta ako vozač ne dođe na dogovorenu lokaciju?", Odgovor = "Možete prijaviti problem putem opcije 'Žalbe' u sekciji profila .", DatumIzmjene = DateTime.Now, DatumKreiranja = DateTime.Now }
+             );
+
+        });
+
         modelBuilder.Entity<Gradovi>(entity =>
         {
             entity.HasData(

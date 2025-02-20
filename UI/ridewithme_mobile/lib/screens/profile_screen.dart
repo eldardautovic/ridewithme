@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
 import 'package:ridewithme_mobile/screens/edit_profile_screen.dart';
+import 'package:ridewithme_mobile/screens/faq_screen.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
 import 'package:ridewithme_mobile/screens/login_screen.dart';
 import 'package:ridewithme_mobile/screens/traveler_rides_screen.dart';
@@ -95,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'title': 'FAQ',
           'icon': Icons.question_answer_rounded,
           'iconColor': Colors.indigoAccent,
-          'route': HomeScreen(),
+          'route': FaqScreen(),
         },
         {
           'title': 'Odjava',

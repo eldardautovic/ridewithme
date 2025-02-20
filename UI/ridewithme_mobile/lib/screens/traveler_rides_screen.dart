@@ -67,7 +67,24 @@ class _TravelerRidesScreenState extends State<TravelerRidesScreen> {
             spacing: 20,
             children: isLoading
                 ? [LoadingSpinnerWidget(height: 100)]
-                : rideTitles.keys.map((state) => _buildRides(state)).toList(),
+                : (voznjeResults == null || voznjeResults!.result.isEmpty)
+                    ? [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            "Niste (bili) putnici u niti jednoj vožnji.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        )
+                      ]
+                    : rideTitles.keys
+                        .map((state) => _buildRides(state))
+                        .toList(),
           ),
         ),
       ),
