@@ -17,5 +17,7 @@ namespace ridewithme.Service.Interfaces
 
         PovjerljivVozac Trusted(int id);
 
+        List<Model.Models.Korisnici> Popular();
+
     }
 }

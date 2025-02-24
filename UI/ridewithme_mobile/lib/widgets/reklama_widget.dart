@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ridewithme_mobile/models/obavjestenje.dart';
-import 'package:ridewithme_mobile/screens/obavjestenja_details.dart';
+import 'package:ridewithme_mobile/models/reklama.dart';
+import 'package:ridewithme_mobile/screens/reklama_details_screen.dart';
 
-class NoticeWidget extends StatelessWidget {
-  NoticeWidget({super.key, required this.obavjestenje, required this.boxColor});
-  final Obavjestenje obavjestenje;
+class ReklamaWidget extends StatelessWidget {
+  ReklamaWidget({super.key, required this.reklama, required this.boxColor});
+  final Reklama reklama;
   final Color boxColor;
 
   @override
@@ -13,8 +13,7 @@ class NoticeWidget extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) =>
-                ObavjestenjaDetails(obavjestenje: obavjestenje),
+            builder: (context) => ReklamaDetailsScreen(reklama: reklama),
           ),
         );
       },
@@ -37,12 +36,12 @@ class NoticeWidget extends StatelessWidget {
                     spacing: 5,
                     children: [
                       Icon(
-                        Icons.info,
+                        Icons.campaign,
                         color: Color(0xFF072220),
                         size: 30,
                       ),
                       Text(
-                        "Obavještenje",
+                        "Reklama",
                         style: TextStyle(
                             fontFamily: "Inter",
                             color: Color(0xFF072220),
@@ -51,7 +50,7 @@ class NoticeWidget extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    obavjestenje.naslov ?? '',
+                    reklama.nazivKampanje ?? '',
                     style: TextStyle(
                         fontFamily: "Inter",
                         color: Color(0xFF072220),
@@ -59,13 +58,13 @@ class NoticeWidget extends StatelessWidget {
                         fontWeight: FontWeight.w900),
                   ),
                   Text(
-                    obavjestenje.podnaslov ?? '',
+                    reklama.nazivKlijenta ?? '',
                     style: TextStyle(
                         fontFamily: "Inter",
                         color: Color(0xFF072220),
                         fontSize: 12,
                         fontWeight: FontWeight.w500),
-                  )
+                  ),
                 ],
               ),
             ),

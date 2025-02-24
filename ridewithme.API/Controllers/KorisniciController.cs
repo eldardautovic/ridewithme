@@ -29,6 +29,13 @@ namespace ridewithme.API.Controllers
             return (_service as IKorisniciService).Trusted(id);
         }
 
+        [HttpGet("popular")]
+        [AllowAnonymous]
+        public List<Model.Models.Korisnici> Popular()
+        {
+            return (_service as IKorisniciService).Popular();
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public Model.Models.Korisnici Login(string username, string password)

@@ -265,5 +265,19 @@ namespace ridewithme.Service.Services
 
             return new PovjerljivVozac() { BrojZavrsenihVoznji = brojObavljenihVoznji };
         }
+
+        public List<Model.Models.Korisnici> Popular()
+        {
+
+            var topDrivers = Context.Voznje
+                 .Include(x => x.Vozac)
+                 .GroupBy(r => r.Vozac)
+                 .OrderByDescending(u => u.Count())
+                 .Select(g => g.First().Vozac) // Vraća listu entiteta vozača
+                 .Take(3)
+                 .ToList();
+
+            return Mapper.Map<List<Model.Models.Korisnici>>(topDrivers);
+        }
     }
 }

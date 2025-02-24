@@ -3,9 +3,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
+import 'package:ridewithme_mobile/models/dogadjaj.dart';
 import 'package:ridewithme_mobile/models/grad.dart';
 import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
+import 'package:ridewithme_mobile/providers/dogadjaji_provider.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/voznje_details_screen.dart';
@@ -26,8 +28,10 @@ class VoznjeCreateScreen extends StatefulWidget {
 class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
   late GradoviProvider _gradoviProvider;
   late VoznjeProvider _voznjeProvider;
+  late DogadjajiProvider _dogadjajiProvider;
 
   SearchResult<Gradovi>? gradoviResult;
+  SearchResult<Dogadjaj>? dogadjajResult;
 
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
@@ -41,12 +45,14 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
 
     _gradoviProvider = context.read<GradoviProvider>();
     _voznjeProvider = context.read<VoznjeProvider>();
+    _dogadjajiProvider = context.read<DogadjajiProvider>();
 
     _initialValue = {
       "gradOdId": widget.voznja?.gradOd?.id,
       "gradDoId": widget.voznja?.gradDo?.id,
       "cijena": widget.voznja?.cijena.toString(),
       "datumVrijemePocetka": widget.voznja?.datumVrijemePocetka,
+      "dogadjajId": widget.voznja?.dogadjaj?.id
     };
 
     initForm();
@@ -54,6 +60,7 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
 
   Future initForm() async {
     gradoviResult = await _gradoviProvider.get();
+    dogadjajResult = await _dogadjajiProvider.get();
 
     setState(() {
       isLoading = false;
@@ -151,6 +158,17 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
                 prefixIcon: Icon(Icons.location_city_rounded),
                 items: _buildGradoviDropdownItems(),
               ),
+              if (dogadjajResult?.count != 0) ...[
+                buildDropdown(
+                    name: "DogadjajId",
+                    labelText: "Događaj",
+                    hintText: "Događaj",
+                    prefixIcon: Icon(Icons.event),
+                    items: _buildDogadjajiDropdownItems(),
+                    onClear: () {
+                      _formKey.currentState!.fields['DogadjajId']?.reset();
+                    }),
+              ],
               FormBuilderTextField(
                 name: "cijena",
                 keyboardType: TextInputType.number,
@@ -279,6 +297,18 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
 
   List<DropdownMenuItem<String>> _buildGradoviDropdownItems() {
     return (gradoviResult?.result ?? [])
+        .map((e) => DropdownMenuItem(
+              value: e.id.toString(),
+              child: Text(
+                e.naziv ?? "",
+                style: const TextStyle(color: Colors.black),
+              ),
+            ))
+        .toList();
+  }
+
+  List<DropdownMenuItem<String>> _buildDogadjajiDropdownItems() {
+    return (dogadjajResult?.result ?? [])
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),
               child: Text(

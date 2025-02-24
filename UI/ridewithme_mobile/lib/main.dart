@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
+import 'package:ridewithme_mobile/providers/dogadjaji_provider.dart';
 import 'package:ridewithme_mobile/providers/faq_provider.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/korisnik_provider.dart';
 import 'package:ridewithme_mobile/providers/kuponi_provider.dart';
 import 'package:ridewithme_mobile/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_mobile/providers/recenzije_provider.dart';
+import 'package:ridewithme_mobile/providers/reklame_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/providers/vrste_zalbe_provider.dart';
 import 'package:ridewithme_mobile/providers/zalbe_provider.dart';
@@ -33,6 +35,8 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => FaqProvider()),
       ChangeNotifierProvider(create: (_) => ZalbeProvider()),
       ChangeNotifierProvider(create: (_) => VrsteZalbeProvider()),
+      ChangeNotifierProvider(create: (_) => DogadjajiProvider()),
+      ChangeNotifierProvider(create: (_) => ReklameProvider()),
     ],
     child: const RideWithMeMobile(),
   ));

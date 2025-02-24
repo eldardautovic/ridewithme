@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/models/korisnik.dart';
 
@@ -10,17 +12,23 @@ class AvatarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Container(
-              width: 50,
-              height: 50,
-              child: Icon(
-                Icons.account_circle_rounded,
-                size: 50,
-                color: Colors.blueGrey,
-              ),
-            )),
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(100)),
+          child: korisnik.slika != null
+              ? Icon(
+                  Icons.account_circle,
+                  size: 25,
+                  color: Colors.blueGrey,
+                )
+              : Icon(
+                  Icons.account_circle,
+                  size: 25,
+                  color: Colors.blueGrey,
+                ),
+        ),
         Text(
           "${korisnik.ime ?? ''}  ${korisnik.prezime ?? ''}",
           style: TextStyle(

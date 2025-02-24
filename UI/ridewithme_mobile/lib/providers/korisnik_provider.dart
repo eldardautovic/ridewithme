@@ -46,4 +46,27 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
       throw new Exception("Unknown error");
     }
   }
+
+  Future<List<Korisnik>> popular() async {
+    var url = "$fullUrl/popular";
+
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      List<Korisnik> result = [];
+
+      for (var item in data) {
+        result.add(fromJson(item));
+      }
+
+      return result;
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
 }

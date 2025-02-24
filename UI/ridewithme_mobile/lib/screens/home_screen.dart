@@ -3,18 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
-import 'package:ridewithme_mobile/models/korisnik.dart';
 import 'package:ridewithme_mobile/models/obavjestenje.dart';
+import 'package:ridewithme_mobile/models/reklama.dart';
 import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/providers/obavjestenja_provider.dart';
+import 'package:ridewithme_mobile/providers/reklame_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
-import 'package:ridewithme_mobile/widgets/avatar_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_mobile/widgets/notice_widget.dart';
+import 'package:ridewithme_mobile/widgets/reklama_widget.dart';
 import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,14 +28,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late VoznjeProvider _voznjeProvider;
   late ObavjestenjaProvider _obavjestenjaProvider;
+  late ReklameProvider _reklameProvider;
 
-  bool recommendedRidesLoading = true;
-  bool cheapRidesLoading = true;
-  bool noticesLoading = true;
+  bool isLoading = true;
 
   SearchResult<Voznja>? recommendedRides;
   SearchResult<Voznja>? cheapRides;
   SearchResult<Obavjestenje>? notices;
+  SearchResult<Reklama>? reklame;
 
   @override
   void initState() {
@@ -43,34 +44,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _voznjeProvider = context.read<VoznjeProvider>();
     _obavjestenjaProvider = context.read<ObavjestenjaProvider>();
+    _reklameProvider = context.read<ReklameProvider>();
 
     initHomepage();
   }
 
   Future<void> initHomepage() async {
-    final results = await Future.wait([
-      _voznjeProvider.get(filter: {
-        "IsGradoviIncluded": true,
-        'IsKorisniciIncluded': true,
-        'Status': 'active'
-      }),
-      _voznjeProvider.get(filter: {
-        "IsGradoviIncluded": true,
-        "OrderBy": "Cijena asc",
-        'IsKorisniciIncluded': true,
-        'Status': 'active'
-      }),
-      _obavjestenjaProvider.get(filter: {"Status": "active"}),
-    ]);
+    recommendedRides = await _voznjeProvider.get(filter: {
+      "IsGradoviIncluded": true,
+      'IsKorisniciIncluded': true,
+      'Status': 'active'
+    });
+    cheapRides = await _voznjeProvider.get(filter: {
+      "IsGradoviIncluded": true,
+      "OrderBy": "Cijena asc",
+      'IsKorisniciIncluded': true,
+      'Status': 'active'
+    });
 
+    notices = await _obavjestenjaProvider.get(filter: {"Status": "active"});
+    reklame = await _reklameProvider.get();
     setState(() {
-      recommendedRides = results[0] as SearchResult<Voznja>?;
-      cheapRides = results[1] as SearchResult<Voznja>?;
-      notices = results[2] as SearchResult<Obavjestenje>?;
-
-      recommendedRidesLoading = false;
-      cheapRidesLoading = false;
-      noticesLoading = false;
+      isLoading = false;
     });
   }
 
@@ -84,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
             spacing: 15,
             children: [
               _buildWelcomeCard(),
+              _buildAds(),
               _buildRecommendedRides(),
               _buildNotices(),
-              _buildPopularDrivers(),
               _buildCheapRides(),
               _buildSorryScreen()
             ],
@@ -97,10 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSorryScreen() {
-    if (recommendedRides?.count == 0 &&
-        cheapRides?.count == 0 &&
-        !recommendedRidesLoading &&
-        !cheapRidesLoading) {
+    if (recommendedRides?.count == 0 && cheapRides?.count == 0 && !isLoading) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -134,12 +126,36 @@ class _HomeScreenState extends State<HomeScreen> {
     return SizedBox.shrink();
   }
 
-  Widget _buildNotices() {
-    if (!noticesLoading && notices?.count == 0) {
+  Widget _buildAds() {
+    if (!isLoading && reklame?.count == 0) {
       return Container();
     }
 
-    return noticesLoading
+    return isLoading
+        ? LoadingSpinnerWidget(height: 170)
+        : CarouselSlider(
+            options: CarouselOptions(
+              height: 120,
+              enableInfiniteScroll: reklame!.count > 1,
+              viewportFraction: reklame!.count > 1 ? 0.9 : 1,
+              enlargeStrategy: CenterPageEnlargeStrategy.scale,
+            ),
+            items: reklame?.result.map((reklama) {
+                  return ReklamaWidget(
+                    reklama: reklama,
+                    boxColor: Colors.greenAccent,
+                  );
+                }).toList() ??
+                [],
+          );
+  }
+
+  Widget _buildNotices() {
+    if (!isLoading && notices?.count == 0) {
+      return Container();
+    }
+
+    return isLoading
         ? LoadingSpinnerWidget(height: 170)
         : CarouselSlider(
             options: CarouselOptions(
@@ -158,47 +174,8 @@ class _HomeScreenState extends State<HomeScreen> {
           );
   }
 
-  Widget _buildPopularDrivers() {
-    List<Korisnik> korisnici = List.generate(
-      5,
-      (index) =>
-          Korisnik(index, "Eldar", "Prezime", null, null, null, null, null),
-    );
-
-    return Column(
-      spacing: 10,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0, top: 10, left: 20),
-          child: Text(
-            "Popularni vozači:",
-            style: TextStyle(
-                fontFamily: "Inter",
-                color: Colors.black,
-                fontSize: 12,
-                fontWeight: FontWeight.w500),
-          ),
-        ),
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 65,
-            enableInfiniteScroll: true,
-            viewportFraction: 0.4,
-            enlargeStrategy: CenterPageEnlargeStrategy.scale,
-          ),
-          items: korisnici.map((korisnik) {
-            return AvatarWidget(
-              korisnik: korisnik,
-            );
-          }).toList(),
-        )
-      ],
-    );
-  }
-
   Widget _buildRecommendedRides() {
-    if (!recommendedRidesLoading && recommendedRides?.count == 0) {
+    if (!isLoading && recommendedRides?.count == 0) {
       return Container();
     }
 
@@ -217,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w500),
           ),
         ),
-        recommendedRidesLoading
+        isLoading
             ? LoadingSpinnerWidget(
                 height: 160,
               )
@@ -242,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCheapRides() {
-    if (!cheapRidesLoading && cheapRides?.count == 0) {
+    if (!isLoading && cheapRides?.count == 0) {
       return Container();
     }
 
@@ -263,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontWeight: FontWeight.w500),
             ),
           ),
-          cheapRidesLoading
+          isLoading
               ? LoadingSpinnerWidget(
                   height: 160,
                 )
