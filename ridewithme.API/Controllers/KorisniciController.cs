@@ -36,6 +36,11 @@ namespace ridewithme.API.Controllers
             return (_service as IKorisniciService).Popular();
         }
 
+        public override Model.Models.Korisnici GetById(int id)
+        {
+            return (_service as IKorisniciService).GetById(id);
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         public Model.Models.Korisnici Login(string username, string password)

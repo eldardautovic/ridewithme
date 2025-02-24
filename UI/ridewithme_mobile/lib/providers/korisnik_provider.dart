@@ -47,6 +47,23 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
     }
   }
 
+  Future<Korisnik> getById(int id) async {
+    var url = "$fullUrl/${id}";
+
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
   Future<List<Korisnik>> popular() async {
     var url = "$fullUrl/popular";
 

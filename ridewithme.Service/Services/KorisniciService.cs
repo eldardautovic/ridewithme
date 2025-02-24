@@ -81,6 +81,9 @@ namespace ridewithme.Service.Services
 
             }
 
+
+            query = query.Include(x => x.KorisniciDostignuca).ThenInclude(x => x.Dostignuce);
+
             return query;
         }
 
@@ -144,6 +147,8 @@ namespace ridewithme.Service.Services
 
             base.BeforeUpdate(request, entity);
         }
+
+       
 
         public override void AfterInsert(Database.Korisnici entity, KorisniciInsertRequest request)
         {
@@ -278,6 +283,21 @@ namespace ridewithme.Service.Services
                  .ToList();
 
             return Mapper.Map<List<Model.Models.Korisnici>>(topDrivers);
+        }
+
+
+        public override Model.Models.Korisnici GetById(int id)
+        {
+            var entity = Context.Set<Database.Korisnici>().Include(x => x.KorisniciDostignuca).ThenInclude(x => x.Dostignuce).FirstOrDefault( x=> x.Id == id);
+
+            if (entity != null)
+            {
+                return Mapper.Map<Model.Models.Korisnici>(entity);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

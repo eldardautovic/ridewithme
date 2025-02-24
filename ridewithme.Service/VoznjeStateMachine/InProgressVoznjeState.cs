@@ -1,11 +1,6 @@
 ﻿using MapsterMapper;
 using ridewithme.Model.Requests;
 using ridewithme.Service.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ridewithme.Service.VoznjeStateMachine
 {
@@ -22,6 +17,128 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "completed";
             entity.DatumVrijemeZavrsetka = DateTime.Now;
+
+            var countOfDriversRides = Context.Voznje.Where(x => x.VozacId == entity.VozacId && x.StateMachine == "completed").Count();
+            var countOfUsersRides = Context.Voznje.Where(x => x.KlijentId == entity.KlijentId && x.StateMachine == "completed").Count();
+
+            KorisniciDostignuca driverAchievement = null;
+            KorisniciDostignuca usersAchievemnt = null;
+
+            switch(countOfDriversRides)
+            {
+                case 0:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 1,
+                        KorisnikId = entity.VozacId,
+                    };
+                break;
+                case 10:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 2,
+                        KorisnikId = entity.VozacId,
+                    };
+                break;
+                case 50:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 3,
+                        KorisnikId = entity.VozacId,
+                    };
+                break;
+                case 100:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 4,
+                        KorisnikId = entity.VozacId,
+                    };
+                break;
+                case 500:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 5,
+                        KorisnikId = entity.VozacId,
+                    };
+                break;
+                
+                case 1000:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 5,
+                        KorisnikId = entity.VozacId,
+                    };
+                break;
+            }
+
+            switch (countOfUsersRides)
+            {
+                case 0:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 1,
+                        KorisnikId = entity.VozacId,
+                    };
+                    break;
+                case 10:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 2,
+                        KorisnikId = entity.VozacId,
+                    };
+                    break;
+                case 50:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 3,
+                        KorisnikId = entity.VozacId,
+                    };
+                    break;
+                case 100:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 4,
+                        KorisnikId = entity.VozacId,
+                    };
+                    break;
+                case 500:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 5,
+                        KorisnikId = entity.VozacId,
+                    };
+                    break;
+
+                case 1000:
+                    driverAchievement = new KorisniciDostignuca()
+                    {
+                        DatumKreiranja = DateTime.Now,
+                        DostignuceId = 5,
+                        KorisnikId = entity.VozacId,
+                    };
+                    break;
+            }
+
+            if(usersAchievemnt != null)
+            {
+                Context.KorisniciDostignuca.Add(usersAchievemnt);
+            }
+
+            if(driverAchievement != null)
+            {
+                Context.KorisniciDostignuca.Add(driverAchievement);
+            }
 
             var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
 

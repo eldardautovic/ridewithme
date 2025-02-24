@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ridewithme_mobile/layouts/master_layout.dart';
+import 'package:ridewithme_mobile/screens/achievements_screen.dart';
 import 'package:ridewithme_mobile/screens/edit_profile_screen.dart';
 import 'package:ridewithme_mobile/screens/faq_screen.dart';
 import 'package:ridewithme_mobile/screens/home_screen.dart';
@@ -74,6 +75,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'title': 'Vožnje u kojima ste (bili) putnici',
           'icon': Icons.airport_shuttle_rounded,
           'route': TravelerRidesScreen(),
+          'iconColor': Color(0xFF7463DE)
+        },
+        {
+          'title': 'Dostignuća',
+          'icon': Icons.emoji_events_rounded,
+          'route': AchievementsScreen(),
           'iconColor': Color(0xFF7463DE)
         },
       ]

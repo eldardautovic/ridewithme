@@ -19,6 +19,9 @@ Korisnik _$KorisnikFromJson(Map<String, dynamic> json) => Korisnik(
           ? null
           : DateTime.parse(json['datumKreiranja'] as String),
       json['slika'] as String?,
+      (json['korisniciDostignuca'] as List<dynamic>?)
+          ?.map((e) => KorisniciDostignuca.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$KorisnikToJson(Korisnik instance) => <String, dynamic>{
@@ -28,6 +31,7 @@ Map<String, dynamic> _$KorisnikToJson(Korisnik instance) => <String, dynamic>{
       'korisnickoIme': instance.korisnickoIme,
       'email': instance.email,
       'korisniciUloge': instance.korisniciUloge,
+      'korisniciDostignuca': instance.korisniciDostignuca,
       'datumKreiranja': instance.datumKreiranja?.toIso8601String(),
       'slika': instance.slika,
     };
