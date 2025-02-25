@@ -122,12 +122,7 @@ public partial class RidewithmeContext : DbContext
                 new Dostignuca { Id = 5, Naziv = "Putni veteran", Opis = "500 vožnji! Obišao si pola zemlje!" },
                 new Dostignuca { Id = 6, Naziv = "Putevi su moj dom", Opis = "1000 vožnji! Jesi li siguran da ne živiš u autu?" },
                 new Dostignuca { Id = 7, Naziv = "Pet zvjezdica, molim!", Opis = "5/5 ocjena! Samo rijetki uspiju ovako!" },
-                new Dostignuca { Id = 8, Naziv = "Noćna ptica", Opis = "Vozio si se najmanje 10 puta između ponoći i 5 ujutro!" },
-                new Dostignuca { Id = 9, Naziv = "Pustolov na putu", Opis = "Vozio si se u 10 različitih gradova! Avantura te zove!" },
-                new Dostignuca { Id = 10, Naziv = "ridewithme beba", Opis = "Godinu dana na platformi! Početak sjajne priče!" },
-                new Dostignuca { Id = 11, Naziv = "ridewithme pro", Opis = "5 godina vožnji! Pravi si veteran zajednice!" },
-                new Dostignuca { Id = 12, Naziv = "Nestali saputnik", Opis = "Otkazao si vožnju u zadnji čas! Sljedeći put dolaziš?" },
-                new Dostignuca { Id = 13, Naziv = "BlaBla influencer", Opis = "Tvoj profil je pregledan preko 1000 puta! Ljudi žele putovati s tobom!" }
+                new Dostignuca { Id = 8, Naziv = "Pustolov na putu", Opis = "Vozio si se u 10 različitih gradova! Avantura te zove!" }
         );
 
         });

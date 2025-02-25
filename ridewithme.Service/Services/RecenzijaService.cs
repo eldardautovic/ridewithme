@@ -1,6 +1,7 @@
 ﻿using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using ridewithme.Model.Exceptions;
+using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
@@ -73,6 +74,30 @@ namespace ridewithme.Service.Services
             }
 
             base.BeforeInsert(request, entity);
+        }
+
+        public override void AfterInsert(Database.Recenzija entity, RecenzijaUpsertRequest request)
+        {
+            if(request.Ocjena == 5)
+            {
+                var numberOfFiveStars = Context.KorisniciDostignuca.FirstOrDefault(x => x.KorisnikId == entity.Voznja.VozacId && x.DostignuceId == 7);
+
+                if (numberOfFiveStars == null)
+                {
+                    var dostignuce = new Database.KorisniciDostignuca()
+                    {
+                        DostignuceId = 7,
+                        DatumKreiranja = DateTime.Now,
+                        KorisnikId = entity.Voznja.VozacId,
+                    };
+
+                    Context.Add(dostignuce);
+
+                    Context.SaveChanges();
+                }
+            }
+
+            base.AfterInsert(entity, request);
         }
     }
 }

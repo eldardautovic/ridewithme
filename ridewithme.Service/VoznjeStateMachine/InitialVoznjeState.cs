@@ -1,11 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MapsterMapper;
 using ridewithme.Model.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mapster;
 using ridewithme.Model.Models;
 using ridewithme.Model.Exceptions;
@@ -52,6 +47,31 @@ namespace ridewithme.Service.VoznjeStateMachine
             if (request.DatumVrijemePocetka != null && request.DatumVrijemePocetka < DateTime.Now)
             {
                 throw new UserException("Datum vrijeme pocetka ne moze biti manje od danasnjeg datuma.");
+            }
+
+            var numberOfDifferentTowns = Context.Voznje
+                .Where(x => x.VozacId == request.VozacId)
+                .SelectMany(x => new[] { x.GradOdId, x.GradDoId, request.GradOdId, request.GradDoId }) // Spajamo oba ID-a u jedan niz
+                .Distinct()
+                .Count();
+
+            if (numberOfDifferentTowns >= 10)
+            {
+                var alreadyAchieved = Context.KorisniciDostignuca.FirstOrDefault(x => x.KorisnikId == request.VozacId && x.DostignuceId == 8);
+
+
+                if (alreadyAchieved == null)
+                {
+                    var dostignuce = new Database.KorisniciDostignuca()
+                    {
+                        DostignuceId = 8,
+                        DatumKreiranja = DateTime.Now,
+                        KorisnikId = request.VozacId,
+                    };
+
+                    Context.Add(dostignuce);
+                }
+
             }
 
             var voznjeSet = Context.Set<Database.Voznje>();
