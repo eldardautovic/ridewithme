@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
 import 'package:ridewithme_mobile/screens/chat_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_details_screen.dart';
+import 'package:ridewithme_mobile/utils/auth_util.dart';
 
 class RideWidgetDetailed extends StatefulWidget {
   RideWidgetDetailed(
@@ -37,20 +38,25 @@ class _RideWidgetDetailedState extends State<RideWidgetDetailed> {
           padding: const EdgeInsets.all(13.0),
           child: Stack(
             children: [
-              if (widget.voznja.klijent != null && widget.rating == false) ...[
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      CupertinoPageRoute(
-                        builder: (context) => ChatScreen(
-                          senderId: widget.voznja.klijent?.id ?? 0,
+              if (widget.voznja.klijent != null &&
+                  widget.rating == false &&
+                  widget.voznja.stateMachine == "booked") ...[
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        CupertinoPageRoute(
+                          builder: (context) => ChatScreen(
+                            sender:
+                                Authorization.id == widget.voznja.klijent?.id
+                                    ? widget.voznja.vozac!
+                                    : widget.voznja.klijent!,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: Positioned(
-                    top: 5,
-                    right: 10,
+                      );
+                    },
                     child: Icon(
                       Icons.mail,
                       color: widget.boxColor,
