@@ -43,12 +43,13 @@ public class ConsumeRabbitMQHostedService : BackgroundService
         _channel = _connection.CreateModel();
 
 
-        _channel.QueueDeclare("Reservation_added", false, false, false, null);
+        _channel.QueueDeclare("chat", false, false, false, null);
 
         _channel.BasicQos(0, 1, false);
 
         _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
     }
+
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ridewithme_mobile/models/voznja.dart';
+import 'package:ridewithme_mobile/screens/chat_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_details_screen.dart';
 
 class RideWidgetDetailed extends StatefulWidget {
@@ -37,12 +38,23 @@ class _RideWidgetDetailedState extends State<RideWidgetDetailed> {
           child: Stack(
             children: [
               if (widget.voznja.klijent != null && widget.rating == false) ...[
-                Positioned(
-                  top: 5,
-                  right: 10,
-                  child: Icon(
-                    Icons.mail,
-                    color: widget.boxColor,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      CupertinoPageRoute(
+                        builder: (context) => ChatScreen(
+                          senderId: widget.voznja.klijent?.id ?? 0,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Positioned(
+                    top: 5,
+                    right: 10,
+                    child: Icon(
+                      Icons.mail,
+                      color: widget.boxColor,
+                    ),
                   ),
                 )
               ],

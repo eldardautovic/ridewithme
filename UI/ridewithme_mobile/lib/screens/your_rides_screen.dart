@@ -118,6 +118,7 @@ class _YourRidesScreenState extends State<YourRidesScreen> {
               return RideWidgetDetailed(
                 voznja: element,
                 boxColor: rideColors[state]!,
+                rating: false,
               );
             }).toList(),
           ),

@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
+import 'package:ridewithme_mobile/providers/chat_provider.dart';
 import 'package:ridewithme_mobile/providers/dogadjaji_provider.dart';
 import 'package:ridewithme_mobile/providers/faq_provider.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
@@ -37,6 +40,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => VrsteZalbeProvider()),
       ChangeNotifierProvider(create: (_) => DogadjajiProvider()),
       ChangeNotifierProvider(create: (_) => ReklameProvider()),
+      ChangeNotifierProvider(create: (_) => ChatProvider()),
     ],
     child: const RideWithMeMobile(),
   ));

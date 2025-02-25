@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ridewithme.Service.Interfaces;
+using System.Threading.Channels;
+using Newtonsoft.Json;
 
 namespace ridewithme.Service.Services
 {
@@ -17,7 +19,7 @@ namespace ridewithme.Service.Services
         private readonly string _password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "mypass";
         private readonly string _virtualhost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
 
-        public void SendingMessage(string message)
+        public void SendingMessage(string message, int senderId, int recieverId)
         {
             try
             {
@@ -32,23 +34,26 @@ namespace ridewithme.Service.Services
                 using var connection = factory.CreateConnection();
                 using var channel = connection.CreateModel();
 
-                channel.QueueDeclare(queue: "reservation_notifications",
-                                     durable: true,
-                                     exclusive: true
-                                  );
+                channel.QueueDeclare("chat", false, false, false, null);
 
+                var messageData = new
+                {
+                    SenderId = senderId,
+                    RecieverId = recieverId,
+                    Message = message
+                };
 
-                var body = Encoding.UTF8.GetBytes(message);
+                // Serializacija objekta u JSON
+                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(messageData));
 
                 channel.BasicPublish(exchange: string.Empty,
-                                     routingKey: "reservation_added",
+                                     routingKey: "chat",
                                      basicProperties: null,
                                      body: body);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while sending message to RabbitMQ: {ex.Message}");
-
             }
         }
 
