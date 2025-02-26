@@ -1,18 +1,15 @@
-﻿using Azure.Core;
-using MapsterMapper;
+﻿using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ridewithme.Model.Requests;
 using ridewithme.Model.SearchObject;
 using ridewithme.Service.Database;
 using ridewithme.Service.VoznjeStateMachine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using ridewithme.Service.Interfaces;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
+using Mapster;
 
 
 namespace ridewithme.Service.Services
@@ -216,5 +213,99 @@ namespace ridewithme.Service.Services
         {
             return new List<Model.Models.Korisnici>();
         }
+
+        static MLContext mlContext = null;
+        static object isLocked = new object();
+        static ITransformer model = null;
+
+        public List<Model.Models.Voznje> Recommend(int rideId)
+        {
+            if (mlContext == null)
+            {
+                lock (isLocked)
+                {
+                    mlContext = new MLContext();
+
+                    var tmpData = Context.Voznje.ToList();
+
+                    var data = new List<RideEntry>();
+
+                    foreach (var rideTmp in tmpData)
+                    {
+                        var relatedRides = tmpData.Where(r => r.GradOdId == rideTmp.GradOdId && r.Id != rideTmp.Id);
+
+                        foreach (var relatedRide in relatedRides)
+                        {
+                            data.Add(new RideEntry()
+                            {
+                                GradOdId = (uint)rideTmp.GradOdId,
+                                RelatedRideId = (uint)relatedRide.Id
+                            });
+                        }
+                    }
+
+                    var trainData = mlContext.Data.LoadFromEnumerable(data);
+
+                    var options = new MatrixFactorizationTrainer.Options
+                    {
+                        MatrixColumnIndexColumnName = nameof(RideEntry.GradOdId),
+                        MatrixRowIndexColumnName = nameof(RideEntry.RelatedRideId),
+                        LabelColumnName = "Label",
+                        LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass,
+                        Alpha = 0.01f,
+                        Lambda = 0.025f,
+                        NumberOfIterations = 100,
+                        C = 0.00001f
+                    };
+
+                    var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
+
+                    model = est.Fit(trainData);
+                }
+            }
+
+            var ride = Context.Voznje.FirstOrDefault(x => x.Id == rideId);
+            if (ride == null) return new List<Model.Models.Voznje>();
+
+            var potentialRides = Context.Voznje.Include(x => x.GradOd).Include(x => x.GradDo).Where(x => x.GradOdId == ride.GradOdId && x.Id != rideId);
+
+            var predictionResult = new List<(Database.Voznje, float)>();
+
+            foreach (var potentialRide in potentialRides)
+            {
+                var predictionEngine = mlContext.Model.CreatePredictionEngine<RideEntry, RidePrediction>(model);
+                var prediction = predictionEngine.Predict(new RideEntry()
+                {
+                    GradOdId = (uint)ride.GradOdId,
+                    RelatedRideId = (uint)potentialRide.Id
+                });
+
+                predictionResult.Add((potentialRide, prediction.Score));
+            }
+
+            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(4).ToList();
+
+            return Mapper.Map<List<Model.Models.Voznje>>(finalResult);
+        }
+
+        public class RidePrediction
+        {
+            public float Score { get; set; }
+        }
+
+        public class RideEntry
+        {
+            [KeyType(count: 100000)]
+            public uint GradOdId { get; set; }
+
+            [KeyType(count: 100000)]
+            public uint RelatedRideId { get; set; }
+
+            public float Label { get; set; }
+        }
+
     }
 }
+
+
+

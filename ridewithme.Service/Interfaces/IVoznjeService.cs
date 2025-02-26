@@ -28,5 +28,8 @@ namespace ridewithme.Service.Interfaces
         public Voznje Start(int id, VoznjeStartRequest request);
         public Voznje Complete(int id, VoznjeCompleteRequest request);
 
+        public List<Model.Models.Voznje> Recommend(int id);
+
+
     }
 }

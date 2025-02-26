@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Client client = Client(
       settings: ConnectionSettings(
           host:
-              const String.fromEnvironment("mqHost", defaultValue: "10.0.2.2"),
+              const String.fromEnvironment("mqHost", defaultValue: "localhost"),
           authProvider: const PlainAuthenticator(
               String.fromEnvironment("mqUsername", defaultValue: "user"),
               String.fromEnvironment("mqPass", defaultValue: "mypass"))));

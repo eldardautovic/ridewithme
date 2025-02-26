@@ -21,11 +21,11 @@ import 'package:ridewithme_mobile/screens/onboarding_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: "assets/.env");
-  Stripe.publishableKey = dotenv.env["STRIPE__PUBKEY"]!;
-  Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
-  Stripe.urlScheme = 'flutterstripe';
-  await Stripe.instance.applySettings();
+  // await dotenv.load(fileName: "assets/.env");
+  // Stripe.publishableKey = dotenv.env["STRIPE__PUBKEY"]!;
+  // Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
+  // Stripe.urlScheme = 'flutterstripe';
+  // await Stripe.instance.applySettings();
 
   runApp(MultiProvider(
     providers: [

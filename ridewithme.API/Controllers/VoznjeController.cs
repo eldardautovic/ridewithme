@@ -100,11 +100,11 @@ namespace ridewithme.API.Controllers
             return (_service as IVoznjeService).Rate(id, ocjena);
         }
 
-        [HttpGet("{id}/getParticipants")]
+        [HttpGet("{id}/recommend")]
 
-        public List<Korisnici> GetParticipants(int id)
+        public List<Model.Models.Voznje> Recommend(int id)
         {
-            return (_service as IVoznjeService).GetParticipants(id);
+            return (_service as IVoznjeService).Recommend(id);
         }
 
         public override Voznje Insert(VoznjeInsertRequest request)
