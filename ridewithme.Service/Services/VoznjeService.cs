@@ -217,7 +217,7 @@ namespace ridewithme.Service.Services
         static MLContext mlContext = null;
         static object isLocked = new object();
         static ITransformer model = null;
-
+        private const string ModelFilePath = "set-model.zip";
         public List<Model.Models.Voznje> Recommend(int rideId)
         {
             if (mlContext == null)
@@ -226,41 +226,56 @@ namespace ridewithme.Service.Services
                 {
                     mlContext = new MLContext();
 
-                    var tmpData = Context.Voznje.ToList();
-
-                    var data = new List<RideEntry>();
-
-                    foreach (var rideTmp in tmpData)
+                    if (File.Exists(ModelFilePath))
                     {
-                        var relatedRides = tmpData.Where(r => r.GradOdId == rideTmp.GradOdId && r.Id != rideTmp.Id);
-
-                        foreach (var relatedRide in relatedRides)
+                        using (var stream = new FileStream(ModelFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                         {
-                            data.Add(new RideEntry()
-                            {
-                                GradOdId = (uint)rideTmp.GradOdId,
-                                RelatedRideId = (uint)relatedRide.Id
-                            });
+                            model = mlContext.Model.Load(stream, out var modelInputSchema);
                         }
-                    }
-
-                    var trainData = mlContext.Data.LoadFromEnumerable(data);
-
-                    var options = new MatrixFactorizationTrainer.Options
+                    } else
                     {
-                        MatrixColumnIndexColumnName = nameof(RideEntry.GradOdId),
-                        MatrixRowIndexColumnName = nameof(RideEntry.RelatedRideId),
-                        LabelColumnName = "Label",
-                        LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass,
-                        Alpha = 0.01f,
-                        Lambda = 0.025f,
-                        NumberOfIterations = 100,
-                        C = 0.00001f
-                    };
 
-                    var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
+                        var tmpData = Context.Voznje.ToList();
 
-                    model = est.Fit(trainData);
+                        var data = new List<RideEntry>();
+
+                        foreach (var rideTmp in tmpData)
+                        {
+                            var relatedRides = tmpData.Where(r => r.GradOdId == rideTmp.GradOdId && r.Id != rideTmp.Id);
+
+                            foreach (var relatedRide in relatedRides)
+                            {
+                                data.Add(new RideEntry()
+                                {
+                                    GradOdId = (uint)rideTmp.GradOdId,
+                                    RelatedRideId = (uint)relatedRide.Id
+                                });
+                            }
+                        }
+
+                        var trainData = mlContext.Data.LoadFromEnumerable(data);
+
+                        var options = new MatrixFactorizationTrainer.Options
+                        {
+                            MatrixColumnIndexColumnName = nameof(RideEntry.GradOdId),
+                            MatrixRowIndexColumnName = nameof(RideEntry.RelatedRideId),
+                            LabelColumnName = "Label",
+                            LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass,
+                            Alpha = 0.01f,
+                            Lambda = 0.025f,
+                            NumberOfIterations = 100,
+                            C = 0.00001f
+                        };
+
+                        var est = mlContext.Recommendation().Trainers.MatrixFactorization(options);
+
+                        model = est.Fit(trainData);
+                        using (var stream = new FileStream(ModelFilePath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                        {
+                            mlContext.Model.Save(model, trainData.Schema, stream);
+                        }
+
+                    }
                 }
             }
 
