@@ -62,6 +62,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        spacing: 10,
         children: result?.korisniciDostignuca?.map((element) {
               return _buildAchievementRow(element);
             }).toList() ??

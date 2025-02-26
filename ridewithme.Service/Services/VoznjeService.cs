@@ -282,7 +282,7 @@ namespace ridewithme.Service.Services
             var ride = Context.Voznje.FirstOrDefault(x => x.Id == rideId);
             if (ride == null) return new List<Model.Models.Voznje>();
 
-            var potentialRides = Context.Voznje.Include(x => x.GradOd).Include(x => x.GradDo).Where(x => x.GradOdId == ride.GradOdId && x.Id != rideId);
+            var potentialRides = Context.Voznje.Include(x => x.Vozac).Include(x => x.GradOd).Include(x => x.GradDo).Where(x => x.GradOdId == ride.GradOdId && x.Id != rideId);
 
             var predictionResult = new List<(Database.Voznje, float)>();
 

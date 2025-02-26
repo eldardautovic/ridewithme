@@ -53,7 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
     recommendedRides = await _voznjeProvider.get(filter: {
       "IsGradoviIncluded": true,
       'IsKorisniciIncluded': true,
-      'Status': 'active'
+      'Status': 'active',
+      'OrderBy': 'DatumKreiranja desc'
     });
     cheapRides = await _voznjeProvider.get(filter: {
       "IsGradoviIncluded": true,
@@ -186,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0, top: 10, left: 20),
           child: Text(
-            "Vožnje koje bi vas mogle zanimati:",
+            "Nedavno objavljene vožnje:",
             style: TextStyle(
                 fontFamily: "Inter",
                 color: Colors.black,

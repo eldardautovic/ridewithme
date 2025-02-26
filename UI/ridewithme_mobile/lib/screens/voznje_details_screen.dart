@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/custom_input_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 
 class VoznjeDetailsScreen extends StatefulWidget {
   Voznja voznja;
@@ -43,6 +45,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
 
   TextEditingController _kuponController = TextEditingController();
 
+  bool recommendationsLoading = true;
   bool isLoading = true;
 
   bool isTrusted = false;
@@ -50,6 +53,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   bool isClient = false;
 
   SearchResult<Recenzija>? recenzijeResult;
+  List<Voznja>? recommendedRides;
 
   int brojVoznji = 0;
   List<String>? allowedActions;
@@ -72,6 +76,16 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     isClient = Authorization.id == widget.voznja.klijent?.id;
 
     initTrusted();
+
+    initRecommendations();
+  }
+
+  Future initRecommendations() async {
+    recommendedRides = await _voznjeProvider.recommend(widget.voznja.id ?? 0);
+
+    setState(() {
+      recommendationsLoading = false;
+    });
   }
 
   Future initTrusted() async {
@@ -91,8 +105,6 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             recenzijeResult?.result.isEmpty == true)) {
       allowedActions =
           await _voznjeProvider.allowedActions(widget.voznja.id ?? 0);
-
-      print(allowedActions);
     }
 
     setState(() {
@@ -209,27 +221,77 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     return MasterLayout(
       selectedIndex: 1,
       backButton: VoznjeScreen(),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (isDriver ||
-                (isClient == true &&
-                    widget.voznja.stateMachine == 'completed')) ...[
-              _buildAllowedActions()
+      child: Flexible(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isDriver ||
+                  (isClient == true &&
+                      widget.voznja.stateMachine == 'completed')) ...[
+                _buildAllowedActions()
+              ],
+              _buildHeader(),
+              _buildInfo(),
+              if (isLoading) LoadingSpinnerWidget(height: 50),
+              if (!isDriver && !isClient && !isLoading) ...[
+                _buildTrusted(),
+                _buildCouponCheck(),
+                _buildPrices(),
+                _pay(),
+              ],
+              if (!isClient && !isDriver) ...[_buildRecommendedRides()]
             ],
-            _buildHeader(),
-            _buildInfo(),
-            if (isLoading) LoadingSpinnerWidget(height: 50),
-            if (!isDriver && !isClient && !isLoading) ...[
-              _buildTrusted(),
-              _buildCouponCheck(),
-              _buildPrices(),
-              _pay(),
-            ]
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRecommendedRides() {
+    if (!isLoading && recommendedRides == null) {
+      return Container();
+    }
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0, top: 10),
+            child: Text(
+              "Vožnje koje bi vas mogle zanimati:",
+              style: TextStyle(
+                  fontFamily: "Inter",
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+          isLoading
+              ? LoadingSpinnerWidget(
+                  height: 160,
+                )
+              : CarouselSlider(
+                  options: CarouselOptions(
+                    height: 160,
+                    enableInfiniteScroll: true,
+                    autoPlay: false,
+                    viewportFraction: 0.55,
+                    enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                  ),
+                  items: recommendedRides?.map((voznja) {
+                        return RideWidget(
+                          voznja: voznja,
+                          boxColor: Color(0xFF7463DE),
+                        );
+                      }).toList() ??
+                      [],
+                ),
+        ],
       ),
     );
   }
