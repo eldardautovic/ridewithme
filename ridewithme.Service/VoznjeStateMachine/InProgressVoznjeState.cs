@@ -80,7 +80,7 @@ namespace ridewithme.Service.VoznjeStateMachine
             switch (countOfUsersRides)
             {
                 case 0:
-                    driverAchievement = new KorisniciDostignuca()
+                    usersAchievemnt = new KorisniciDostignuca()
                     {
                         DatumKreiranja = DateTime.Now,
                         DostignuceId = 1,
@@ -88,7 +88,7 @@ namespace ridewithme.Service.VoznjeStateMachine
                     };
                     break;
                 case 10:
-                    driverAchievement = new KorisniciDostignuca()
+                    usersAchievemnt = new KorisniciDostignuca()
                     {
                         DatumKreiranja = DateTime.Now,
                         DostignuceId = 2,
@@ -96,7 +96,7 @@ namespace ridewithme.Service.VoznjeStateMachine
                     };
                     break;
                 case 50:
-                    driverAchievement = new KorisniciDostignuca()
+                    usersAchievemnt = new KorisniciDostignuca()
                     {
                         DatumKreiranja = DateTime.Now,
                         DostignuceId = 3,
@@ -104,7 +104,7 @@ namespace ridewithme.Service.VoznjeStateMachine
                     };
                     break;
                 case 100:
-                    driverAchievement = new KorisniciDostignuca()
+                    usersAchievemnt = new KorisniciDostignuca()
                     {
                         DatumKreiranja = DateTime.Now,
                         DostignuceId = 4,
@@ -112,7 +112,7 @@ namespace ridewithme.Service.VoznjeStateMachine
                     };
                     break;
                 case 500:
-                    driverAchievement = new KorisniciDostignuca()
+                    usersAchievemnt = new KorisniciDostignuca()
                     {
                         DatumKreiranja = DateTime.Now,
                         DostignuceId = 5,
@@ -121,7 +121,7 @@ namespace ridewithme.Service.VoznjeStateMachine
                     break;
 
                 case 1000:
-                    driverAchievement = new KorisniciDostignuca()
+                    usersAchievemnt = new KorisniciDostignuca()
                     {
                         DatumKreiranja = DateTime.Now,
                         DostignuceId = 5,
@@ -132,12 +132,12 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             if(usersAchievemnt != null)
             {
-                Context.KorisniciDostignuca.Add(usersAchievemnt);
+                Context.Add(usersAchievemnt);
             }
 
             if(driverAchievement != null)
             {
-                Context.KorisniciDostignuca.Add(driverAchievement);
+                Context.Add(driverAchievement);
             }
 
             var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
