@@ -46,15 +46,22 @@ class _ChatScreenState extends State<ChatScreen> {
     checkNotifications();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future initChat() async {
     _messages = await _chatProvider.conversation(
       Authorization.id ?? 0,
       widget.sender.id ?? 0,
     );
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> checkNotifications() async {
@@ -67,9 +74,12 @@ class _ChatScreenState extends State<ChatScreen> {
     consumer.listen((AmqpMessage message) {
       if (message.payloadAsJson["RecieverId"] == Authorization.id ||
           message.payloadAsJson["SenderId"] == Authorization.id) {
-        isLoading = true;
-
-        initChat();
+        if (mounted) {
+          setState(() {
+            isLoading = true;
+          });
+          initChat();
+        }
       }
     });
   }
@@ -94,15 +104,13 @@ class _ChatScreenState extends State<ChatScreen> {
       selectedIndex: 4,
       child: Stack(
         children: [
-          Flexible(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  isLoading
-                      ? LoadingSpinnerWidget(height: 500)
-                      : _buildChat(context),
-                ],
-              ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                isLoading
+                    ? LoadingSpinnerWidget(height: 500)
+                    : _buildChat(context),
+              ],
             ),
           ),
           Positioned(
