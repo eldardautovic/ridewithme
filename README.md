@@ -32,6 +32,8 @@ Broj kartice: ```4242 4242 4242 4242```\
 CVC: ```Bilo koje 3 cifre```\
 Datum isteka: ```Bilo koji u budućnosti```
 
+Plaćanje je omogućeno kada se uđe u detalje vožnje koja je u statusu "Aktivan".
+
 
 ## RabbitMQ
 RabbitMQ korišten za:
