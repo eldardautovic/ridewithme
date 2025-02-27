@@ -25,4 +25,20 @@ Seminarski rad za predmet Razvoj Softvera II
   Korisničko ime: ```test```\
   Lozinka: ```string```
 
+## Stripe
+U sklopu seminarskog rada za plaćanje korišten je Stripe. Da bi testirali plaćanje on nam osigurava testne podatke za unos kreditne kartice. Oni su sljedeći:
 
+Broj kartice: ```4242 4242 4242 4242```\
+CVC: ```Bilo koje 3 cifre```\
+Datum isteka: ```Bilo koji u budućnosti```
+
+
+## RabbitMQ
+RabbitMQ korišten za:
+- dopisivanje između korisnika i vozača ukoliko je vožnja u statusu "Zakazana".
+- slanje e-maila da smo aktivirali vožnju
+- slanja e-maila svim Administratorima da je žalba kreirana
+- slanje e-maila korisniku koji plati vožnju i vozaču da mu je vožnja zakazana.
+
+## CRON
+Korišten je i jedan CRON job koji nam svaki dan u 00:00 provjerava sva obavještenja koja su aktivna da li su završili po datumu završetka, ako jesu prebacuje ih u status "Završen".
