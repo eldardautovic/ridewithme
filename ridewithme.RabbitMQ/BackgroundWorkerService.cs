@@ -15,7 +15,7 @@ public class ConsumeRabbitMQHostedService : BackgroundService
     private IModel _channel;
     private readonly IEmailSender _emailSender;
 
-    public readonly string _host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+    public readonly string _host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitmq";
     public readonly string _username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "user";
     public readonly string _password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "mypass";
     public readonly string _virtualhost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
