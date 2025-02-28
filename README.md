@@ -42,5 +42,10 @@ RabbitMQ korišten za:
 - slanja e-maila svim Administratorima da je žalba kreirana
 - slanje e-maila korisniku koji plati vožnju i vozaču da mu je vožnja zakazana.
 
+## E-mail 
+E-mail adresa korištena za slanje mejlova jeste:\
+```ridewithmesender@gmail.com```
+
 ## CRON
 Korišten je i jedan CRON job koji nam svaki dan u 00:00 provjerava sva obavještenja koja su aktivna da li su završili po datumu završetka, ako jesu prebacuje ih u status "Završen".
+
