@@ -23,10 +23,10 @@ namespace ridewithme.API.Controllers
             context = ridewithmecontext;
         }
 
-        [HttpGet("{id}/trusted")]
-        public PovjerljivVozac Trusted(int id)
+        [HttpGet("{vozacId}/trusted/{klijentId}")]
+        public PovjerljivVozac Trusted(int vozacId, int klijentId)
         {
-            return (_service as IKorisniciService).Trusted(id);
+            return (_service as IKorisniciService).Trusted(vozacId, klijentId);
         }
 
         [HttpGet("popular")]

@@ -34,8 +34,8 @@ public partial class RidewithmeContext : DbContext
     public virtual DbSet<Recenzija> Recenzije { get; set; }
     public virtual DbSet<ChatMessage> ChatMessages { get; set; }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 

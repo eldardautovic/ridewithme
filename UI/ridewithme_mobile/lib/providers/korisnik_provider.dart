@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:ridewithme_mobile/models/korisnik.dart';
+import 'package:ridewithme_mobile/models/povjerljiv_vozac_model.dart';
 import 'package:ridewithme_mobile/providers/base_provider.dart';
 
 class KorisnikProvider extends BaseProvider<Korisnik> {
@@ -30,8 +31,8 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
     }
   }
 
-  Future<int> trusted(int id) async {
-    var url = "$fullUrl/${id}/trusted";
+  Future<PovjerljivVozac> trusted(int vozacId, int klijentId) async {
+    var url = "$fullUrl/${vozacId}/trusted/${klijentId}";
 
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -41,7 +42,10 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
-      return data['brojZavrsenihVoznji'];
+      var result = PovjerljivVozac(data['brojZavrsenihVoznjiVozaca'],
+          data['brojZavrsenihVoznjiKlijenta']);
+
+      return result;
     } else {
       throw new Exception("Unknown error");
     }

@@ -263,12 +263,13 @@ namespace ridewithme.Service.Services
             return Mapper.Map<Model.Models.Korisnici>(entity);
         }
 
-        public PovjerljivVozac Trusted(int id)
+        public PovjerljivVozac Trusted(int vozacId, int klijentId)
         {
 
-            var brojObavljenihVoznji = Context.Voznje.Where(x => x.VozacId == id && x.StateMachine == "completed").Count();
+            var brojObavljenihVoznjiVozaca = Context.Voznje.Where(x => x.VozacId == vozacId && x.StateMachine == "completed").Count();
+            var brojObavljenihVoznjiKlijenta = Context.Voznje.Where(x => x.KlijentId == klijentId && x.StateMachine == "completed").Count();
 
-            return new PovjerljivVozac() { BrojZavrsenihVoznji = brojObavljenihVoznji };
+            return new PovjerljivVozac() { BrojZavrsenihVoznjiVozaca = brojObavljenihVoznjiVozaca, BrojZavrsenihVoznjiKlijenta = brojObavljenihVoznjiKlijenta };
         }
 
         public List<Model.Models.Korisnici> Popular()

@@ -51,7 +51,7 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             var numberOfDifferentTowns = Context.Voznje
                 .Where(x => x.VozacId == request.VozacId)
-                .Select(x => x.GradOdId) // Spajamo oba ID-a u jedan niz
+                .Select(x => x.GradOdId)
                 .Distinct()
                 .Count();
 

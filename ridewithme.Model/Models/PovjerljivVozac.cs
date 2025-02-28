@@ -6,6 +6,7 @@ namespace ridewithme.Model.Models
 {
     public class PovjerljivVozac
     {
-        public int BrojZavrsenihVoznji { get; set; }
+        public int BrojZavrsenihVoznjiVozaca { get; set; }
+        public int BrojZavrsenihVoznjiKlijenta { get; set; }
     }
 }

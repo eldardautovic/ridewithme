@@ -40,7 +40,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
       'GradOdId': widget.initialFilters['GradOdId']?.toString(),
       'GradDoId': widget.initialFilters['GradDoId']?.toString(),
       'OrderBy': widget.initialFilters['OrderBy'] ?? "DatumVrijemePocetka ASC",
-      'Status': widget.initialFilters['Status'] ?? null
+      'Status': widget.initialFilters['Status'] ?? 'active'
     };
 
     initFilters();
@@ -143,7 +143,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
                       'GradOdId': _formKey.currentState?.value['GradOdId'],
                       'GradDoId': _formKey.currentState?.value['GradDoId'],
                       'OrderBy': "$orderByField $orderByDirection",
-                      'Status': _formKey.currentState?.value['Status'],
+                      'Status': 'active',
                     });
                   },
                 ),

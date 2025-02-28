@@ -56,11 +56,12 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   List<Voznja>? recommendedRides;
 
   int brojVoznji = 0;
+  int brojVoznjiKlijenta = 0;
   List<String>? allowedActions;
 
   IspravanKupon? isCouponCorrect;
 
-  double totalPrice = 2.0;
+  double totalPrice = 0.0;
 
   @override
   void initState() {
@@ -71,7 +72,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
     _voznjeProvider = context.read<VoznjeProvider>();
     _recenzijeProvider = context.read<RecenzijeProvider>();
 
-    totalPrice += (widget.voznja.cijena ?? 0);
+    totalPrice = (widget.voznja.cijena ?? 0) + 2.0;
     isDriver = Authorization.id == widget.voznja.vozac?.id;
     isClient = Authorization.id == widget.voznja.klijent?.id;
 
@@ -89,14 +90,21 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   }
 
   Future initTrusted() async {
-    var result = await _korisnikProvider.trusted(widget.voznja.vozac?.id ?? 0);
+    var result = await _korisnikProvider.trusted(
+        widget.voznja.vozac?.id ?? 0, Authorization.id ?? 0);
 
     recenzijeResult =
         await _recenzijeProvider.get(filter: {"VoznjaId": widget.voznja.id});
 
-    if (result > 0) {
+    if (result.brojObavljenihVoznjiVozaca > 0) {
       isTrusted = true;
-      brojVoznji = result;
+      brojVoznji = result.brojObavljenihVoznjiVozaca;
+    }
+
+    brojVoznjiKlijenta = result.brojObavljenihVoznjiKlijenta;
+
+    if (result.brojObavljenihVoznjiKlijenta >= 10) {
+      totalPrice = totalPrice - (widget.voznja.cijena! * 0.1);
     }
 
     if ((isDriver == true && widget.voznja.stateMachine != 'completed') ||
@@ -250,7 +258,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   }
 
   Widget _buildRecommendedRides() {
-    if (!isLoading && recommendedRides == null) {
+    if (!isLoading && recommendedRides!.isEmpty) {
       return Container();
     }
 
@@ -591,7 +599,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDoubleTextLabel(
-              strongText: "Cijena:", text: " ${widget.voznja.cijena} KM"),
+              strongText: "Cijena:",
+              text: " ${widget.voznja.cijena!.toStringAsFixed(2)} KM"),
           if (isCouponCorrect?.ispravanKupon == true &&
               isCouponCorrect?.kupon != null)
             _buildDoubleTextLabel(
@@ -599,12 +608,15 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                 text:
                     " -${(widget.voznja.cijena! - (widget.voznja.cijena! * (1 - (isCouponCorrect?.kupon?.popust ?? 0)))).toStringAsFixed(2)} KM",
                 textColor: Color(0xFFE14040)),
+          if (brojVoznjiKlijenta >= 10) ...[
+            _buildDoubleTextLabel(
+                strongText: "Popust na Rank:",
+                text:
+                    " -${(widget.voznja.cijena! * 0.1).toStringAsFixed(2)} KM",
+                textColor: Color(0xFFE14040)),
+          ],
           _buildDoubleTextLabel(
-              strongText: "Popust na Rank:",
-              text: " -${widget.voznja.cijena} KM",
-              textColor: Color(0xFFE14040)),
-          _buildDoubleTextLabel(
-              strongText: "Provizija na pronalazak:", text: " 2.0 KM"),
+              strongText: "Provizija na pronalazak:", text: " 2.00 KM"),
           SizedBox(
             width: double.infinity,
             height: 2,
@@ -613,7 +625,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             ),
           ),
           _buildDoubleTextLabel(
-              strongText: "Ukupno:", text: " ${totalPrice} KM")
+              strongText: "Ukupno:",
+              text: " ${totalPrice.toStringAsFixed(2)} KM")
         ],
       ),
     );

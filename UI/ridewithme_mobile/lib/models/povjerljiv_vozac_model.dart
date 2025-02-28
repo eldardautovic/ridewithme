@@ -1,5 +1,7 @@
 class PovjerljivVozac {
-  int brojObavljenihVoznji;
+  int brojObavljenihVoznjiVozaca;
+  int brojObavljenihVoznjiKlijenta;
 
-  PovjerljivVozac(this.brojObavljenihVoznji);
+  PovjerljivVozac(
+      this.brojObavljenihVoznjiVozaca, this.brojObavljenihVoznjiKlijenta);
 }

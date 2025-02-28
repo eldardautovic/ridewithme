@@ -27,6 +27,7 @@ class _YourRidesScreenState extends State<YourRidesScreen> {
     'booked': Color(0xFF39D5C3),
     'inprogress': Color(0xFFC339D5),
     'completed': Color(0xFF3999D5),
+    'hidden': Color(0xFF3999D5),
   };
 
   final Map<String, String> rideTitles = {
@@ -35,6 +36,7 @@ class _YourRidesScreenState extends State<YourRidesScreen> {
     'booked': "Zakazane vožnje",
     'inprogress': "U toku",
     'completed': "Završene vožnje",
+    'hidden': "Skrivena"
   };
 
   @override

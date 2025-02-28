@@ -15,7 +15,7 @@ namespace ridewithme.Service.Interfaces
 
         Korisnici GetLoggedInUser(string username);
 
-        PovjerljivVozac Trusted(int id);
+        PovjerljivVozac Trusted(int vozacId, int korisnikId);
 
         List<Model.Models.Korisnici> Popular();
 
