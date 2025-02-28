@@ -137,7 +137,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
           }
         case "Edit":
           {
-            await _voznjeProvider.edit(widget.voznja?.id ?? 0);
+            await _voznjeProvider.edit(widget.voznja.id ?? 0);
 
             showSnackBar("Uspješno ste omogućili uređivanje vožnji.");
             Navigator.of(context).pushReplacement(
@@ -249,7 +249,9 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                 _buildPrices(),
                 _pay(),
               ],
-              if (!isClient && !isDriver) ...[_buildRecommendedRides()]
+              if (!isClient && !isDriver && !isLoading) ...[
+                _buildRecommendedRides()
+              ]
             ],
           ),
         ),
@@ -258,7 +260,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
   }
 
   Widget _buildRecommendedRides() {
-    if (!isLoading && recommendedRides!.isEmpty) {
+    if (recommendedRides != null && recommendedRides!.isEmpty) {
       return Container();
     }
 
