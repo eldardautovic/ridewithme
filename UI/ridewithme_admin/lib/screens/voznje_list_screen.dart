@@ -313,13 +313,15 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
         buildDataCell("${e.cijena} KM"),
         DataCell(Row(
           children: [
-            IconButton(
-              iconSize: 17,
-              onPressed: () {
-                showAlertDialog(context, e.id ?? 0);
-              },
-              icon: const Icon(Icons.delete),
-            ),
+            if (e.stateMachine == 'draft') ...[
+              IconButton(
+                iconSize: 17,
+                onPressed: () {
+                  showAlertDialog(context, e.id ?? 0);
+                },
+                icon: const Icon(Icons.delete),
+              )
+            ],
             IconButton(
               onPressed: () {
                 Navigator.of(context).push(

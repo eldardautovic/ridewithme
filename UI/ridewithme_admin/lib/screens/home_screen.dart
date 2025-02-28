@@ -160,11 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAnalitics() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Color(0x29C3CBCA), borderRadius: BorderRadius.circular(10)),
-      child: Center(child: Text("Analitika.")),
-    );
+    return Container();
   }
 
   Widget _buildAuthCard() {

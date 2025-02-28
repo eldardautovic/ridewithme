@@ -42,7 +42,7 @@ namespace ridewithme.Service.Services
         {
             var voznjePoMjesecu = context.Voznje
              .Where(x => x.DatumVrijemePocetka != null)
-             .GroupBy(x => x.DatumVrijemePocetka.Value.Month)
+             .GroupBy(x => x.DatumKreiranja.Month)
              .Select(g => new { Mjesec = g.Key, BrojVoznji = g.Count() })
              .ToDictionary(x => x.Mjesec, x => x.BrojVoznji);
 
