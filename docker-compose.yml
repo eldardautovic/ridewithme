@@ -1,6 +1,43 @@
 version: '3'
 services:
 #mssql docker
+  rabbitmq:
+    image: rabbitmq:3.12.1-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ__USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ__PASSWORD}
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 5672
+    networks:
+      - ridewithmenet
+
+
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmq
+    hostname: "rabbitmq"
+    labels:
+        NAME: "rabbitmq"
+    restart: unless-stopped
+    ports:
+        - "15672:15672"
+        - "5673:5672"
+    expose:
+        - 5672
+        - 15672
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 10
+    networks:
+        - ridewithmenet
   ridewithme-sql:
     image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
     restart: unless-stopped
@@ -15,20 +52,6 @@ services:
     networks:
       - ridewithmenet
 
-  rabbitmq:
-    image: rabbitmq:3.12.1-management
-    container_name: rabbitmq
-    restart: unless-stopped
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ__USERNAME}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ__PASSWORD}
-    ports:
-      - 5672:5672
-      - 15672:15672
-    expose:
-      - 5672
-    networks:
-      - ridewithmenet
 
   ridewithme-rabbitmq:
     restart: on-failure
