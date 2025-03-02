@@ -76,12 +76,16 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
                 voznja: widget.voznja!,
               )
             : null,
-        child: Column(
-          children: [
-            _buildHeader(),
-            isLoading ? LoadingSpinnerWidget(height: 100) : _buildForm(),
-            _save()
-          ],
+        child: Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(),
+                isLoading ? LoadingSpinnerWidget(height: 100) : _buildForm(),
+                _save()
+              ],
+            ),
+          ),
         ));
   }
 

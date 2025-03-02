@@ -52,157 +52,162 @@ class LoginPage extends StatelessWidget {
                 constraints: BoxConstraints(maxHeight: 650, maxWidth: 400),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          constraints:
-                              BoxConstraints(maxHeight: 200, maxWidth: 400),
-                          child: Align(
-                              alignment: Alignment.topLeft,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            constraints:
+                                BoxConstraints(maxHeight: 200, maxWidth: 400),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "ridewithme.",
+                                      style: TextStyle(
+                                          fontFamily: "Inter",
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.w900),
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Text(
+                                      "Dobrodošli nazad!",
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontFamily: "Inter",
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w800,
+                                          color: Color(0xFF072220)),
+                                    ),
+                                    Text(
+                                      "Unesite korisničko ime i lozinku",
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontFamily: "Inter",
+                                          fontSize: 16,
+                                          color: Color(0xFF072220)),
+                                    ),
+                                  ],
+                                ))),
+                        SizedBox(height: 10),
+                        Container(
+                          child: Form(
+                              key: _formKey,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    "ridewithme.",
-                                    style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.w900),
+                                  CustomInputField(
+                                    labelText: "Korisničko ime",
+                                    controller: _usernameController,
+                                    prefixIcon: Icons.verified_user_rounded,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Korisničko ime je obavezno';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  SizedBox(
-                                    height: 30,
+                                  SizedBox(height: 20),
+                                  CustomInputField(
+                                    labelText: "Lozinka",
+                                    controller: _passwordController,
+                                    prefixIcon: Icons.password_rounded,
+                                    obscuredText: true,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Lozinka je obavezna.';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  Text(
-                                    "Dobrodošli nazad!",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w800,
-                                        color: Color(0xFF072220)),
+                                  SizedBox(height: 30),
+                                  CustomButtonWidget(
+                                    isFullWidth: true,
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    buttonText: "Prijavi se",
+                                    onPress: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        var username = _usernameController.text;
+                                        var password = _passwordController.text;
+
+                                        Authorization.username = username;
+                                        Authorization.password = password;
+
+                                        try {
+                                          Korisnik result =
+                                              await _korisnikProvider.login(
+                                                  username, password);
+
+                                          Authorization.fullName =
+                                              "${result.ime} ${result.prezime}";
+
+                                          Authorization.id = result.id;
+
+                                          Authorization.email = result.email;
+
+                                          Authorization.slika = result.slika;
+
+                                          Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const HomeScreen(),
+                                            ),
+                                          );
+
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              content:
+                                                  Text("Uspješna prijava."),
+                                            ),
+                                          );
+                                        } on Exception catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              content: Text(
+                                                  "Neispravni kredencijali."),
+                                              action: SnackBarAction(
+                                                  label: "U redu",
+                                                  onPressed: () =>
+                                                      ScaffoldMessenger.of(
+                                                          context)
+                                                        ..removeCurrentSnackBar()),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    },
                                   ),
-                                  Text(
-                                    "Unesite korisničko ime i lozinku",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontSize: 16,
-                                        color: Color(0xFF072220)),
-                                  ),
-                                ],
-                              ))),
-                      SizedBox(height: 10),
-                      Container(
-                        child: Form(
-                            key: _formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomInputField(
-                                  labelText: "Korisničko ime",
-                                  controller: _usernameController,
-                                  prefixIcon: Icons.verified_user_rounded,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Korisničko ime je obavezno';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 20),
-                                CustomInputField(
-                                  labelText: "Lozinka",
-                                  controller: _passwordController,
-                                  prefixIcon: Icons.password_rounded,
-                                  obscuredText: true,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Lozinka je obavezna.';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 30),
-                                CustomButtonWidget(
-                                  isFullWidth: true,
-                                  padding: EdgeInsets.symmetric(vertical: 20),
-                                  buttonText: "Prijavi se",
-                                  onPress: () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      var username = _usernameController.text;
-                                      var password = _passwordController.text;
-
-                                      Authorization.username = username;
-                                      Authorization.password = password;
-
-                                      try {
-                                        Korisnik result =
-                                            await _korisnikProvider.login(
-                                                username, password);
-
-                                        Authorization.fullName =
-                                            "${result.ime} ${result.prezime}";
-
-                                        Authorization.id = result.id;
-
-                                        Authorization.email = result.email;
-
-                                        Authorization.slika = result.slika;
-
+                                  TextButton(
+                                      onPressed: () {
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const HomeScreen(),
+                                                const RegisterScreen(),
                                           ),
                                         );
-
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            behavior: SnackBarBehavior.floating,
-                                            content: Text("Uspješna prijava."),
-                                          ),
-                                        );
-                                      } on Exception catch (e) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            behavior: SnackBarBehavior.floating,
-                                            content: Text(
-                                                "Neispravni kredencijali."),
-                                            action: SnackBarAction(
-                                                label: "U redu",
-                                                onPressed: () =>
-                                                    ScaffoldMessenger.of(
-                                                        context)
-                                                      ..removeCurrentSnackBar()),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  },
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const RegisterScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      "Nemate nalog?",
-                                      style: TextStyle(
-                                          fontFamily: "Inter",
-                                          color: Color(0xFF072220),
-                                          fontSize: 14),
-                                    ))
-                              ],
-                            )),
-                      ),
-                    ],
+                                      },
+                                      child: Text(
+                                        "Nemate nalog?",
+                                        style: TextStyle(
+                                            fontFamily: "Inter",
+                                            color: Color(0xFF072220),
+                                            fontSize: 14),
+                                      ))
+                                ],
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

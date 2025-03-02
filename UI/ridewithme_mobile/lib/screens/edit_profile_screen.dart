@@ -62,8 +62,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         headerDescription: "Ovdje možete da uredite vaš profil",
         headerColor: Color(0xFF39D5C3),
         headerTextColor: Colors.black,
-        child: Column(
-          children: [_buildForm(), _save()],
+        child: Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [_buildForm(), _save()],
+            ),
+          ),
         ));
   }
 
@@ -264,7 +268,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _save() {
     return Container(
-      margin: EdgeInsets.only(top: 40, left: 20, right: 20),
+      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
       child: CustomButtonWidget(
           isFullWidth: true,
           padding: EdgeInsets.symmetric(vertical: 20),

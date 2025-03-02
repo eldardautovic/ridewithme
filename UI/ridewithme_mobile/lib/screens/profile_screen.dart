@@ -124,8 +124,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         headerDescription: "Ovdje možete da pregledate i uredite vaš profil",
         headerColor: Color(0xFF39D5C3),
         headerTextColor: Colors.black,
-        child: Column(
-          children: [_buildOverview(), _buildSegments()],
+        child: Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [_buildOverview(), _buildSegments()],
+            ),
+          ),
         ));
   }
 

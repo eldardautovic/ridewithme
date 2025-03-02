@@ -52,8 +52,12 @@ class _ZalbeCreateScreenState extends State<ZalbeCreateScreen> {
   Widget build(BuildContext context) {
     return MasterLayout(
         selectedIndex: 4,
-        child: Column(
-          children: [_buildHeader(), _buildForm(), _save()],
+        child: Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [_buildHeader(), _buildForm(), _save()],
+            ),
+          ),
         ));
   }
 

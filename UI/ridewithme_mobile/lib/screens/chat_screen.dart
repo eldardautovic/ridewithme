@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Client client = Client(
       settings: ConnectionSettings(
           host:
-              const String.fromEnvironment("mqHost", defaultValue: "rabbitmq"),
+              const String.fromEnvironment("mqHost", defaultValue: "10.0.2.2"),
           authProvider: const PlainAuthenticator(
               String.fromEnvironment("mqUsername", defaultValue: "user"),
               String.fromEnvironment("mqPass", defaultValue: "mypass"))));
@@ -102,56 +102,65 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return MasterLayout(
       selectedIndex: 4,
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                isLoading
-                    ? LoadingSpinnerWidget(height: 500)
-                    : _buildChat(context),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 10,
-            right: 10,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Color(0xFFE1E0E0).withAlpha(200)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(10),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
+      child: Flexible(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white.withAlpha(5),
-                          hintText: 'Pišite ovdje...',
-                          border: InputBorder.none),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        isLoading
+                            ? LoadingSpinnerWidget(height: 500)
+                            : _buildChat(context),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.send, color: Color(0xFF7463DE)),
-                    onPressed: _sendMessage,
+                  Positioned(
+                    bottom: 0,
+                    left: 10,
+                    right: 10,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        border:
+                            Border.all(color: Color(0xFFE1E0E0).withAlpha(200)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(10),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _messageController,
+                              decoration: InputDecoration(
+                                  fillColor: Colors.white.withAlpha(5),
+                                  hintText: 'Pišite ovdje...',
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.send, color: Color(0xFF7463DE)),
+                            onPressed: _sendMessage,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                  _buildHeader(),
                 ],
               ),
-            ),
+            ],
           ),
-          _buildHeader(),
-        ],
+        ),
       ),
     );
   }

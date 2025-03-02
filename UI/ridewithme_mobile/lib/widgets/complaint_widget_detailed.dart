@@ -56,22 +56,6 @@ class _ComplaintWidgetDetailedState extends State<ComplaintWidgetDetailed> {
                               widget.zalba.datumKreiranja ?? DateTime.now())),
                     ],
                   ),
-                  if (widget.zalba.administrator != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 8,
-                      children: [
-                        _buildDoubleTextLabel(
-                            strongText: "Datum preuzimanja:",
-                            text: DateFormat("dd.MM.yyyy u hh:mm").format(
-                                widget.zalba.datumPreuzimanja ??
-                                    DateTime.now())),
-                        _buildDoubleTextLabel(
-                            strongText: "Administrator:",
-                            text:
-                                "${widget.zalba.administrator?.ime} ${widget.zalba.administrator?.prezime}"),
-                      ],
-                    )
                 ],
               )
             ],

@@ -50,13 +50,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             right: 0,
             child: SvgPicture.asset(
               "assets/images/logo.svg",
-              width: 1500,
-              height: 550,
+              width: 500,
+              height: 400,
             ),
           ),
           Positioned(
-            top: 250,
-            right: 130,
+            top: 190,
+            right: 100,
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
@@ -72,15 +72,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 borderRadius: BorderRadius.circular(100),
                 child: Image.asset(
                   "assets/images/people-happy.png",
-                  width: 190,
-                  height: 190,
+                  width: 140,
+                  height: 140,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
           Positioned(
-            top: 80,
+            top: 35,
             right: 30,
             child: Container(
               decoration: BoxDecoration(
@@ -106,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           Positioned(
               top: 80,
-              left: 50,
+              left: 20,
               child: Text(
                 "ridewithme",
                 style: TextStyle(
@@ -117,7 +117,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               )),
           Positioned(
               left: 30,
-              bottom: 100,
+              bottom: 20,
               child: Container(
                 constraints: BoxConstraints(maxWidth: 350),
                 child: Column(
@@ -131,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         softWrap: true,
                         style: TextStyle(
                             fontFamily: "Inter",
-                            fontSize: 64,
+                            fontSize: 50,
                             fontWeight: FontWeight.w900,
                             color: Color(0xFF072220)),
                       ),
