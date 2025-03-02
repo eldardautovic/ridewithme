@@ -16,28 +16,6 @@ services:
       - 5672
     networks:
       - ridewithmenet
-
-
-  rabbitmq:
-    image: rabbitmq:4.0-management
-    container_name: rabbitmq
-    hostname: "rabbitmq"
-    labels:
-        NAME: "rabbitmq"
-    restart: unless-stopped
-    ports:
-        - "15672:15672"
-        - "5673:5672"
-    expose:
-        - 5672
-        - 15672
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:15672"]
-        interval: 30s
-        timeout: 10s
-        retries: 10
-    networks:
-        - ridewithmenet
   ridewithme-sql:
     image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
     restart: unless-stopped
