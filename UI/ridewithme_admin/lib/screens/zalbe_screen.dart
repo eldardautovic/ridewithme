@@ -1,4 +1,3 @@
-import 'package:cross_scroll/cross_scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +23,8 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
   late ZalbaProvider _zalbaProvider;
 
   SearchResult<Zalba>? zalbeResult;
+
+  final _horizontalScrollController = ScrollController();
 
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -266,9 +267,6 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
 
   DataRow _buildDataRow(Zalba e, BuildContext context) {
     return DataRow(
-      color: WidgetStateColor.resolveWith(
-        (states) => Color(0x29C3CBCA),
-      ),
       cells: [
         buildDataCell(e.id?.toString()),
         buildDataCell(e.naslov),
@@ -330,36 +328,50 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
       return Text("Nema rezultata.");
     }
 
-    return Flexible(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0x29C3CBCA),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Color(0xFFD3D3D3)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CrossScroll(
-            verticalBar: CrossScrollTrack(),
-            horizontalBar: CrossScrollTrack(),
-            child: DataTable(
-              headingRowColor:
-                  WidgetStateColor.resolveWith((states) => Color(0x29C3CBCA)),
-              showCheckboxColumn: false,
-              columnSpacing: 25,
-              columns: columnData.map((col) {
-                return DataColumn(
-                  label: Text(col["label"], style: columnTextStyle),
-                  numeric: col["numeric"] ?? false,
-                );
-              }).toList(),
-              rows: zalbeResult?.result
-                      .map((e) => _buildDataRow(e, context))
-                      .toList()
-                      .cast<DataRow>() ??
-                  [],
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0x29C3CBCA),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color(0xFFD3D3D3)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  controller: _horizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minWidth: 1500,
+                          minHeight: MediaQuery.of(context).size.height - 250),
+                      child: DataTable(
+                        showCheckboxColumn: false,
+                        columnSpacing: 25,
+                        columns: columnData.map((col) {
+                          return DataColumn(
+                            label: Text(col["label"], style: columnTextStyle),
+                            numeric: col["numeric"] ?? false,
+                          );
+                        }).toList(),
+                        rows: zalbeResult?.result
+                                .map((e) => _buildDataRow(e, context))
+                                .toList()
+                                .cast<DataRow>() ??
+                            [],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

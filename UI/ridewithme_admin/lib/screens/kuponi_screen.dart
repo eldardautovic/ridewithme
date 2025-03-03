@@ -28,6 +28,8 @@ class _KuponiScreenState extends State<KuponiScreen> {
 
   final _formKey = GlobalKey<FormBuilderState>();
 
+  final _horizontalScrollController = ScrollController();
+
   Map<String, dynamic> _initialValue = {};
 
   bool isLoading = true;
@@ -368,37 +370,49 @@ class _KuponiScreenState extends State<KuponiScreen> {
     }
 
     return Expanded(
-      child: SizedBox(
-        width: double.infinity, // Expands to full width
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0x29C3CBCA),
-            border: Border.all(color: Color(0xFFD3D3D3)),
-          ),
-          child: SingleChildScrollView(
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 25,
-              border: const TableBorder(
-                horizontalInside: BorderSide(
-                  width: 1,
-                  color: Color(0xFFD3D3D3),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0x29C3CBCA),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color(0xFFD3D3D3)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  controller: _horizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minWidth: 1500,
+                          minHeight: MediaQuery.of(context).size.height - 250),
+                      child: DataTable(
+                        showCheckboxColumn: false,
+                        columnSpacing: 25,
+                        columns: columnData.map((col) {
+                          return DataColumn(
+                            label: Text(col["label"], style: columnTextStyle),
+                            numeric: col["numeric"] ?? false,
+                          );
+                        }).toList(),
+                        rows: kuponiResult?.result
+                                .map((e) => _buildDataRow(e, context))
+                                .toList()
+                                .cast<DataRow>() ??
+                            [],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              columns: columnData.map((col) {
-                return DataColumn(
-                  label: Text(col["label"], style: columnTextStyle),
-                  numeric: col["numeric"] ?? false,
-                );
-              }).toList(),
-              rows: kuponiResult?.result
-                      .map((e) => _buildDataRow(e, context))
-                      .toList()
-                      .cast<DataRow>() ??
-                  [],
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -31,6 +31,8 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   SearchResult<Voznja>? result;
   SearchResult<Gradovi>? gradoviResult;
 
+  final _horizontalScrollController = ScrollController();
+
   Map<String, dynamic> _initialValue = {};
 
   final List<Map<String, dynamic>> columnData = [
@@ -309,7 +311,9 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
         buildDataCell(e.datumVrijemePocetka != null
             ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumVrijemePocetka!)
             : "N/A"),
-        buildDataCell(e.datumVrijemeZavrsetka?.toString()),
+        buildDataCell(e.datumVrijemeZavrsetka != null
+            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumVrijemeZavrsetka!)
+            : "N/A"),
         buildDataCell("${e.cijena} KM"),
         DataCell(Row(
           children: [
@@ -345,37 +349,49 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
     }
 
     return Expanded(
-      child: SizedBox(
-        width: double.infinity, // Expands to full width
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0x29C3CBCA),
-            border: Border.all(color: Color(0xFFD3D3D3)),
-          ),
-          child: SingleChildScrollView(
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 25,
-              border: const TableBorder(
-                horizontalInside: BorderSide(
-                  width: 1,
-                  color: Color(0xFFD3D3D3),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0x29C3CBCA),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color(0xFFD3D3D3)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  controller: _horizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minWidth: 1500,
+                          minHeight: MediaQuery.of(context).size.height - 250),
+                      child: DataTable(
+                        showCheckboxColumn: false,
+                        columnSpacing: 25,
+                        columns: columnData.map((col) {
+                          return DataColumn(
+                            label: Text(col["label"], style: columnTextStyle),
+                            numeric: col["numeric"] ?? false,
+                          );
+                        }).toList(),
+                        rows: result?.result
+                                .map((e) => _buildDataRow(e, context))
+                                .toList()
+                                .cast<DataRow>() ??
+                            [],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              columns: columnData.map((col) {
-                return DataColumn(
-                  label: Text(col["label"], style: columnTextStyle),
-                  numeric: col["numeric"] ?? false,
-                );
-              }).toList(),
-              rows: result?.result
-                      .map((e) => _buildDataRow(e, context))
-                      .toList()
-                      .cast<DataRow>() ??
-                  [],
             ),
-          ),
+          ],
         ),
       ),
     );

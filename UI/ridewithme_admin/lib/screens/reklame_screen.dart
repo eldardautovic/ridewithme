@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/reklama.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/providers/reklame_provider.dart';
-import 'package:ridewithme_admin/screens/gradovi_details_screen.dart';
 import 'package:ridewithme_admin/screens/reklame_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
@@ -22,6 +21,8 @@ class ReklameScreen extends StatefulWidget {
 
 class _ReklameScreenState extends State<ReklameScreen> {
   late ReklameProvider _reklameProvider;
+
+  final _horizontalScrollController = ScrollController();
 
   SearchResult<Reklama>? reklameResult;
 
@@ -236,37 +237,49 @@ class _ReklameScreenState extends State<ReklameScreen> {
     }
 
     return Expanded(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width / 2, // Expands to full width
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0x29C3CBCA),
-            border: Border.all(color: Color(0xFFD3D3D3)),
-          ),
-          child: SingleChildScrollView(
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 25,
-              border: const TableBorder(
-                horizontalInside: BorderSide(
-                  width: 1,
-                  color: Color(0xFFD3D3D3),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0x29C3CBCA),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color(0xFFD3D3D3)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  controller: _horizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minWidth: 1500,
+                          minHeight: MediaQuery.of(context).size.height - 250),
+                      child: DataTable(
+                        showCheckboxColumn: false,
+                        columnSpacing: 25,
+                        columns: columnData.map((col) {
+                          return DataColumn(
+                            label: Text(col["label"], style: columnTextStyle),
+                            numeric: col["numeric"] ?? false,
+                          );
+                        }).toList(),
+                        rows: reklameResult?.result
+                                .map((e) => _buildDataRow(e, context))
+                                .toList()
+                                .cast<DataRow>() ??
+                            [],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              columns: columnData.map((col) {
-                return DataColumn(
-                  label: Text(col["label"], style: columnTextStyle),
-                  numeric: col["numeric"] ?? false,
-                );
-              }).toList(),
-              rows: reklameResult?.result
-                      .map((e) => _buildDataRow(e, context))
-                      .toList()
-                      .cast<DataRow>() ??
-                  [],
             ),
-          ),
+          ],
         ),
       ),
     );

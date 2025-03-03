@@ -30,6 +30,8 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   SearchResult<Gradovi>? gradoviResult;
   SearchResult<Obavjestenje>? obavjestenjeResult;
 
+  final _horizontalScrollController = ScrollController();
+
   final List<Map<String, dynamic>> columnData = [
     {"label": "ID", "numeric": true},
     {"label": "Naslov"},
@@ -327,37 +329,49 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
       return Text("Nema rezultata.");
     }
     return Expanded(
-      child: SizedBox(
-        width: double.infinity, // Expands to full width
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0x29C3CBCA),
-            border: Border.all(color: Color(0xFFD3D3D3)),
-          ),
-          child: SingleChildScrollView(
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 25,
-              border: const TableBorder(
-                horizontalInside: BorderSide(
-                  width: 1,
-                  color: Color(0xFFD3D3D3),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0x29C3CBCA),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color(0xFFD3D3D3)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  controller: _horizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minWidth: 1500,
+                          minHeight: MediaQuery.of(context).size.height - 250),
+                      child: DataTable(
+                        showCheckboxColumn: false,
+                        columnSpacing: 25,
+                        columns: columnData.map((col) {
+                          return DataColumn(
+                            label: Text(col["label"], style: columnTextStyle),
+                            numeric: col["numeric"] ?? false,
+                          );
+                        }).toList(),
+                        rows: obavjestenjeResult?.result
+                                .map((e) => _buildDataRow(e, context))
+                                .toList()
+                                .cast<DataRow>() ??
+                            [],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              columns: columnData.map((col) {
-                return DataColumn(
-                  label: Text(col["label"], style: columnTextStyle),
-                  numeric: col["numeric"] ?? false,
-                );
-              }).toList(),
-              rows: obavjestenjeResult?.result
-                      .map((e) => _buildDataRow(e, context))
-                      .toList()
-                      .cast<DataRow>() ??
-                  [],
             ),
-          ),
+          ],
         ),
       ),
     );

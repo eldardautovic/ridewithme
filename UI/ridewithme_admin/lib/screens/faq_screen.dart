@@ -29,6 +29,8 @@ class _FaqScreenState extends State<FaqScreen> {
 
   final _formKey = GlobalKey<FormBuilderState>();
 
+  final _horizontalScrollController = ScrollController();
+
   final List<Map<String, dynamic>> columnData = [
     {"label": "ID", "numeric": true},
     {"label": "Pitanje"},
@@ -258,37 +260,50 @@ class _FaqScreenState extends State<FaqScreen> {
       return Text("Nema rezultata.");
     }
     return Expanded(
-      child: SizedBox(
-        width: double.infinity,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0x29C3CBCA),
-            border: Border.all(color: Color(0xFFD3D3D3)),
-          ),
-          child: SingleChildScrollView(
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 25,
-              border: const TableBorder(
-                horizontalInside: BorderSide(
-                  width: 1,
-                  color: Color(0xFFD3D3D3),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0x29C3CBCA),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color(0xFFD3D3D3)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  controller: _horizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _horizontalScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxWidth: 1500,
+                          minWidth: 1500,
+                          minHeight: MediaQuery.of(context).size.height - 250),
+                      child: DataTable(
+                        showCheckboxColumn: false,
+                        columnSpacing: 25,
+                        columns: columnData.map((col) {
+                          return DataColumn(
+                            label: Text(col["label"], style: columnTextStyle),
+                            numeric: col["numeric"] ?? false,
+                          );
+                        }).toList(),
+                        rows: faqResults?.result
+                                .map((e) => _buildDataRow(e, context))
+                                .toList()
+                                .cast<DataRow>() ??
+                            [],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              columns: columnData.map((col) {
-                return DataColumn(
-                  label: Text(col["label"], style: columnTextStyle),
-                  numeric: col["numeric"] ?? false,
-                );
-              }).toList(),
-              rows: faqResults?.result
-                      .map((e) => _buildDataRow(e, context))
-                      .toList()
-                      .cast<DataRow>() ??
-                  [],
             ),
-          ),
+          ],
         ),
       ),
     );

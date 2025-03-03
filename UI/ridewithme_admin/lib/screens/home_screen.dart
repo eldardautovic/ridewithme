@@ -19,18 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late StatistikaProvider _statistikaProvider;
 
-  var _cardItems = [
-    CardItemModel(
-        title: "Korisnici",
-        subtitle: "Ukupno registrovanih korisnika",
-        value: "150,000"),
-    CardItemModel(
-        title: "Aktivne vožnje",
-        subtitle: "Broj aktivnih kreiranih vožnji",
-        value: "154"),
-    CardItemModel(
-        title: "Kuponi", subtitle: "Broj iskorištenih kupona", value: "55")
-  ];
+  List<CardItemModel> _cardItems = [];
 
   bool isLoading = true;
 
