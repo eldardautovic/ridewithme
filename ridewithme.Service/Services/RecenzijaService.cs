@@ -19,9 +19,9 @@ namespace ridewithme.Service.Services
 
         public override IQueryable<Database.Recenzija> AddFilter(RecenzijaSearchObject searchObject, IQueryable<Database.Recenzija> query)
         {
-            if (searchObject.KorisnikId != null)
+            if (!string.IsNullOrEmpty(searchObject.KorisnikGTE))
             {
-                query = query.Where(x => x.KorisnikId == searchObject.KorisnikId);
+                query = query.Where(x => x.Korisnik.KorisnickoIme.Contains(searchObject.KorisnikGTE) || x.Voznja.Vozac.KorisnickoIme.Contains(searchObject.KorisnikGTE));
             }
 
             if (searchObject.VoznjaId != null)
@@ -47,7 +47,7 @@ namespace ridewithme.Service.Services
 
             }
 
-            query = query.Include(x => x.Voznja).ThenInclude(x => x.GradOd).Include(x => x.Voznja).ThenInclude(x => x.GradDo).Include(x => x.Voznja).ThenInclude(x => x.Vozac);
+            query = query.Include(x=> x.Korisnik).Include(x => x.Voznja).ThenInclude(x => x.GradOd).Include(x => x.Voznja).ThenInclude(x => x.GradDo).Include(x => x.Voznja).ThenInclude(x => x.Vozac);
 
             return query;
         }

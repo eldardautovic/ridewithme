@@ -8,6 +8,7 @@ import 'package:ridewithme_admin/screens/gradovi_screen.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
 import 'package:ridewithme_admin/screens/kuponi_screen.dart';
 import 'package:ridewithme_admin/screens/obavjestenja_screen.dart';
+import 'package:ridewithme_admin/screens/ocjene_screen.dart';
 import 'package:ridewithme_admin/screens/reklame_screen.dart';
 import 'package:ridewithme_admin/screens/voznje_list_screen.dart';
 import 'package:ridewithme_admin/screens/vrsta_zalbe_screen.dart';
@@ -85,6 +86,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       'route': VrstaZalbeScreen()
     },
     {'title': 'FAQ', 'icon': Icons.quiz_rounded, 'route': FaqScreen()},
+    {
+      'title': 'Ocjene',
+      'icon': Icons.rate_review_rounded,
+      'route': OcjeneScreen()
+    },
   ];
 
   @override

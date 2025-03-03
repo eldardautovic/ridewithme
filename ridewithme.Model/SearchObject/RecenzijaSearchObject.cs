@@ -8,7 +8,7 @@ namespace ridewithme.Model.SearchObject
     {
         public int? VoznjaId { get; set; }
 
-        public int? KorisnikId { get; set; }
+        public string? KorisnikGTE { get; set; }
 
         public string? OrderBy { get; set; }
     }

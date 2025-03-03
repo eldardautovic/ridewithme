@@ -8,6 +8,7 @@ import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/providers/kuponi_provider.dart';
 import 'package:ridewithme_admin/providers/obavjestenja_provider.dart';
+import 'package:ridewithme_admin/providers/recenzije_provider.dart';
 import 'package:ridewithme_admin/providers/reklame_provider.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
@@ -32,6 +33,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => ReklameProvider()),
       ChangeNotifierProvider(create: (_) => DogadjajiProvider()),
       ChangeNotifierProvider(create: (_) => FaqProvider()),
+      ChangeNotifierProvider(create: (_) => RecenzijeProvider()),
     ],
     child: const MyApp(),
   ));
