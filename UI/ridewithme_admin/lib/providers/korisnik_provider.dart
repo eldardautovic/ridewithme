@@ -17,8 +17,6 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
   Future<Korisnik> login(String username, String password) async {
     var url = "$fullUrl/login?username=${username}&password=${password}";
 
-    print(url);
-
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -31,6 +29,5 @@ class KorisnikProvider extends BaseProvider<Korisnik> {
     } else {
       throw new Exception("Unknown error");
     }
-    // print("response: ${response.request} ${response.statusCode}, ${response.body}");
   }
 }

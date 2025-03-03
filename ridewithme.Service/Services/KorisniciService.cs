@@ -60,7 +60,7 @@ namespace ridewithme.Service.Services
 
             if (!string.IsNullOrWhiteSpace(searchObject?.KorisnickoIme))
             {
-                query = query.Where(x => x.KorisnickoIme == searchObject.KorisnickoIme);
+                query = query.Where(x => x.KorisnickoIme.Contains(searchObject.KorisnickoIme));
             }
 
             if (!string.IsNullOrWhiteSpace(searchObject?.OrderBy))

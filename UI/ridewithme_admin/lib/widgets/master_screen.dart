@@ -6,6 +6,7 @@ import 'package:ridewithme_admin/screens/dogadjaji_screen.dart';
 import 'package:ridewithme_admin/screens/faq_screen.dart';
 import 'package:ridewithme_admin/screens/gradovi_screen.dart';
 import 'package:ridewithme_admin/screens/home_screen.dart';
+import 'package:ridewithme_admin/screens/korisnici_screen.dart';
 import 'package:ridewithme_admin/screens/kuponi_screen.dart';
 import 'package:ridewithme_admin/screens/obavjestenja_screen.dart';
 import 'package:ridewithme_admin/screens/ocjene_screen.dart';
@@ -47,7 +48,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     {
       'title': 'Korisnici',
       'icon': Icons.perm_contact_cal_rounded,
-      'route': VoznjeListScreen()
+      'route': KorisniciScreen()
     },
     {
       'title': 'Vožnje',

@@ -1,31 +1,33 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:ridewithme_admin/models/reklama.dart';
-import 'package:ridewithme_admin/providers/reklame_provider.dart';
-import 'package:ridewithme_admin/screens/reklame_screen.dart';
+import 'package:ridewithme_admin/models/korisnik.dart';
+import 'package:ridewithme_admin/providers/korisnik_provider.dart';
+import 'package:ridewithme_admin/screens/korisnici_screen.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
-import 'package:file_picker/file_picker.dart';
 
-class ReklameDetailsScreen extends StatefulWidget {
-  Reklama? reklama;
-
-  ReklameDetailsScreen({super.key, this.reklama});
+class KorisniciDetailsScreen extends StatefulWidget {
+  Korisnik? korisnik;
+  KorisniciDetailsScreen({super.key, this.korisnik});
 
   @override
-  State<ReklameDetailsScreen> createState() => _ReklameDetailsScreenState();
+  State<KorisniciDetailsScreen> createState() => _KorisniciDetailsScreenState();
 }
 
-class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
-  late ReklameProvider _reklameProvider;
+class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
+  //TODO: Ne smije moc obirsat samog sebe!
+  late KorisnikProvider _korisnikProvider;
 
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
+
+  bool isLoading = true;
 
   File? _image;
   final _base64Placeholder =
@@ -33,16 +35,19 @@ class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
-    _reklameProvider = context.read<ReklameProvider>();
+    _korisnikProvider = context.read<KorisnikProvider>();
 
     _initialValue = {
-      "nazivKlijenta": widget.reklama?.nazivKlijenta,
-      "nazivKampanje": widget.reklama?.nazivKampanje,
-      "sadrzajKampanje": widget.reklama?.sadrzajKampanje,
-      "slika": widget.reklama?.slika != null
-          ? widget.reklama?.slika.toString()
+      'ime': widget.korisnik?.ime,
+      'prezime': widget.korisnik?.prezime,
+      'korisnickoIme': widget.korisnik?.korisnickoIme,
+      'email': widget.korisnik?.email,
+      'lozinka': null,
+      'lozinkaPotvrda': null,
+      "slika": widget.korisnik?.slika != null
+          ? widget.korisnik?.slika.toString()
           : _base64Placeholder
     };
   }
@@ -50,20 +55,20 @@ class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        selectedIndex: 7,
-        headerTitle:
-            widget.reklama != null ? "Detalji reklame" : "Dodavanje reklame",
-        headerDescription: widget.reklama != null
-            ? "Ovdje možete pregledati/izmjeniti detalje reklame."
-            : "Ovdje možete da dodate novu reklamu.",
-        backButton: ReklameScreen(),
-        child: Flexible(
+      backButton: KorisniciScreen(),
+      selectedIndex: 2,
+      headerTitle: widget.korisnik != null
+          ? "Uređivanje korisnika"
+          : "Kreiranje korisnika",
+      headerDescription: widget.korisnik != null
+          ? "Ovdje možete urediti korisnika."
+          : "Ovdje možete kreirati korisnika.",
+      child: Flexible(
           child: SingleChildScrollView(
-            child: Column(
-              children: [_buildForm(), _save()],
-            ),
-          ),
-        ));
+              child: Column(
+        children: [_buildForm(), _save()],
+      ))),
+    );
   }
 
   final commonDecoration = InputDecoration(
@@ -84,18 +89,41 @@ class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
         child: Column(
           children: [
             Row(
+              spacing: 20,
               children: [
                 Expanded(
                     child: FormBuilderTextField(
-                  name: "nazivKlijenta",
+                  name: "ime",
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(
                       errorText: 'Ovo polje je obavezno.',
                     ),
                   ]),
-                  initialValue: _initialValue['nazivKlijenta'],
+                  initialValue: _initialValue['ime'],
                   decoration: InputDecoration(
-                    label: Text("Naziv klijenta"),
+                    label: Text("Ime"),
+                    labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
+                    filled: true,
+                    fillColor: Color(0xFFF3FCFC),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                  ),
+                )),
+                Expanded(
+                    child: FormBuilderTextField(
+                  name: "prezime",
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Ovo polje je obavezno.',
+                    ),
+                  ]),
+                  initialValue: _initialValue['prezime'],
+                  decoration: InputDecoration(
+                    label: Text("Prezime"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                     filled: true,
                     fillColor: Color(0xFFF3FCFC),
@@ -113,18 +141,41 @@ class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
               height: 10,
             ),
             Row(
+              spacing: 20,
               children: [
                 Expanded(
                     child: FormBuilderTextField(
-                  name: "nazivKampanje",
+                  name: "korisnickoIme",
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(
                       errorText: 'Ovo polje je obavezno.',
                     ),
                   ]),
-                  initialValue: _initialValue['nazivKampanje'],
+                  initialValue: _initialValue['korisnickoIme'],
                   decoration: InputDecoration(
-                    label: Text("Naziv kampanje"),
+                    label: Text("Korisničko ime"),
+                    labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
+                    filled: true,
+                    fillColor: Color(0xFFF3FCFC),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                  ),
+                )),
+                Expanded(
+                    child: FormBuilderTextField(
+                  name: "email",
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Ovo polje je obavezno.',
+                    ),
+                  ]),
+                  initialValue: _initialValue['email'],
+                  decoration: InputDecoration(
+                    label: Text("E-mail"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                     filled: true,
                     fillColor: Color(0xFFF3FCFC),
@@ -142,18 +193,35 @@ class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
               height: 10,
             ),
             Row(
+              spacing: 20,
               children: [
                 Expanded(
                     child: FormBuilderTextField(
-                  name: "sadrzajKampanje",
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(
-                      errorText: 'Ovo polje je obavezno.',
-                    ),
-                  ]),
-                  initialValue: _initialValue['sadrzajKampanje'],
+                  name: "lozinka",
+                  obscureText: true,
+                  initialValue: _initialValue['lozinka'],
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
-                    label: Text("Sadržaj kampanje"),
+                    label: Text("Lozinka"),
+                    labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
+                    filled: true,
+                    fillColor: Color(0xFFF3FCFC),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE3E3E3)),
+                    ),
+                  ),
+                )),
+                Expanded(
+                    child: FormBuilderTextField(
+                  name: "lozinkaPotvrda",
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  obscureText: true,
+                  initialValue: _initialValue['lozinkaPotvrda'],
+                  decoration: InputDecoration(
+                    label: Text("Potvrda lozinke"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                     filled: true,
                     fillColor: Color(0xFFF3FCFC),
@@ -252,21 +320,21 @@ class _ReklameDetailsScreenState extends State<ReklameDetailsScreen> {
 
       var request = Map.from(_formKey.currentState!.value);
 
-      if (widget.reklama == null) {
-        await _reklameProvider.insert(request);
-        await showSnackBar("Uspješno ste dodali novu reklamu.");
+      if (widget.korisnik == null) {
+        await _korisnikProvider.insert(request);
+        await showSnackBar("Uspješno ste dodali novog korisnika.");
 
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const ReklameScreen(),
+            builder: (context) => const KorisniciScreen(),
           ),
         );
       } else {
-        await _reklameProvider.update(widget.reklama!.id!, request);
-        await showSnackBar("Uspješno ste izmjenili reklamu.");
+        await _korisnikProvider.update(widget.korisnik!.id!, request);
+        await showSnackBar("Uspješno ste izmjenili korisnika.");
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const ReklameScreen(),
+            builder: (context) => const KorisniciScreen(),
           ),
         );
       }
