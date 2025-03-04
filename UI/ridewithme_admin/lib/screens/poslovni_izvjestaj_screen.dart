@@ -204,6 +204,8 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
   }
 
   Future<void> _buildReport() async {
+    await _initReport();
+
     final PdfDocument document = PdfDocument();
     final PdfPage page = document.pages.add();
     final Size pageSize = page.getClientSize();

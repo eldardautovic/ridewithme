@@ -171,7 +171,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
   }
 
   List<DropdownMenuItem<String>> _buildGradoviDropdownItems() {
-    return (gradoviResults?.result ?? [])
+    final items = (gradoviResults?.result ?? [])
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),
               child: Text(
@@ -180,5 +180,19 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
               ),
             ))
         .toList();
+
+    // Dodaj opciju "Odaberi" s null vrijednošću
+    items.insert(
+      0,
+      const DropdownMenuItem(
+        value: null,
+        child: Text(
+          'Odaberi',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+
+    return items;
   }
 }

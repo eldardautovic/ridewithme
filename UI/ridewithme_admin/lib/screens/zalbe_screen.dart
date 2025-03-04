@@ -278,10 +278,10 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
         buildDataCell("#${e.id?.toString()}"),
         buildDataCell(e.naslov),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumPreuzimanja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumPreuzimanja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumPreuzimanja!)
             : "N/A"),
         buildDataCell(e.vrstaZalbe?.naziv),
         buildDataCell("${e.korisnik?.ime ?? ""} ${e.korisnik?.prezime ?? ""}"),

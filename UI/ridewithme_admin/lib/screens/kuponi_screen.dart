@@ -320,7 +320,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
         buildDataCell(e.kod),
         buildDataCell(e.naziv),
         buildDataCell(e.datumPocetka != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumPocetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumPocetka!)
             : "N/A"),
         DataCell(
           Badge(

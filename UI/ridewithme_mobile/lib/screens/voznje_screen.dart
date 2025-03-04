@@ -115,7 +115,7 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
           CustomButtonWidget(
             buttonText: "Kreiraj vožnju",
             onPress: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).push(
                 CupertinoPageRoute(
                   builder: (context) => VoznjeCreateScreen(),
                 ),
@@ -145,7 +145,7 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
         placeholderStyle: TextStyle(color: Color(0xFF898989)),
         readOnly: true,
         onTap: () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const VoznjeSearchScreen(),
             ),

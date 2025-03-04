@@ -10,6 +10,8 @@ namespace ridewithme.Model.SearchObject
 
         public string? KorisnikGTE { get; set; }
 
+        public int? KorisnikId { get; set; }
+
         public string? OrderBy { get; set; }
     }
 }

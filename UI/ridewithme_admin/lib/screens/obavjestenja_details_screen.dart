@@ -278,6 +278,18 @@ class _ObavjestenjaDetailsScreenState extends State<ObavjestenjaDetailsScreen> {
                             (allowedActions?.contains("Update") ?? false) ||
                                 widget.obavjestenje == null,
                         initialValue: _initialValue['datumZavrsetka'],
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Ovo polje je obavezno.'),
+                          (value) {
+                            if (value == null) return null;
+                            if (value.isBefore(DateTime.now())) {
+                              return 'Datum završetka ne može biti u prošlosti.';
+                            }
+
+                            return null;
+                          },
+                        ]),
                         decoration: buildTextFieldDecoration(
                             labelText: "Datum završetka",
                             hintText: "Datum završetka",

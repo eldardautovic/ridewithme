@@ -201,6 +201,18 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   obscureText: true,
                   initialValue: _initialValue['lozinka'],
                   autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value != null && value.isNotEmpty ||
+                        widget.korisnik == null) {
+                      return FormBuilderValidators.compose([
+                        FormBuilderValidators.password(
+                          errorText:
+                              'Lozinka: 8-32 karaktera, 1 veliko, 1 malo slovo, broj i spec. znak.',
+                        ),
+                      ])(value);
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     label: Text("Lozinka"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
@@ -220,6 +232,16 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   obscureText: true,
                   initialValue: _initialValue['lozinkaPotvrda'],
+                  validator: (value) {
+                    if (value != null && value.isNotEmpty ||
+                        widget.korisnik == null) {
+                      if (value !=
+                          _formKey.currentState?.fields['lozinka']?.value) {
+                        return 'Lozinke se ne podudaraju';
+                      }
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     label: Text("Potvrda lozinke"),
                     labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
@@ -232,7 +254,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                       borderSide: BorderSide(color: Color(0xFFE3E3E3)),
                     ),
                   ),
-                )),
+                ))
               ],
             ),
             SizedBox(

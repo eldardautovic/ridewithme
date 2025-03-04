@@ -169,31 +169,69 @@ class _DogadjajiDetailsScreenState extends State<DogadjajiDetailsScreen> {
               spacing: 10,
               children: [
                 Expanded(
-                    child: FormBuilderDateTimePicker(
-                        name: "datumPocetka",
-                        initialValue: _initialValue['datumPocetka'],
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                            errorText: 'Ovo polje je obavezno.',
-                          ),
-                        ]),
-                        decoration: buildTextFieldDecoration(
-                            labelText: "Datum početka",
-                            hintText: "Datum početka",
-                            prefixIcon: Icon(Icons.date_range_rounded)))),
+                  child: FormBuilderDateTimePicker(
+                    name: "datumPocetka",
+                    initialValue: _initialValue['datumPocetka'],
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(
+                          errorText: 'Ovo polje je obavezno.'),
+                      (value) {
+                        if (value == null) return null;
+                        if (value.isBefore(DateTime.now())) {
+                          return 'Datum početka ne može biti u prošlosti.';
+                        }
+                        final datumZavrsetka = _formKey
+                            .currentState?.fields['datumZavrsetka']?.value;
+                        if (datumZavrsetka != null) {
+                          if (value.isAfter(datumZavrsetka)) {
+                            return 'Datum početka ne može biti nakon datuma završetka.';
+                          }
+                          if (value.isAtSameMomentAs(datumZavrsetka)) {
+                            return 'Datum početka i datum završetka ne mogu biti isti.';
+                          }
+                        }
+                        return null;
+                      },
+                    ]),
+                    decoration: buildTextFieldDecoration(
+                      labelText: "Datum početka",
+                      hintText: "Datum početka",
+                      prefixIcon: Icon(Icons.date_range_rounded),
+                    ),
+                  ),
+                ),
                 Expanded(
-                    child: FormBuilderDateTimePicker(
-                        name: "datumZavrsetka",
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                            errorText: 'Ovo polje je obavezno.',
-                          ),
-                        ]),
-                        initialValue: _initialValue['datumZavrsetka'],
-                        decoration: buildTextFieldDecoration(
-                            labelText: "Datum završetka",
-                            hintText: "Datum završetka",
-                            prefixIcon: Icon(Icons.date_range_rounded)))),
+                  child: FormBuilderDateTimePicker(
+                    name: "datumZavrsetka",
+                    initialValue: _initialValue['datumZavrsetka'],
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(
+                          errorText: 'Ovo polje je obavezno.'),
+                      (value) {
+                        if (value == null) return null;
+                        if (value.isBefore(DateTime.now())) {
+                          return 'Datum završetka ne može biti u prošlosti.';
+                        }
+                        final datumPocetka = _formKey
+                            .currentState?.fields['datumPocetka']?.value;
+                        if (datumPocetka != null) {
+                          if (value.isBefore(datumPocetka)) {
+                            return 'Datum završetka ne može biti prije datuma početka.';
+                          }
+                          if (value.isAtSameMomentAs(datumPocetka)) {
+                            return 'Datum početka i datum završetka ne mogu biti isti.';
+                          }
+                        }
+                        return null;
+                      },
+                    ]),
+                    decoration: buildTextFieldDecoration(
+                      labelText: "Datum završetka",
+                      hintText: "Datum završetka",
+                      prefixIcon: Icon(Icons.date_range_rounded),
+                    ),
+                  ),
+                ),
               ],
             )
           ],

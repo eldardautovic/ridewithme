@@ -174,11 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                CupertinoPageRoute(
-                  builder: (context) => ProfileScreen(),
-                ),
-              );
+              Navigator.of(context).pop();
             },
             child: Icon(
               Icons.chevron_left,

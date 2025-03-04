@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
           CustomButtonWidget(
             buttonText: "Kreiraj vožnju",
             onPress: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).push(
                 CupertinoPageRoute(
                   builder: (context) => VoznjeCreateScreen(),
                 ),
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ? LoadingSpinnerWidget(height: 170)
         : CarouselSlider(
             options: CarouselOptions(
-              height: 120,
+              height: 150,
               enableInfiniteScroll: reklame!.count > 1,
               viewportFraction: reklame!.count > 1 ? 0.9 : 1,
               enlargeStrategy: CenterPageEnlargeStrategy.scale,

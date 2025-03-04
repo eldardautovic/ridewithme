@@ -194,17 +194,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   SizedBox(height: 20),
                                   FormBuilderTextField(
                                     name: "lozinka",
+                                    obscureText: true,
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(
-                                        errorText: 'Ovo polje je obavezno.',
-                                      ),
-                                      FormBuilderValidators.password(
-                                        errorText:
-                                            'Lozinka: 8-32 karaktera, 1 veliko, 1 malo slovo, broj i spec. znak.',
-                                      ),
-                                    ]),
+                                    validator: (value) {
+                                      if (value != null && value.isNotEmpty) {
+                                        return FormBuilderValidators.compose([
+                                          FormBuilderValidators.password(
+                                            errorText:
+                                                'Lozinka: 8-32 karaktera, 1 veliko, 1 malo slovo, broj i spec. znak.',
+                                          ),
+                                        ])(value);
+                                      }
+                                      return null;
+                                    },
                                     decoration: InputDecoration(
                                         label: Text("Lozinka"),
                                         labelStyle: TextStyle(
@@ -224,17 +227,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   SizedBox(height: 20),
                                   FormBuilderTextField(
                                     name: "lozinkaPotvrda",
+                                    obscureText: true,
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(
-                                        errorText: 'Ovo polje je obavezno.',
-                                      ),
-                                      FormBuilderValidators.password(
-                                        errorText:
-                                            'Lozinka: 8-32 karaktera, 1 veliko, 1 malo slovo, broj i spec. znak.',
-                                      ),
-                                    ]),
+                                    validator: (value) {
+                                      if (value != null && value.isNotEmpty) {
+                                        if (value !=
+                                            _formKey.currentState
+                                                ?.fields['lozinka']?.value) {
+                                          return 'Lozinke se ne podudaraju';
+                                        }
+                                      }
+                                      return null;
+                                    },
                                     decoration: InputDecoration(
                                       label: Text("Potvrda lozinke"),
                                       labelStyle: TextStyle(

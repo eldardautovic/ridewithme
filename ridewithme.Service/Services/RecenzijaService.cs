@@ -24,6 +24,11 @@ namespace ridewithme.Service.Services
                 query = query.Where(x => x.Korisnik.KorisnickoIme.Contains(searchObject.KorisnikGTE) || x.Voznja.Vozac.KorisnickoIme.Contains(searchObject.KorisnikGTE));
             }
 
+            if (searchObject.KorisnikId != null)
+            {
+                query = query.Where(x => x.KorisnikId == searchObject.KorisnikId);
+            }
+
             if (searchObject.VoznjaId != null)
             {
                 query = query.Where(x => x.VoznjaId == searchObject.VoznjaId);

@@ -280,10 +280,10 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
         buildDataCell(e.naslov),
         buildDataCell(e.podnaslov),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumZavrsetka != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumZavrsetka!)
             : "N/A"),
         DataCell(
           Badge(

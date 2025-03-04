@@ -50,7 +50,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
               text: widget.zalba.vrstaZalbe?.naziv ?? ''),
           _buildDoubleTextLabel(
               strongText: "Datum kreiranja:",
-              text: DateFormat("dd.MM.yyyy u hh:mm")
+              text: DateFormat("dd.MM.yyyy u HH:mm")
                   .format(widget.zalba.datumKreiranja ?? DateTime.now())),
         ],
       ),
@@ -130,7 +130,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
                                 "${widget.zalba.administrator?.ime} ${widget.zalba.administrator?.prezime}"),
                         _buildDoubleTextLabel(
                             strongText: "Datum preuzimanja:",
-                            text: DateFormat("dd.MM.yyyy u hh:mm").format(
+                            text: DateFormat("dd.MM.yyyy u HH:mm").format(
                                 widget.zalba.datumPreuzimanja ??
                                     DateTime.now())),
                         _buildDoubleTextLabel(

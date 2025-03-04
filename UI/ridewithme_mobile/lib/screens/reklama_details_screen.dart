@@ -75,7 +75,7 @@ class _ReklamaDetailsScreenState extends State<ReklamaDetailsScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.reklama.datumKreiranja ?? DateTime.now())}",
+            " ${DateFormat("dd.MM.yyyy u HH:mm").format(widget.reklama.datumKreiranja ?? DateTime.now())}",
             style: TextStyle(
                 fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600),
           ),

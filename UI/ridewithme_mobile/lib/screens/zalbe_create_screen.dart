@@ -8,6 +8,7 @@ import 'package:ridewithme_mobile/models/search_result.dart';
 import 'package:ridewithme_mobile/models/vrsta_zalbe.dart';
 import 'package:ridewithme_mobile/providers/vrste_zalbe_provider.dart';
 import 'package:ridewithme_mobile/providers/zalbe_provider.dart';
+import 'package:ridewithme_mobile/screens/zalbe_details_screen.dart';
 import 'package:ridewithme_mobile/screens/zalbe_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
 import 'package:ridewithme_mobile/utils/input_util.dart';
@@ -193,7 +194,7 @@ class _ZalbeCreateScreenState extends State<ZalbeCreateScreen> {
 
       var request = Map.from(_formKey.currentState!.value);
 
-      await _zalbeProvider.insert({
+      var result = await _zalbeProvider.insert({
         "vrstaZalbeId": request['vrstaZalbeId'],
         "naslov": request['naslov'],
         "sadrzaj": request['sadrzaj'],
@@ -204,7 +205,9 @@ class _ZalbeCreateScreenState extends State<ZalbeCreateScreen> {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ZalbeScreen(),
+          builder: (context) => ZalbeDetailsScreen(
+            zalba: result,
+          ),
         ),
       );
     } on Exception catch (e) {

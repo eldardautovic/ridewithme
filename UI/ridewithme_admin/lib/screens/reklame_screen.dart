@@ -200,10 +200,10 @@ class _ReklameScreenState extends State<ReklameScreen> {
         buildDataCell(e.nazivKampanje),
         buildDataCell("${e.korisnik?.ime} ${e.korisnik?.prezime}"),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumIzmjene != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumIzmjene!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumIzmjene!)
             : "N/A"),
         DataCell(Row(
           children: [

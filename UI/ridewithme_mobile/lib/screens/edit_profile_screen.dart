@@ -138,7 +138,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ]),
                     initialValue: _initialValue['email'],
                     decoration: InputDecoration(
-                      label: Text("Naziv klijenta"),
+                      label: Text("E-mail"),
                       labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
                       filled: true,
                       fillColor: Color(0xFFF3FCFC),
@@ -160,7 +160,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Expanded(
                       child: FormBuilderTextField(
                     name: "lozinka",
-                    validator: FormBuilderValidators.compose([]),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != null && value.isNotEmpty) {
+                        return FormBuilderValidators.compose([
+                          FormBuilderValidators.password(
+                            errorText:
+                                'Lozinka: 8-32 karaktera, 1 veliko, 1 malo slovo, broj i spec. znak.',
+                          ),
+                        ])(value);
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       label: Text("Nova lozinka"),
                       labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),
@@ -184,7 +196,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Expanded(
                       child: FormBuilderTextField(
                     name: "lozinkaPotvrda",
-                    validator: FormBuilderValidators.compose([]),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != null && value.isNotEmpty) {
+                        if (value !=
+                            _formKey.currentState?.fields['lozinka']?.value) {
+                          return 'Lozinke se ne podudaraju';
+                        }
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       label: Text("Potvrda lozinke"),
                       labelStyle: TextStyle(fontSize: 14, fontFamily: "Inter"),

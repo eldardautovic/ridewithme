@@ -52,7 +52,7 @@ class _ComplaintWidgetDetailedState extends State<ComplaintWidgetDetailed> {
                           text: widget.zalba.vrstaZalbe?.naziv ?? ''),
                       _buildDoubleTextLabel(
                           strongText: "Datum kreiranja:",
-                          text: DateFormat("dd.MM.yyyy u hh:mm").format(
+                          text: DateFormat("dd.MM.yyyy u HH:mm").format(
                               widget.zalba.datumKreiranja ?? DateTime.now())),
                     ],
                   ),

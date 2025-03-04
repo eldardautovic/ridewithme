@@ -75,7 +75,7 @@ class ChatBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "${DateFormat("dd.MM.yyyy u hh:mm").format(poruka.datumKreiranja ?? DateTime.now())}",
+              "${DateFormat("dd.MM.yyyy u HH:mm").format(poruka.datumKreiranja ?? DateTime.now())}",
               style: TextStyle(
                   color: Colors.black, fontSize: 11, fontFamily: "Inter"),
             ),

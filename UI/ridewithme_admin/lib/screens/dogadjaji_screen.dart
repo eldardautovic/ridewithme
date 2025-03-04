@@ -39,6 +39,10 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +62,8 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
       "NazivGTE": _formKey.currentState?.value['NazivGTE'],
       "OpisGTE": _formKey.currentState?.value['OpisGTE'],
       'OrderBy': "$orderByField $orderByDirection",
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
 
     setState(() {
@@ -228,16 +234,16 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
       cells: [
         buildDataCell(e.naziv),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumKreiranja!)
             : "N/A"),
         buildDataCell(e.datumIzmjene != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumZavrsetka!)
             : "N/A"),
         buildDataCell(e.datumPocetka != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumZavrsetka!)
             : "N/A"),
         buildDataCell(e.datumZavrsetka != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumZavrsetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumZavrsetka!)
             : "N/A"),
         DataCell(Row(
           children: [
@@ -277,6 +283,7 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -296,7 +303,7 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -317,6 +324,40 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (dogadjajiResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

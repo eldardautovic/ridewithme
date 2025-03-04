@@ -69,7 +69,7 @@ class _MasterLayoutState extends State<MasterLayout> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,11 +79,12 @@ class _MasterLayoutState extends State<MasterLayout> {
                 padding: const EdgeInsets.only(top: 10, left: 10),
                 child: IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) => widget.backButton!,
-                      ),
-                    );
+                    // Navigator.of(context).push(
+                    //   CupertinoPageRoute(
+                    //     builder: (context) => widget.backButton!,
+                    //   ),
+                    // );
+                    Navigator.of(context).pop();
                   },
                   iconSize: 30,
                   icon: Icon(Icons.chevron_left),

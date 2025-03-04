@@ -6,7 +6,6 @@ import 'package:ridewithme_admin/models/korisnik.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/screens/korisnici_details_screen.dart';
-import 'package:ridewithme_admin/screens/kuponi_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
@@ -42,6 +41,10 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -68,7 +71,9 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
       'OrderBy': "$orderByField $orderByDirection",
       'KorisnickoIme': _formKey.currentState?.value['KorisnickoIme'],
       'IsKorisniciIncluded': true,
-      'IsDostignucaIncluded': true
+      'IsDostignucaIncluded': true,
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
 
     setState(() {
@@ -164,7 +169,7 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
         buildDataCell(e.korisnickoIme),
         buildDataCell(e.email),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumKreiranja!)
             : "N/A"),
         DataCell(Row(
           children: [
@@ -204,6 +209,7 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -224,7 +230,7 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
                       constraints: BoxConstraints(
                           minWidth: 800,
                           maxWidth: 800,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -245,6 +251,40 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (korisnikResults != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

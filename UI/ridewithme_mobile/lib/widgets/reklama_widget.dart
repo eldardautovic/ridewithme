@@ -11,7 +11,7 @@ class ReklamaWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ReklamaDetailsScreen(reklama: reklama),
           ),

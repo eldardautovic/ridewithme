@@ -48,6 +48,10 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
+
   bool isLoading = true;
 
   final _formKey = GlobalKey<FormBuilderState>();
@@ -87,6 +91,8 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
       'GradDoId': _formKey.currentState?.value['gradDoId'],
       'OrderBy': "$orderByField $orderByDirection",
       'Status': _formKey.currentState?.value['status'],
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
 
     setState(() {
@@ -309,10 +315,10 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
           ),
         ),
         buildDataCell(e.datumVrijemePocetka != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumVrijemePocetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumVrijemePocetka!)
             : "N/A"),
         buildDataCell(e.datumVrijemeZavrsetka != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumVrijemeZavrsetka!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumVrijemeZavrsetka!)
             : "N/A"),
         buildDataCell("${e.cijena} KM"),
         DataCell(Row(
@@ -351,6 +357,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -370,7 +377,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -391,6 +398,40 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (result != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

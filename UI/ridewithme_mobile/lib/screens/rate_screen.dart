@@ -55,8 +55,12 @@ class _RateScreenState extends State<RateScreen> {
         headerDescription: "Ovdje možete da ostavite ocjenu vožnje",
         headerColor: Color(0xFF39D5C3),
         headerTextColor: Colors.black,
-        child: Column(
-          children: [_buildForm(), _save()],
+        child: Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [_buildForm(), _save()],
+            ),
+          ),
         ));
   }
 

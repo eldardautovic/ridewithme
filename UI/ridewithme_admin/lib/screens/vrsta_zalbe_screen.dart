@@ -123,7 +123,7 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
       cells: [
         buildDataCell(e.naziv.toString()),
         buildDataCell(e.datumIzmjene != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumIzmjene!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumIzmjene!)
             : "N/A"),
         DataCell(Row(
           children: [

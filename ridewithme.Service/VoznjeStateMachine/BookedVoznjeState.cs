@@ -25,6 +25,8 @@ namespace ridewithme.Service.VoznjeStateMachine
 
             entity.StateMachine = "inprogress";
 
+            entity.DatumVrijemePocetka = DateTime.Now;
+
             var mappedEntity = Mapper.Map<Model.Models.Voznje>(entity);
 
             Context.SaveChanges();

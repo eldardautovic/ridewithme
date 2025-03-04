@@ -91,7 +91,7 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
           CustomButtonWidget(
             buttonText: "Kreiraj vožnju",
             onPress: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).push(
                 CupertinoPageRoute(
                   builder: (context) => VoznjeCreateScreen(),
                 ),

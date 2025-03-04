@@ -22,7 +22,7 @@ class _RideWidgetDetailedState extends State<RideWidgetDetailed> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (context) => VoznjeDetailsScreen(
               voznja: widget.voznja,
@@ -46,7 +46,7 @@ class _RideWidgetDetailedState extends State<RideWidgetDetailed> {
                   right: 10,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                         CupertinoPageRoute(
                           builder: (context) => ChatScreen(
                             sender:
@@ -102,7 +102,7 @@ class _RideWidgetDetailedState extends State<RideWidgetDetailed> {
                           text: "${widget.voznja.cijena} KM"),
                       _buildDoubleTextLabel(
                           strongText: "Polazak:",
-                          text: DateFormat("dd.MM.yyyy u hh:mm").format(
+                          text: DateFormat("dd.MM.yyyy u HH:mm").format(
                               widget.voznja.datumVrijemePocetka ??
                                   DateTime.now())),
                       widget.voznja.klijent != null

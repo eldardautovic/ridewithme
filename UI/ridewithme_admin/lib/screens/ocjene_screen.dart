@@ -185,7 +185,7 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
         buildDataCell(e.voznja?.vozac?.korisnickoIme),
         buildDataCell(e.ocjena.toString()),
         buildDataCell(e.datumKreiranja != null
-            ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
+            ? DateFormat('dd/MM/yyyy HH:mm').format(e.datumKreiranja!)
             : "N/A"),
         DataCell(Row(
           children: [

@@ -15,7 +15,7 @@ class RideWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => VoznjeDetailsScreen(voznja: voznja),
           ),
@@ -69,7 +69,7 @@ class RideWidget extends StatelessWidget {
                         children: [
                           TextSpan(
                               text:
-                                  " ${DateFormat("dd.MM.yyyy u hh:mm").format(voznja.datumVrijemePocetka ?? DateTime.now())}",
+                                  " ${DateFormat("dd.MM.yyyy u HH:mm").format(voznja.datumVrijemePocetka ?? DateTime.now())}",
                               style: TextStyle(
                                   fontFamily: "Inter",
                                   fontSize: 11,

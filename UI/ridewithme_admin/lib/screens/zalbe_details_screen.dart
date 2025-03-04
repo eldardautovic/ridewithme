@@ -160,7 +160,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
             namedColumn(Text("${zalba.korisnik?.korisnickoIme}"), "Korisnik"),
             namedColumn(
                 Text(
-                    "${DateFormat('dd/MM/yyyy hh:mm').format(zalba.datumKreiranja!)}"),
+                    "${DateFormat('dd/MM/yyyy HH:mm').format(zalba.datumKreiranja!)}"),
                 "Datum kreiranja"),
           ],
         ),

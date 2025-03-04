@@ -41,7 +41,6 @@ namespace ridewithme.Service.Services
         public UkupnaStatistika GetMonthlyStatistics()
         {
             var voznjePoMjesecu = context.Voznje
-             .Where(x => x.DatumVrijemePocetka != null)
              .GroupBy(x => x.DatumKreiranja.Month)
              .Select(g => new { Mjesec = g.Key, BrojVoznji = g.Count() })
              .ToDictionary(x => x.Mjesec, x => x.BrojVoznji);
@@ -105,7 +104,7 @@ namespace ridewithme.Service.Services
                         .Count(x => x.DatumKreiranja.Year == year),
 
                     PrihodiVozaca = context.Voznje
-                        .Where(x => x.DatumKreiranja.Year == year && x.StateMachine == "completed")
+                        .Where(x => x.DatumKreiranja.Year == year && (x.StateMachine == "booked" || x.StateMachine == "completed"))
                         .Sum(x => x.Cijena)
                 };
 

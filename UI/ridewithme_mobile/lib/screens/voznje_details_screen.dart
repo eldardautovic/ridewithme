@@ -21,6 +21,7 @@ import 'package:ridewithme_mobile/screens/payment_success.dart';
 import 'package:ridewithme_mobile/screens/rate_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_create_screen.dart';
 import 'package:ridewithme_mobile/screens/voznje_screen.dart';
+import 'package:ridewithme_mobile/screens/your_rides_screen.dart';
 import 'package:ridewithme_mobile/utils/auth_util.dart';
 import 'package:ridewithme_mobile/utils/enums_util.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
@@ -130,7 +131,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             showSnackBar("Uspješno ste sakrili vožnju.");
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
-                builder: (context) => VoznjeScreen(),
+                builder: (context) => YourRidesScreen(),
               ),
             );
             break;
@@ -142,7 +143,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             showSnackBar("Uspješno ste omogućili uređivanje vožnji.");
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
-                builder: (context) => VoznjeScreen(),
+                builder: (context) => YourRidesScreen(),
               ),
             );
             break;
@@ -154,7 +155,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             showSnackBar("Uspješno ste aktivirali vožnju.");
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
-                builder: (context) => VoznjeScreen(),
+                builder: (context) => YourRidesScreen(),
               ),
             );
             break;
@@ -166,7 +167,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             showSnackBar("Uspješno ste započeli vožnju.");
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
-                builder: (context) => VoznjeScreen(),
+                builder: (context) => YourRidesScreen(),
               ),
             );
             break;
@@ -178,14 +179,14 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
             showSnackBar("Uspješno ste završili vožnju.");
             Navigator.of(context).pushReplacement(
               CupertinoPageRoute(
-                builder: (context) => VoznjeScreen(),
+                builder: (context) => YourRidesScreen(),
               ),
             );
             break;
           }
         case "Rate":
           {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).push(
               CupertinoPageRoute(
                 builder: (context) => RateScreen(
                   voznja: widget.voznja,
@@ -196,7 +197,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
           }
         case "Update":
           {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).push(
               CupertinoPageRoute(
                 builder: (context) => VoznjeCreateScreen(
                   voznja: widget.voznja,
@@ -281,7 +282,7 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                   fontWeight: FontWeight.w500),
             ),
           ),
-          isLoading
+          recommendationsLoading
               ? LoadingSpinnerWidget(
                   height: 160,
                 )
@@ -434,12 +435,12 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
         _buildDoubleTextLabel(
             strongText: "Polazak:",
             text:
-                " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())} sati"),
+                " ${DateFormat("dd.MM.yyyy u HH:mm").format(widget.voznja.datumVrijemePocetka ?? DateTime.now())} sati"),
         if (widget.voznja.datumVrijemeZavrsetka != null) ...[
           _buildDoubleTextLabel(
               strongText: "Završetak:",
               text:
-                  " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.voznja.datumVrijemeZavrsetka ?? DateTime.now())} sati"),
+                  " ${DateFormat("dd.MM.yyyy u HH:mm").format(widget.voznja.datumVrijemeZavrsetka ?? DateTime.now())} sati"),
         ],
         if (Authorization.id == widget.voznja.vozac?.id)
           _buildDoubleTextLabel(

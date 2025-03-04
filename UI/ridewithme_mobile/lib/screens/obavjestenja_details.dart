@@ -47,7 +47,7 @@ class _ObavjestenjaDetailsState extends State<ObavjestenjaDetails> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            " ${DateFormat("dd.MM.yyyy u hh:mm").format(widget.obavjestenje.datumKreiranja ?? DateTime.now())}",
+            " ${DateFormat("dd.MM.yyyy u HH:mm").format(widget.obavjestenje.datumKreiranja ?? DateTime.now())}",
             style: TextStyle(
                 fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600),
           ),

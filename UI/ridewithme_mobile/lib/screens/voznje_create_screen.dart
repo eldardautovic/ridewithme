@@ -11,7 +11,6 @@ import 'package:ridewithme_mobile/providers/dogadjaji_provider.dart';
 import 'package:ridewithme_mobile/providers/gradovi_provider.dart';
 import 'package:ridewithme_mobile/providers/voznje_provider.dart';
 import 'package:ridewithme_mobile/screens/voznje_details_screen.dart';
-import 'package:ridewithme_mobile/screens/voznje_screen.dart';
 import 'package:ridewithme_mobile/utils/input_util.dart';
 import 'package:ridewithme_mobile/widgets/custom_button_widget.dart';
 import 'package:ridewithme_mobile/widgets/loading_spinner_widget.dart';
@@ -164,18 +163,17 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
               ),
               if (dogadjajResult?.count != 0) ...[
                 buildDropdown(
-                    name: "DogadjajId",
-                    labelText: "Događaj",
-                    hintText: "Događaj",
-                    prefixIcon: Icon(Icons.event),
-                    items: _buildDogadjajiDropdownItems(),
-                    onClear: () {
-                      _formKey.currentState!.fields['DogadjajId']?.reset();
-                    }),
+                  name: "DogadjajId",
+                  labelText: "Događaj",
+                  hintText: "Događaj",
+                  prefixIcon: Icon(Icons.event),
+                  items: _buildDogadjajiDropdownItems(),
+                ),
               ],
               FormBuilderTextField(
                 name: "cijena",
                 keyboardType: TextInputType.number,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
                     errorText: 'Ovo polje je obavezno.',
@@ -195,12 +193,21 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
                     prefixIcon: Icon(Icons.attach_money_rounded)),
               ),
               FormBuilderDateTimePicker(
-                  name: "datumVrijemePocetka",
-                  initialValue: _initialValue['datumVrijemePocetka'],
-                  decoration: buildTextFieldDecoration(
-                      labelText: "Datum vrijeme polaska",
-                      hintText: "Datum vrijeme polaska",
-                      prefixIcon: Icon(Icons.date_range_rounded)))
+                name: "datumVrijemePocetka",
+                initialValue: _initialValue['datumVrijemePocetka'],
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  if (value != null && value.isBefore(DateTime.now())) {
+                    return 'Datum ne može biti u prošlosti';
+                  }
+                  return null;
+                },
+                decoration: buildTextFieldDecoration(
+                  labelText: "Datum vrijeme polaska",
+                  hintText: "Datum vrijeme polaska",
+                  prefixIcon: Icon(Icons.date_range_rounded),
+                ),
+              )
             ],
           )),
     );
@@ -219,12 +226,14 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
       }
 
       if (widget.voznja == null) {
-        await _voznjeProvider.insert(request);
+        var result = await _voznjeProvider.insert(request);
         await showSnackBar("Uspješno ste dodali novu vožnju.");
 
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const VoznjeScreen(),
+            builder: (context) => VoznjeDetailsScreen(
+              voznja: result,
+            ),
           ),
         );
       } else {
@@ -250,11 +259,14 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
         );
 
         if (confirmUpdate == true) {
-          await _voznjeProvider.update(widget.voznja!.id!, request);
+          var result =
+              await _voznjeProvider.update(widget.voznja!.id!, request);
           await showSnackBar("Uspješno ste izmijenili vožnju.");
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const VoznjeScreen(),
+              builder: (context) => VoznjeDetailsScreen(
+                voznja: result,
+              ),
             ),
           );
         }
@@ -312,7 +324,7 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
   }
 
   List<DropdownMenuItem<String>> _buildDogadjajiDropdownItems() {
-    return (dogadjajResult?.result ?? [])
+    final items = (dogadjajResult?.result ?? [])
         .map((e) => DropdownMenuItem(
               value: e.id.toString(),
               child: Text(
@@ -321,5 +333,19 @@ class _VoznjeCreateScreenState extends State<VoznjeCreateScreen> {
               ),
             ))
         .toList();
+
+    // Dodaj opciju "Odaberi" s null vrijednošću
+    items.insert(
+      0,
+      const DropdownMenuItem(
+        value: null,
+        child: Text(
+          'Odaberi',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+
+    return items;
   }
 }
