@@ -77,24 +77,21 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
           {
             await _voznjeProvider.hide(widget.voznja?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste sakrili vožnju ID ${widget.voznja?.id}.");
+            showSnackBar("Uspješno ste sakrili vožnju.");
             break;
           }
         case "Edit":
           {
             await _voznjeProvider.edit(widget.voznja?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste vratili Draft status vožnji ID ${widget.voznja?.id}.");
+            showSnackBar("Uspješno ste vratili Draft status vožnji.");
             break;
           }
         case "Activate":
           {
             await _voznjeProvider.activate(widget.voznja?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste aktivirali vožnju ID ${widget.voznja?.id}.");
+            showSnackBar("Uspješno ste aktivirali vožnju.");
             break;
           }
         default:

@@ -71,32 +71,28 @@ class _ObavjestenjaDetailsScreenState extends State<ObavjestenjaDetailsScreen> {
           {
             await _obavjestenjaProvider.hide(widget.obavjestenje?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste sakrili obavještenje ID ${widget.obavjestenje?.id}.");
+            showSnackBar("Uspješno ste sakrili obavještenje.");
             break;
           }
         case "Edit":
           {
             await _obavjestenjaProvider.edit(widget.obavjestenje?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste vratili Draft status obavještenju ID ${widget.obavjestenje?.id}.");
+            showSnackBar("Uspješno ste vratili Draft status obavještenju.");
             break;
           }
         case "Activate":
           {
             await _obavjestenjaProvider.activate(widget.obavjestenje?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste aktivirali obavještenje ID ${widget.obavjestenje?.id}.");
+            showSnackBar("Uspješno ste aktivirali obavještenje.");
             break;
           }
         case "Complete":
           {
             await _obavjestenjaProvider.complete(widget.obavjestenje?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste aktivirali obavještenje ID ${widget.obavjestenje?.id}.");
+            showSnackBar("Uspješno ste aktivirali obavještenje.");
             break;
           }
         default:

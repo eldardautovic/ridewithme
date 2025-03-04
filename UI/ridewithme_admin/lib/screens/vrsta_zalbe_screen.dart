@@ -31,11 +31,14 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
   bool isLoading = true;
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Naziv"},
     {"label": "Datum izmjene"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
+
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
 
   @override
   void initState() {
@@ -47,8 +50,13 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
   }
 
   Future initTable() async {
-    vrsteZalbeResult = await _vrstaZalbeProvider
-        .get(filter: {"NazivGTE": _formKey.currentState?.value['NazivGTE']});
+    vrsteZalbeResult = await _vrstaZalbeProvider.get(filter: {
+      "NazivGTE": _formKey.currentState?.value['NazivGTE'],
+      "Page": _pageNumber,
+      "PageSize": _pageSize
+    });
+
+    _totalPages = ((vrsteZalbeResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -113,7 +121,6 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
   DataRow _buildDataRow(VrstaZalbe e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.naziv.toString()),
         buildDataCell(e.datumIzmjene != null
             ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumIzmjene!)
@@ -151,6 +158,7 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -171,7 +179,7 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
                       constraints: BoxConstraints(
                           maxWidth: 700,
                           minWidth: 700,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -192,6 +200,40 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (vrsteZalbeResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

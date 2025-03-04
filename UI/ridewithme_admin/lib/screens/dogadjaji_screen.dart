@@ -31,7 +31,6 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
   bool isLoading = true;
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Naziv"},
     {"label": "Datum kreiranja"},
     {"label": "Datum izmjene"},
@@ -50,9 +49,10 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
   }
 
   Future initTable() async {
-    String orderByField = _formKey.currentState?.value['OrderByField'] ?? "id";
+    String orderByField =
+        _formKey.currentState?.value['OrderByField'] ?? "DatumKreiranja";
     String orderByDirection =
-        _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
+        _formKey.currentState?.value['OrderByDirection'] ?? "DESC";
 
     dogadjajiResult = await _dogadjajiProvider.get(filter: {
       "NazivGTE": _formKey.currentState?.value['NazivGTE'],
@@ -136,7 +136,7 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
         selectedIndex: 4,
         headerTitle: "Događaji",
         headerDescription: "Ovdje možete pregledati listu događaja.",
-        child: Column(children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           _buildSearch(),
           isLoading ? LoadingSpinnerWidget() : _buildResultView(),
         ]));
@@ -175,10 +175,9 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
                 child: buildDropdown(
                   name: "OrderByField",
                   labelText: "Sortiraj po",
-                  initialValue: "id",
+                  initialValue: "DatumKreiranja",
                   prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                   items: const [
-                    DropdownMenuItem(value: "id", child: Text("ID")),
                     DropdownMenuItem(
                         value: "DatumKreiranja",
                         child: Text("Datum kreiranja")),
@@ -196,7 +195,7 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
                 child: buildDropdown(
                   name: "OrderByDirection",
                   labelText: "Smjer",
-                  initialValue: "ASC",
+                  initialValue: "DESC",
                   prefixIcon:
                       _formKey.currentState?.value['OrderByDirection'] == "ASC"
                           ? Icon(Icons.arrow_upward_rounded)
@@ -227,7 +226,6 @@ class _DogadjajiScreenState extends State<DogadjajiScreen> {
   DataRow _buildDataRow(Dogadjaj e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.naziv),
         buildDataCell(e.datumKreiranja != null
             ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)

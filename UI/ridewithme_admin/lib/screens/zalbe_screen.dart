@@ -33,7 +33,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
   bool isLoading = false;
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
+    {"label": "Broj žalbe", "numeric": true},
     {"label": "Naslov"},
     {"label": "Datum kreiranja"},
     {"label": "Datum preuzimanja"},
@@ -43,6 +43,10 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
     {"label": "Status"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
+
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
 
   @override
   void initState() {
@@ -80,8 +84,11 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
           _formKey.currentState?.value['KorisnickoImeKorisnikGTE'],
       'IsKorisnikIncluded': true,
       'IsAdministratorIncluded': true,
-      'IsVrstaZalbeIncluded': true
+      'IsVrstaZalbeIncluded': true,
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
+    _totalPages = ((zalbeResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -106,7 +113,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text("Uspješno ste obrisali žalbu ID $id."),
+              content: Text("Uspješno ste obrisali žalbu."),
               action: SnackBarAction(
                 label: "U redu",
                 onPressed: () =>
@@ -138,7 +145,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
 
     AlertDialog alert = AlertDialog(
       title: Text("Upozorenje"),
-      content: Text("Da li ste sigurni da želite da obrišete žalbu ID $id ?"),
+      content: Text("Da li ste sigurni da želite da obrišete žalbu?"),
       actions: [
         cancelButton,
         continueButton,
@@ -233,7 +240,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
                 initialValue: "id",
                 prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
-                  DropdownMenuItem(value: "id", child: Text("ID")),
+                  DropdownMenuItem(value: "id", child: Text("Broj žalbe")),
                   DropdownMenuItem(
                       value: "DatumPreuzimanja",
                       child: Text("Datum preuzimanja")),
@@ -268,7 +275,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
   DataRow _buildDataRow(Zalba e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
+        buildDataCell("#${e.id?.toString()}"),
         buildDataCell(e.naslov),
         buildDataCell(e.datumKreiranja != null
             ? DateFormat('dd/MM/yyyy hh:mm').format(e.datumKreiranja!)
@@ -331,6 +338,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -350,7 +358,7 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -371,6 +379,40 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (zalbeResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

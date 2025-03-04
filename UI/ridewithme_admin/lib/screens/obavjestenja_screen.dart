@@ -8,7 +8,6 @@ import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/providers/gradovi_provider.dart';
 import 'package:ridewithme_admin/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_admin/screens/obavjestenja_details_screen.dart';
-import 'package:ridewithme_admin/screens/voznje_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/utils/util.dart';
@@ -33,7 +32,6 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   final _horizontalScrollController = ScrollController();
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Naslov"},
     {"label": "Podnaslov"},
     {"label": "Početak"},
@@ -47,6 +45,10 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
 
   bool isLoading = true;
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
+
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -56,7 +58,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
     _obavjestenjeProvider = context.read<ObavjestenjaProvider>();
 
     _initialValue = {
-      'OrderBy': 'id ASC',
+      'OrderBy': 'DatumKreiranja DESC',
       'Status': null,
       'datumOd': null,
       'datumDo': null
@@ -71,7 +73,8 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   }
 
   Future initTable() async {
-    String orderByField = _formKey.currentState?.value['OrderByField'] ?? "id";
+    String orderByField =
+        _formKey.currentState?.value['OrderByField'] ?? "DatumKreiranja";
     String orderByDirection =
         _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
 
@@ -79,8 +82,11 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
       'OrderBy': "$orderByField $orderByDirection",
       'Status': _formKey.currentState?.value['status'],
       'DatumOdGTE': _formKey.currentState?.value['datumOd'],
-      'DatumDoGTE': _formKey.currentState?.value['datumDo']
+      'DatumDoGTE': _formKey.currentState?.value['datumDo'],
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
+    _totalPages = ((obavjestenjeResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -156,10 +162,9 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
               child: buildDropdown(
                 name: "OrderByField",
                 labelText: "Sortiraj po",
-                initialValue: "id",
+                initialValue: "DatumKreiranja",
                 prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
-                  DropdownMenuItem(value: "id", child: Text("ID")),
                   DropdownMenuItem(
                       value: "DatumKreiranja", child: Text("Datum kreiranja")),
                   DropdownMenuItem(
@@ -272,7 +277,6 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
   DataRow _buildDataRow(Obavjestenje e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.naslov),
         buildDataCell(e.podnaslov),
         buildDataCell(e.datumKreiranja != null
@@ -331,6 +335,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -350,7 +355,7 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -371,6 +376,40 @@ class _ObavjestenjaScreenState extends State<ObavjestenjaScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (obavjestenjeResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

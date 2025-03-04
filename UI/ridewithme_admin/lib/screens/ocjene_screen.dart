@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/recenzija.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/providers/recenzije_provider.dart';
-import 'package:ridewithme_admin/screens/kuponi_details_screen.dart';
 import 'package:ridewithme_admin/screens/ocjene_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
@@ -34,14 +33,17 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
   final _horizontalScrollController = ScrollController();
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
-    {"label": "Vožnja ID", "numeric": true},
+    {"label": "Broj vožnje", "numeric": true},
     {"label": "Klijent ime"},
     {"label": "Vozač ime"},
     {"label": "Ocjena", "numeric": true},
     {"label": "Datum ostavljanja ocjene"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
+
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
 
   @override
   void initState() {
@@ -50,7 +52,7 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
     _recenzijeProvider = context.read<RecenzijeProvider>();
 
     _initialValue = {
-      'OrderBy': 'id ASC',
+      'OrderBy': 'VoznjaId ASC',
       'KorisnikGTE': null,
       'VoznjaId': null
     };
@@ -66,8 +68,12 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
     recenzijaResult = await _recenzijeProvider.get(filter: {
       'OrderBy': "$orderByField $orderByDirection",
       'KorisnikGTE': _formKey.currentState?.value['KorisnikGTE'],
-      'VoznjaId': _formKey.currentState?.value['VoznjaId']
+      'VoznjaId': _formKey.currentState?.value['VoznjaId'],
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
+
+    _totalPages = ((recenzijaResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -129,18 +135,19 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
                 ]),
                 initialValue: _initialValue['VoznjaId'],
                 decoration: buildTextFieldDecoration(
-                    hintText: "Voznja ID...",
-                    labelText: "Voznja ID",
+                    hintText: "Broj vožnje...",
+                    labelText: "Broj vožnje",
                     prefixIcon: Icon(Icons.numbers_rounded)),
               )),
               Expanded(
                 child: buildDropdown(
                   name: "OrderByField",
                   labelText: "Sortiraj po",
-                  initialValue: "id",
+                  initialValue: "VoznjaId",
                   prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                   items: const [
-                    DropdownMenuItem(value: "id", child: Text("ID")),
+                    DropdownMenuItem(
+                        value: "VoznjaId", child: Text("Broj vožnje")),
                     DropdownMenuItem(value: "Ocjena", child: Text("Ocjena")),
                     DropdownMenuItem(
                         value: "DatumKreiranja",
@@ -173,8 +180,7 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
   DataRow _buildDataRow(Recenzija e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
-        buildDataCell(e.voznja?.id?.toString()),
+        buildDataCell("#${e.voznja?.id?.toString()}"),
         buildDataCell(e.korisnik?.korisnickoIme),
         buildDataCell(e.voznja?.vozac?.korisnickoIme),
         buildDataCell(e.ocjena.toString()),
@@ -214,6 +220,7 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -234,7 +241,7 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
                       constraints: BoxConstraints(
                           maxWidth: 700,
                           minWidth: 700,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -255,6 +262,40 @@ class _OcjeneScreenState extends State<OcjeneScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (recenzijaResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

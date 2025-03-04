@@ -49,7 +49,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
           {
             await _zalbaProvider.process(widget.zalba.id ?? 0);
 
-            showSnackBar("Uspješno ste preuzeli žalbu ID ${widget.zalba.id}.");
+            showSnackBar("Uspješno ste preuzeli žalbu.");
 
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -99,8 +99,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
               await _zalbaProvider.complete(
                   widget.zalba.id ?? 0, {"odgovorNaZalbu": odgovorNaZalbu});
 
-              showSnackBar(
-                  "Uspješno ste odgovorili na žalbu ID ${widget.zalba.id}.");
+              showSnackBar("Uspješno ste odgovorili na žalbu.");
 
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -157,7 +156,7 @@ class _ZalbeDetailsScreenState extends State<ZalbeDetailsScreen> {
         Row(
           spacing: 20,
           children: [
-            namedColumn(Text("${zalba.id ?? 'N/A'}"), "ID žalbe"),
+            namedColumn(Text("${zalba.id ?? 'N/A'}"), "Broj žalbe"),
             namedColumn(Text("${zalba.korisnik?.korisnickoIme}"), "Korisnik"),
             namedColumn(
                 Text(

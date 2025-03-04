@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/faq.dart';
 import 'package:ridewithme_admin/models/search_result.dart';
 import 'package:ridewithme_admin/providers/faq_provider.dart';
-import 'package:ridewithme_admin/screens/dogadjaji_details_screen.dart';
 import 'package:ridewithme_admin/screens/faq_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
@@ -31,33 +30,48 @@ class _FaqScreenState extends State<FaqScreen> {
 
   final _horizontalScrollController = ScrollController();
 
+  Map<String, dynamic> _initialValue = {};
+
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Pitanje"},
     {"label": "Kreirao"},
     {"label": "Datum kreiranja"},
     {"label": "Datum izmjene"},
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
 
   @override
   void initState() {
     super.initState();
     _faqProvider = context.read<FaqProvider>();
 
+    _initialValue = {
+      'OrderBy': 'VoznjaId ASC',
+      'KorisnikGTE': null,
+      'VoznjaId': null
+    };
+
     initTable();
   }
 
   Future initTable() async {
-    String orderByField = _formKey.currentState?.value['OrderByField'] ?? "id";
+    String orderByField =
+        _formKey.currentState?.value['OrderByField'] ?? "DatumKreiranja";
     String orderByDirection =
         _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
 
     faqResults = await _faqProvider.get(filter: {
       "PitanjeGTE": _formKey.currentState?.value['PitanjeGTE'],
       "OrderBy": "$orderByField $orderByDirection",
-      "IsKorisnikIncluded": true
+      "IsKorisnikIncluded": true,
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
+
+    _totalPages = ((faqResults?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -136,6 +150,7 @@ class _FaqScreenState extends State<FaqScreen> {
       headerTitle: "FAQ",
       headerDescription: "Ovdje možete da pregledate FAQ.",
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSearch(),
           isLoading ? LoadingSpinnerWidget() : _buildResultView()
@@ -169,10 +184,9 @@ class _FaqScreenState extends State<FaqScreen> {
                 child: buildDropdown(
                   name: "OrderByField",
                   labelText: "Sortiraj po",
-                  initialValue: "id",
+                  initialValue: "DatumKreiranja",
                   prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                   items: const [
-                    DropdownMenuItem(value: "id", child: Text("ID")),
                     DropdownMenuItem(
                         value: "DatumKreiranja",
                         child: Text("Datum kreiranja")),
@@ -216,7 +230,6 @@ class _FaqScreenState extends State<FaqScreen> {
   DataRow _buildDataRow(FAQ e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.pitanje),
         buildDataCell("${e.korisnik?.ime} ${e.korisnik?.prezime}"),
         buildDataCell(e.datumKreiranja != null
@@ -262,6 +275,7 @@ class _FaqScreenState extends State<FaqScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -282,7 +296,7 @@ class _FaqScreenState extends State<FaqScreen> {
                       constraints: BoxConstraints(
                           maxWidth: 1500,
                           minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -303,6 +317,40 @@ class _FaqScreenState extends State<FaqScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (faqResults != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

@@ -29,9 +29,11 @@ class _ReklameScreenState extends State<ReklameScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   bool isLoading = true;
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Klijent"},
     {"label": "Naziv kampanje"},
     {"label": "Kreirao"},
@@ -53,8 +55,11 @@ class _ReklameScreenState extends State<ReklameScreen> {
     reklameResult = await _reklameProvider.get(filter: {
       "NazivKlijentaGTE": _formKey.currentState?.value['NazivKlijentaGTE'],
       "NazivKampanjeGTE": _formKey.currentState?.value['NazivKampanjeGTE'],
-      "IsKorisniciIncluded": true
+      "IsKorisniciIncluded": true,
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
+    _totalPages = ((reklameResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -79,7 +84,7 @@ class _ReklameScreenState extends State<ReklameScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text("Uspješno ste obrisali reklamu ID $id."),
+              content: Text("Uspješno ste obrisali reklamu."),
               action: SnackBarAction(
                 label: "U redu",
                 onPressed: () =>
@@ -111,7 +116,7 @@ class _ReklameScreenState extends State<ReklameScreen> {
 
     AlertDialog alert = AlertDialog(
       title: Text("Upozorenje"),
-      content: Text("Da li ste sigurni da želite da obrišete reklamu ID $id ?"),
+      content: Text("Da li ste sigurni da želite da obrišete reklamu?"),
       actions: [
         cancelButton,
         continueButton,
@@ -191,7 +196,6 @@ class _ReklameScreenState extends State<ReklameScreen> {
   DataRow _buildDataRow(Reklama e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.nazivKlijenta),
         buildDataCell(e.nazivKampanje),
         buildDataCell("${e.korisnik?.ime} ${e.korisnik?.prezime}"),
@@ -239,6 +243,7 @@ class _ReklameScreenState extends State<ReklameScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -258,7 +263,7 @@ class _ReklameScreenState extends State<ReklameScreen> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                           minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -279,6 +284,40 @@ class _ReklameScreenState extends State<ReklameScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (reklameResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

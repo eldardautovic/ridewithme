@@ -34,7 +34,6 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
   Map<String, dynamic> _initialValue = {};
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Ime"},
     {"label": "Prezime"},
     {"label": "Korisničko ime"},
@@ -50,8 +49,8 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
     _korisnikProvider = context.read<KorisnikProvider>();
 
     _initialValue = {
-      'OrderBy': 'id ASC',
-      'KorisnickoImeGTE': null,
+      'OrderBy': 'DatumKreiranja DESC',
+      'KorisnickoIme': null,
       'IsKorisniciIncluded': true,
       'IsDostignucaIncluded': true
     };
@@ -60,7 +59,17 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
   }
 
   Future initTable() async {
-    korisnikResults = await _korisnikProvider.get();
+    String orderByField =
+        _formKey.currentState?.value['OrderByField'] ?? "DatumKreiranja";
+    String orderByDirection =
+        _formKey.currentState?.value['OrderByDirection'] ?? "DESC";
+
+    korisnikResults = await _korisnikProvider.get(filter: {
+      'OrderBy': "$orderByField $orderByDirection",
+      'KorisnickoIme': _formKey.currentState?.value['KorisnickoIme'],
+      'IsKorisniciIncluded': true,
+      'IsDostignucaIncluded': true
+    });
 
     setState(() {
       isLoading = false;
@@ -97,7 +106,7 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
           children: [
             Expanded(
                 child: FormBuilderTextField(
-              name: "KorisnickoImeGTE",
+              name: "KorisnickoIme",
               initialValue: _initialValue['KorisnickoImeGTE'],
               decoration: buildTextFieldDecoration(
                   hintText: "Korisničko ime...",
@@ -108,10 +117,9 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
               child: buildDropdown(
                 name: "OrderByField",
                 labelText: "Sortiraj po",
-                initialValue: "id",
+                initialValue: "DatumKreiranja",
                 prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
-                  DropdownMenuItem(value: "id", child: Text("ID")),
                   DropdownMenuItem(
                       value: "DatumKreiranja", child: Text("Datum kreiranja"))
                 ],
@@ -121,7 +129,7 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
               child: buildDropdown(
                 name: "OrderByDirection",
                 labelText: "Smjer",
-                initialValue: "ASC",
+                initialValue: "DESC",
                 prefixIcon:
                     _formKey.currentState?.value['OrderByDirection'] == "ASC"
                         ? Icon(Icons.arrow_upward_rounded)
@@ -151,7 +159,6 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
   DataRow _buildDataRow(Korisnik e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.ime),
         buildDataCell(e.prezime),
         buildDataCell(e.korisnickoIme),

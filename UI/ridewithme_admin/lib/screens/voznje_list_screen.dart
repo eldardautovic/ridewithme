@@ -36,7 +36,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   Map<String, dynamic> _initialValue = {};
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
+    {"label": "Broj vožnje", "numeric": true},
     {"label": "Grad od"},
     {"label": "Grad do"},
     {"label": "Vozač"},
@@ -235,7 +235,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                 initialValue: "id",
                 prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
-                  DropdownMenuItem(value: "id", child: Text("ID")),
+                  DropdownMenuItem(value: "id", child: Text("Broj vožnje")),
                   DropdownMenuItem(
                       value: "DatumVrijemePocetka",
                       child: Text("Datum početka")),
@@ -292,7 +292,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
   DataRow _buildDataRow(Voznja e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
+        buildDataCell("#${e.id?.toString()}"),
         buildDataCell(e.gradOd?.naziv),
         buildDataCell(e.gradDo?.naziv),
         buildDataCell("${e.vozac?.ime ?? ""} ${e.vozac?.prezime ?? ""}"),

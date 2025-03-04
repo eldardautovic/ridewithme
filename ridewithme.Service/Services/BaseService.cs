@@ -35,7 +35,8 @@ namespace ridewithme.Service.Services
 
             if (searchObject?.Page.HasValue == true && searchObject?.PageSize.HasValue == true)
             {
-                query = query.Skip(searchObject.Page.Value * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
+                int skip = searchObject.Page.Value - 1;
+                query = query.Skip(skip * searchObject.PageSize.Value).Take(searchObject.PageSize.Value);
             }
 
             var list = query.ToList();

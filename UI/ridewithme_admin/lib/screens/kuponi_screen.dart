@@ -35,7 +35,6 @@ class _KuponiScreenState extends State<KuponiScreen> {
   bool isLoading = true;
 
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Kod"},
     {"label": "Naziv"},
     {"label": "Početak"},
@@ -46,6 +45,10 @@ class _KuponiScreenState extends State<KuponiScreen> {
     {"label": "", "numeric": true}, // Prazna kolona za dugmad
   ];
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +56,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
     _kuponiProvider = context.read<KuponiProvider>();
 
     _initialValue = {
-      'OrderBy': 'id ASC',
+      'OrderBy': 'DatumPocetka ASC',
       'status': null,
       'datumPocetka': null,
       'kodGTE': null,
@@ -65,7 +68,8 @@ class _KuponiScreenState extends State<KuponiScreen> {
   }
 
   Future initTable() async {
-    String orderByField = _formKey.currentState?.value['OrderByField'] ?? "id";
+    String orderByField =
+        _formKey.currentState?.value['OrderByField'] ?? "DatumPocetka";
     String orderByDirection =
         _formKey.currentState?.value['OrderByDirection'] ?? "ASC";
 
@@ -77,7 +81,11 @@ class _KuponiScreenState extends State<KuponiScreen> {
       'BrojIskoristivostiGTE':
           _formKey.currentState?.value['brojIskoristivostiGTE'],
       'PopustGTE': _formKey.currentState?.value['popustGTE'],
+      "Page": _pageNumber,
+      "PageSize": _pageSize
     });
+
+    _totalPages = ((kuponiResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -102,7 +110,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text("Uspješno ste obrisali kupon ID $id."),
+              content: Text("Uspješno ste obrisali kupon."),
               action: SnackBarAction(
                 label: "U redu",
                 onPressed: () =>
@@ -134,7 +142,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
 
     AlertDialog alert = AlertDialog(
       title: Text("Upozorenje"),
-      content: Text("Da li ste sigurni da želite da obrišete kupon ID $id ?"),
+      content: Text("Da li ste sigurni da želite da obrišete kupon ?"),
       actions: [
         cancelButton,
         continueButton,
@@ -259,7 +267,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
               child: buildDropdown(
                 name: "OrderByField",
                 labelText: "Sortiraj po",
-                initialValue: "id",
+                initialValue: "DatumPocetka",
                 prefixIcon: Icon(Icons.sort_by_alpha_rounded),
                 items: const [
                   DropdownMenuItem(value: "id", child: Text("ID")),
@@ -309,7 +317,6 @@ class _KuponiScreenState extends State<KuponiScreen> {
   DataRow _buildDataRow(Kupon e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.kod),
         buildDataCell(e.naziv),
         buildDataCell(e.datumPocetka != null
@@ -372,6 +379,7 @@ class _KuponiScreenState extends State<KuponiScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -390,8 +398,9 @@ class _KuponiScreenState extends State<KuponiScreen> {
                     scrollDirection: Axis.horizontal,
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                          minWidth: 1500,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          maxWidth: 1000,
+                          minWidth: 1000,
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -412,6 +421,40 @@ class _KuponiScreenState extends State<KuponiScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (kuponiResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

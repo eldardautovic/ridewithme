@@ -64,23 +64,21 @@ class _KuponiDetailsScreenState extends State<KuponiDetailsScreen> {
           {
             await _kuponiProvider.hide(widget.kupon?.id ?? 0);
 
-            showSnackBar("Uspješno ste sakrili kupon ID ${widget.kupon?.id}.");
+            showSnackBar("Uspješno ste sakrili kupon.");
             break;
           }
         case "Edit":
           {
             await _kuponiProvider.edit(widget.kupon?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste vratili Draft status kuponu ID ${widget.kupon?.id}.");
+            showSnackBar("Uspješno ste vratili Draft status kuponu.");
             break;
           }
         case "Activate":
           {
             await _kuponiProvider.activate(widget.kupon?.id ?? 0);
 
-            showSnackBar(
-                "Uspješno ste aktivirali kupon ID ${widget.kupon?.id}.");
+            showSnackBar("Uspješno ste aktivirali kupon.");
             break;
           }
         default:

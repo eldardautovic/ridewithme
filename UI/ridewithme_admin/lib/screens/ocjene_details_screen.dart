@@ -1,6 +1,7 @@
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:ridewithme_admin/models/recenzija.dart';
+import 'package:ridewithme_admin/screens/ocjene_screen.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
 class OcjeneDetailsScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _OcjeneDetailsScreenState extends State<OcjeneDetailsScreen> {
       selectedIndex: 12,
       headerTitle: "Ocjena detalji",
       headerDescription: "Ovdje možete da pregledate detalje ocjene.",
+      backButton: OcjeneScreen(),
       child: Column(
         children: [_buildReview()],
       ),
@@ -32,9 +34,8 @@ class _OcjeneDetailsScreenState extends State<OcjeneDetailsScreen> {
         Row(
           spacing: 20,
           children: [
-            namedColumn(Text("${widget.recenzija.id ?? 'N/A'}"), "ID ocjene"),
             namedColumn(
-                Text("${widget.recenzija.voznja?.id ?? 'N/A'}"), "Vožnja ID"),
+                Text("${widget.recenzija.voznja?.id ?? 'N/A'}"), "Broj vožnje"),
           ],
         ),
         SizedBox(height: 15),

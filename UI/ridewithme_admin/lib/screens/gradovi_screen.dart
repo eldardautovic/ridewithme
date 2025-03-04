@@ -29,8 +29,11 @@ class _GradoviScreenState extends State<GradoviScreen> {
 
   final _horizontalScrollController = ScrollController();
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+  int _totalPages = 1;
+
   final List<Map<String, dynamic>> columnData = [
-    {"label": "ID", "numeric": true},
     {"label": "Naziv"},
     {"label": "Geo. dužina"},
     {"label": "Geo. širina"},
@@ -47,8 +50,13 @@ class _GradoviScreenState extends State<GradoviScreen> {
   }
 
   Future initTable() async {
-    gradoviResult = await _gradoviProvider
-        .get(filter: {"NazivGTE": _formKey.currentState?.value['NazivGTE']});
+    gradoviResult = await _gradoviProvider.get(filter: {
+      "NazivGTE": _formKey.currentState?.value['NazivGTE'],
+      "Page": _pageNumber,
+      "PageSize": _pageSize
+    });
+
+    _totalPages = ((gradoviResult?.count ?? 1) / _pageSize).ceil();
 
     setState(() {
       isLoading = false;
@@ -66,7 +74,7 @@ class _GradoviScreenState extends State<GradoviScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSearch(),
-          isLoading ? LoadingSpinnerWidget() : _buildResultView()
+          isLoading ? LoadingSpinnerWidget() : _buildResultView(),
         ],
       ),
     );
@@ -114,7 +122,6 @@ class _GradoviScreenState extends State<GradoviScreen> {
   DataRow _buildDataRow(Gradovi e, BuildContext context) {
     return DataRow(
       cells: [
-        buildDataCell(e.id?.toString()),
         buildDataCell(e.naziv.toString()),
         buildDataCell(e.longitude.toString()),
         buildDataCell(e.latitude.toString()),
@@ -151,6 +158,7 @@ class _GradoviScreenState extends State<GradoviScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -171,7 +179,7 @@ class _GradoviScreenState extends State<GradoviScreen> {
                       constraints: BoxConstraints(
                           maxWidth: 700,
                           minWidth: 700,
-                          minHeight: MediaQuery.of(context).size.height - 250),
+                          minHeight: MediaQuery.of(context).size.height - 500),
                       child: DataTable(
                         showCheckboxColumn: false,
                         columnSpacing: 25,
@@ -192,6 +200,40 @@ class _GradoviScreenState extends State<GradoviScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            if (gradoviResult != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: _pageNumber > 1
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber - 1;
+                              initTable();
+                            });
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  ),
+                  Text('$_pageNumber',
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    onPressed: _pageNumber < _totalPages
+                        ? () {
+                            setState(() {
+                              _pageNumber = _pageNumber + 1;
+                            });
+                            initTable();
+                          }
+                        : null,
+                    icon: const Icon(Icons.arrow_forward_ios_rounded),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
