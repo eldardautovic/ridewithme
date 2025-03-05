@@ -104,8 +104,16 @@ namespace ridewithme.Service.KuponiStateMachine
 
             var entity = set.Find(id);
 
-            set.Remove(entity);
 
+            var voznjeKuponi = Context.Voznje.Where(x => x.KuponId == id).ToList();
+
+            foreach (var v in voznjeKuponi)
+            {
+                v.KuponId = null;
+            }
+
+            Context.SaveChanges();
+            set.Remove(entity);
             Context.SaveChanges();
 
             return Mapper.Map<Model.Models.Kuponi>(entity);

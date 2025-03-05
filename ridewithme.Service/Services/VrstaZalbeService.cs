@@ -29,5 +29,28 @@ namespace ridewithme.Service.Services
             return query;
         }
 
+        public Model.Models.VrstaZalbe Delete(int id)
+        {
+            var set = Context.Set<Database.VrstaZalbe>();
+
+            var entity = set.Find(id);
+
+            var zalbeVrste = Context.Zalbe.Where(x => x.VrstaZalbeId == id).ToList();
+
+            foreach (var v in zalbeVrste)
+            {
+                Context.Remove(v);
+            }
+
+            Context.SaveChanges();
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Models.VrstaZalbe>(entity);
+        }
+
+
     }
 }

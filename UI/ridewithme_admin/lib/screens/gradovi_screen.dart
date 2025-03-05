@@ -119,6 +119,72 @@ class _GradoviScreenState extends State<GradoviScreen> {
     );
   }
 
+  showAlertDialog(BuildContext context, int id) {
+    Widget cancelButton = TextButton(
+      child: Text("Odustani"),
+      onPressed: () {
+        Navigator.pop(context, true);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Da"),
+      onPressed: () async {
+        try {
+          await _gradoviProvider.delete(id);
+
+          Navigator.pop(context, true);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text("Uspješno ste obrisali grad."),
+              action: SnackBarAction(
+                label: "U redu",
+                onPressed: () =>
+                    ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+              ),
+            ),
+          );
+
+          initTable();
+
+          setState(() {
+            isLoading = true;
+          });
+        } on Exception catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(e.toString()),
+              action: SnackBarAction(
+                label: "U redu",
+                onPressed: () =>
+                    ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+              ),
+            ),
+          );
+        }
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Upozorenje"),
+      content: Text(
+          "Jeste li sigurni da želite obrisati ovaj grad?\nAko nastavite, sve vožnje koje uključuju ovaj grad bit će ažurirane tako da im se zamjenska\nvrijednost postavi na prvi dostupni grad i budu vraćene u status 'Draft'."),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   DataRow _buildDataRow(Gradovi e, BuildContext context) {
     return DataRow(
       cells: [
@@ -127,6 +193,13 @@ class _GradoviScreenState extends State<GradoviScreen> {
         buildDataCell(e.latitude.toString()),
         DataCell(Row(
           children: [
+            IconButton(
+              iconSize: 17,
+              onPressed: () {
+                showAlertDialog(context, e.id ?? 0);
+              },
+              icon: const Icon(Icons.delete),
+            ),
             IconButton(
               onPressed: () {
                 Navigator.of(context)

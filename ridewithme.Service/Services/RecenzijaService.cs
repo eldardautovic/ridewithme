@@ -104,5 +104,18 @@ namespace ridewithme.Service.Services
 
             base.AfterInsert(entity, request);
         }
+
+        public Model.Models.Recenzija Delete(int id)
+        {
+            var set = Context.Set<Database.Recenzija>();
+
+            var entity = set.Find(id);
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Models.Recenzija>(entity);
+        }
     }
 }

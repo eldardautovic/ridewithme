@@ -19,9 +19,22 @@ namespace ridewithme.Service.VoznjeStateMachine
             return base.Rate(id, ocjena);
         }
 
+        public override Model.Models.Voznje Delete(int id)
+        {
+            var set = Context.Set<Database.Voznje>();
+
+            var entity = set.Find(id);
+
+            set.Remove(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Models.Voznje>(entity);
+        }
+
         public override List<string> AllowedActions(Database.Voznje entity)
         {
-            return new List<string>() { nameof(Rate) };
+            return new List<string>() { nameof(Rate), nameof(Delete) };
         }
     }
 }

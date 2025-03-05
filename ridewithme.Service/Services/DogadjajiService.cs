@@ -69,6 +69,15 @@ namespace ridewithme.Service.Services
 
             var entity = set.Find(id);
 
+            var voznjeDogadjaji = Context.Voznje.Where(x => x.DogadjajId == id).ToList();
+
+            foreach (var v in voznjeDogadjaji)
+            {
+                v.DogadjajId = null;
+            }
+
+            Context.SaveChanges();
+
             set.Remove(entity);
 
             Context.SaveChanges();

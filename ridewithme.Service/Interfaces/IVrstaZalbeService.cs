@@ -11,5 +11,7 @@ namespace ridewithme.Service.Interfaces
 {
     public interface IVrstaZalbeService : ICRUDService<VrstaZalbe, VrstaZalbeSearchObject, VrstaZalbeInsertRequest, VrstaZalbeUpdateRequest>
     {
+        public VrstaZalbe Delete(int id);
+
     }
 }

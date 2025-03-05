@@ -223,12 +223,18 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
                 name: "status",
                 labelText: "Status",
                 prefixIcon: Icon(Icons.flag),
-                items: VoznjaStatus.values
-                    .map((status) => DropdownMenuItem(
-                          value: status.name,
-                          child: Text(status.naziv),
-                        ))
-                    .toList(),
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text("Odaberi"),
+                  ),
+                  ...VoznjaStatus.values
+                      .map((status) => DropdownMenuItem(
+                            value: status.name,
+                            child: Text(status.naziv),
+                          ))
+                      .toList(),
+                ],
                 onClear: () {
                   _formKey.currentState!.fields['status']?.reset();
                 },
@@ -283,16 +289,30 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
     );
   }
 
-  List<DropdownMenuItem<int>> _buildGradoviDropdownItems() {
-    return (gradoviResult?.result ?? [])
+  List<DropdownMenuItem<String>> _buildGradoviDropdownItems() {
+    final items = (gradoviResult?.result ?? [])
         .map((e) => DropdownMenuItem(
-              value: e.id,
+              value: e.id.toString(),
               child: Text(
                 e.naziv ?? "",
                 style: const TextStyle(color: Colors.black),
               ),
             ))
         .toList();
+
+    // Dodaj opciju "Odaberi" s null vrijednošću
+    items.insert(
+      0,
+      const DropdownMenuItem(
+        value: null,
+        child: Text(
+          'Odaberi',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+
+    return items;
   }
 
   DataRow _buildDataRow(Voznja e, BuildContext context) {
@@ -323,7 +343,7 @@ class _VoznjeListScreenState extends State<VoznjeListScreen> {
         buildDataCell("${e.cijena} KM"),
         DataCell(Row(
           children: [
-            if (e.stateMachine == 'draft') ...[
+            if (e.stateMachine == 'draft' || e.stateMachine == 'completed') ...[
               IconButton(
                 iconSize: 17,
                 onPressed: () {

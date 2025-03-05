@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ridewithme.Model.Models;
 using ridewithme.Model.Requests;
@@ -13,6 +14,14 @@ namespace ridewithme.API.Controllers
     {
         public RecenzijeController(IRecenzijaService service) : base(service)
         {
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpDelete("{id}/delete")]
+
+        public Recenzija Delete(int id)
+        {
+            return (_service as IRecenzijaService).Delete(id);
         }
     }
 }

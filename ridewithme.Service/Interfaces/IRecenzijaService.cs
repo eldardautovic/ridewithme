@@ -11,6 +11,7 @@ namespace ridewithme.Service.Interfaces
 {
     public interface IRecenzijaService : ICRUDService<Recenzija, RecenzijaSearchObject, RecenzijaUpsertRequest, RecenzijaUpsertRequest>
     {
+        public Recenzija Delete(int id);
 
     }
 }

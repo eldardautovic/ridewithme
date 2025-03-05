@@ -252,12 +252,18 @@ class _KuponiScreenState extends State<KuponiScreen> {
                 name: "status",
                 labelText: "Status",
                 prefixIcon: Icon(Icons.flag),
-                items: KuponiStatus.values
-                    .map((status) => DropdownMenuItem(
-                          value: status.name,
-                          child: Text(status.naziv),
-                        ))
-                    .toList(),
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text("Odaberi"),
+                  ),
+                  ...KuponiStatus.values
+                      .map((status) => DropdownMenuItem(
+                            value: status.name,
+                            child: Text(status.naziv),
+                          ))
+                      .toList()
+                ],
                 onClear: () {
                   _formKey.currentState!.fields['status']?.reset();
                 },

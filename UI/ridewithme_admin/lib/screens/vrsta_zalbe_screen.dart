@@ -63,6 +63,72 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
     });
   }
 
+  showAlertDialog(BuildContext context, int id) {
+    Widget cancelButton = TextButton(
+      child: Text("Odustani"),
+      onPressed: () {
+        Navigator.pop(context, true);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Da"),
+      onPressed: () async {
+        try {
+          await _vrstaZalbeProvider.delete(id);
+
+          Navigator.pop(context, true);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text("Uspješno ste obrisali grad."),
+              action: SnackBarAction(
+                label: "U redu",
+                onPressed: () =>
+                    ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+              ),
+            ),
+          );
+
+          initTable();
+
+          setState(() {
+            isLoading = true;
+          });
+        } on Exception catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(e.toString()),
+              action: SnackBarAction(
+                label: "U redu",
+                onPressed: () =>
+                    ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+              ),
+            ),
+          );
+        }
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Upozorenje"),
+      content: Text(
+          "Jeste li sigurni da želite obrisati ovu vrstu žalbe?\nAko nastavite, žalbe koje uključuju ovu vrstu žalbe će biti obrisane."),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -127,6 +193,13 @@ class _VrstaZalbeScreenState extends State<VrstaZalbeScreen> {
             : "N/A"),
         DataCell(Row(
           children: [
+            IconButton(
+              iconSize: 17,
+              onPressed: () {
+                showAlertDialog(context, e.id ?? 0);
+              },
+              icon: const Icon(Icons.delete),
+            ),
             IconButton(
               onPressed: () {
                 Navigator.of(context)

@@ -46,7 +46,7 @@ namespace ridewithme.Service.Services
 
             var ispravnostKupona = new ProvjerenKupon();
 
-            if (kupon == null || kupon.StateMachine == "used" || kupon.BrojIskoristivosti == 0)
+            if (kupon == null || kupon.StateMachine != "active" || kupon.BrojIskoristivosti == 0)
             {
                 ispravnostKupona.ispravanKupon = false;
                 return ispravnostKupona;

@@ -30,6 +30,14 @@ namespace ridewithme.API.Controllers
 
             return base.Insert(request);
         }
+
+        [HttpDelete("{id}/delete")]
+        [Authorize(Roles = "Administrator")]
+
+        public VrstaZalbe Delete(int id)
+        {
+            return (_service as IVrstaZalbeService).Delete(id);
+        }
         public override PagedResult<VrstaZalbe> GetList([FromQuery] VrstaZalbeSearchObject searchObject)
         {
             return base.GetList(searchObject);

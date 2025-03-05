@@ -222,12 +222,18 @@ class _ZalbeScreenState extends State<ZalbeScreen> {
                 name: "Status",
                 labelText: "Status",
                 prefixIcon: Icon(Icons.flag),
-                items: ZalbeStatus.values
-                    .map((status) => DropdownMenuItem(
-                          value: status.name,
-                          child: Text(status.naziv),
-                        ))
-                    .toList(),
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text("Odaberi"),
+                  ),
+                  ...ZalbeStatus.values
+                      .map((status) => DropdownMenuItem(
+                            value: status.name,
+                            child: Text(status.naziv),
+                          ))
+                      .toList()
+                ],
                 onClear: () {
                   _formKey.currentState!.fields['Status']?.reset();
                 },
