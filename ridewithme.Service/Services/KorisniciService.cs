@@ -300,5 +300,128 @@ namespace ridewithme.Service.Services
                 return null;
             }
         }
+
+        public Model.Models.Korisnici Delete(int id)
+        {
+           //Kaskadno brisanje korisnika
+
+            var korisnik = Context.Korisnicis.FirstOrDefault(x => x.Id == id);
+
+
+            if(korisnik == null)
+            {
+                throw new UserException("Korisnik sa tim ID-om ne postoji.");
+            }
+
+            var korisniciFaq = Context.FAQs.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciFaq.Count() > 0)
+            {
+                foreach (var item in korisniciFaq)
+                {
+                    Context.Remove(item);
+                }
+            }
+
+            var korisniciKuponi = Context.Kuponi.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciKuponi.Count() > 0)
+            {
+                foreach (var item in korisniciKuponi)
+                {
+                    Context.Remove(item);
+                }
+            }
+
+            var korisniciDostignuca = Context.KorisniciDostignuca.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciDostignuca.Count() > 0)
+            {
+                foreach (var item in korisniciDostignuca)
+                {
+                    Context.Remove(item);
+                }
+            }
+            
+            var korisniciUloge = Context.KorisniciUloge.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciUloge.Count() > 0)
+            {
+                foreach (var item in korisniciUloge)
+                {
+                    Context.Remove(item);
+                }
+            }
+            
+            var korisniciObavjestenja = Context.Obavjestenja.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciObavjestenja.Count() > 0)
+            {
+                foreach (var item in korisniciObavjestenja)
+                {
+                    Context.Remove(item);
+                }
+            }
+            
+            var korisniciRecenzije = Context.Recenzije.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciRecenzije.Count() > 0)
+            {
+                foreach (var item in korisniciRecenzije)
+                {
+                    Context.Remove(item);
+                }
+            }
+            
+            var korisniciReklame = Context.Reklame.Where(x => x.KorisnikId == id).ToList();
+
+            if (korisniciReklame.Count() > 0)
+            {
+                foreach (var item in korisniciReklame)
+                {
+                    Context.Remove(item);
+                }
+            }
+            
+            var korisniciVoznje = Context.Voznje.Where(x => x.VozacId == id).ToList();
+
+            if (korisniciVoznje.Count() > 0)
+            {
+                foreach (var item in korisniciVoznje)
+                {
+                    Context.Remove(item);
+                }
+            }
+            
+            var korisniciVoznjeKlijent = Context.Voznje.Where(x => x.KlijentId == id).ToList();
+
+            if (korisniciVoznjeKlijent.Count() > 0)
+            {
+                foreach (var item in korisniciVoznjeKlijent)
+                {
+                    item.KlijentId = null;
+
+                    item.StateMachine = "draft";
+                }
+            }
+            
+            var korisniciZalbe = Context.Zalbe.Where(x => x.Id == id).ToList();
+
+            if (korisniciZalbe.Count() > 0)
+            {
+                foreach (var item in korisniciZalbe)
+                {
+                    Context.Remove(item);
+                }
+            }
+
+            Context.SaveChanges();
+
+            Context.Remove(korisnik);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Models.Korisnici>(korisnik);
+        }
     }
 }

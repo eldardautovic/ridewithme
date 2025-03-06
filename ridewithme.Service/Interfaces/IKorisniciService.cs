@@ -14,6 +14,7 @@ namespace ridewithme.Service.Interfaces
         Korisnici Login(string username, string password);
 
         Korisnici GetLoggedInUser(string username);
+        Korisnici Delete(int id);
 
         PovjerljivVozac Trusted(int vozacId, int korisnikId);
 

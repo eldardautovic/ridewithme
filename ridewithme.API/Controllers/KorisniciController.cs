@@ -61,5 +61,14 @@ namespace ridewithme.API.Controllers
             return base.GetList(searchObject);
         }
 
+
+        [HttpDelete("{id}/delete")]
+        [Authorize(Roles = "Administrator")]
+
+        public Model.Models.Korisnici Delete(int id)
+        {
+            return (_service as IKorisniciService).Delete(id);
+        }
+
     }
 }
