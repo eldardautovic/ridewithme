@@ -33,6 +33,7 @@ public partial class RidewithmeContext : DbContext
     public virtual DbSet<Dostignuca> Dostignuca { get; set; }
     public virtual DbSet<Recenzija> Recenzije { get; set; }
     public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+    public virtual DbSet<Payments> Payments { get; set; }
 
     //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //    => optionsBuilder.UseSqlServer("Data Source=localhost, 1436;Initial Catalog=ridewithme; user=sa; Password=Password_123!; TrustServerCertificate=True");

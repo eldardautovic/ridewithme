@@ -146,7 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       ),
                                       FormBuilderValidators.firstName(
                                           errorText:
-                                              'Ovo polje ne smije imati razmake.'),
+                                              'Ovo polje mora biti validno ime.'),
                                     ]),
                                     decoration: InputDecoration(
                                       label: Text("Ime"),
@@ -173,7 +173,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       ),
                                       FormBuilderValidators.lastName(
                                           errorText:
-                                              'Ovo polje ne smije imati razmake.'),
+                                              'Ovo polje mora biti validno prezime.'),
                                     ]),
                                     decoration: InputDecoration(
                                       label: Text("Prezime"),

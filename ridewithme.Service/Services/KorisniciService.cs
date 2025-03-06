@@ -83,6 +83,7 @@ namespace ridewithme.Service.Services
 
 
             query = query.Include(x => x.KorisniciDostignuca).ThenInclude(x => x.Dostignuce);
+            query = query.Include(x => x.KorisniciUloge).ThenInclude(x => x.Uloga);
 
             return query;
         }
@@ -148,8 +149,29 @@ namespace ridewithme.Service.Services
             base.BeforeUpdate(request, entity);
         }
 
-       
+        public override Model.Models.Korisnici Update(int id, KorisniciUpdateRequest request)
+        {
+            if(request.UlogaId != null)
+            {
+                var korisniciUloge = Context.KorisniciUloge.FirstOrDefault(x => x.KorisnikId == id);
 
+                if (korisniciUloge != null)
+                {
+
+                    var uloga = Context.Uloge.FirstOrDefault(x => x.Id == request.UlogaId);
+
+                    if(uloga != null)
+                    {
+                        korisniciUloge.UlogaId = (int)request.UlogaId;
+
+                    }
+
+                }
+
+            }
+
+            return base.Update(id, request);
+        }
         public override void AfterInsert(Database.Korisnici entity, KorisniciInsertRequest request)
         {
             var korisnikRole = Context.Uloge.FirstOrDefault(x => x.Naziv == "Korisnik");

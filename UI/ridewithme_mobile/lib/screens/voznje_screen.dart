@@ -147,7 +147,7 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const VoznjeSearchScreen(),
+              builder: (context) => VoznjeSearchScreen(),
             ),
           );
         },
@@ -192,8 +192,19 @@ class _VoznjeScreenState extends State<VoznjeScreen> {
                   enlargeStrategy: CenterPageEnlargeStrategy.scale,
                 ),
                 items: gradoviResults?.result.map((grad) {
-                      return TownWidget(
-                        grad: grad,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => VoznjeSearchScreen(
+                                initialValue: {"GradDoId": grad.id},
+                              ),
+                            ),
+                          );
+                        },
+                        child: TownWidget(
+                          grad: grad,
+                        ),
                       );
                     }).toList() ??
                     [],

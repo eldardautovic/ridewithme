@@ -23,8 +23,12 @@ class _ObavjestenjaDetailsState extends State<ObavjestenjaDetails> {
       headerDescription: widget.obavjestenje.podnaslov,
       headerColor: Color(0xFFFCFC00),
       headerTextColor: Colors.black,
-      child: Column(
-        children: [_buildMainContent(), _buildTimestamp()],
+      child: Flexible(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [_buildMainContent(), _buildTimestamp()],
+          ),
+        ),
       ),
     );
   }

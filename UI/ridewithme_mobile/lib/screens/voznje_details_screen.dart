@@ -730,7 +730,8 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
       await Stripe.instance.presentPaymentSheet();
 
       await _voznjeProvider.book(widget.voznja.id ?? 0, {
-        "kuponId": _kuponController.text.isEmpty ? null : _kuponController.text
+        "kod": _kuponController.text.isEmpty ? null : _kuponController.text,
+        'payment_id': paymentIntent['id']
       });
 
       Navigator.of(context).pushReplacement(

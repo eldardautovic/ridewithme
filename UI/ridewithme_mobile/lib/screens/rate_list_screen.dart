@@ -50,10 +50,16 @@ class _RateListScreenState extends State<RateListScreen> {
       header: "Ocjena",
       headerDescription: "Ovdje možete da pregledate voznje koje ste ocijenili",
       headerColor: Color(0xFF39D5C3),
-      child: Column(
-        children: [
-          isLoading ? LoadingSpinnerWidget(height: 100) : _buildRatingsList()
-        ],
+      child: Flexible(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              isLoading
+                  ? LoadingSpinnerWidget(height: 100)
+                  : _buildRatingsList()
+            ],
+          ),
+        ),
       ),
     );
   }

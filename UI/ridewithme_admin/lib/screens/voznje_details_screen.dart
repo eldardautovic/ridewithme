@@ -228,20 +228,19 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                       widget.voznja == null,
                   initialValue: widget.voznja?.gradOd?.id.toString(),
                   items: [
-                        DropdownMenuItem(
-                          value: null,
-                          child: Text("Odaberi"),
-                        ),
-                        ...gradoviResult!.result
-                            .map((e) => DropdownMenuItem(
-                                  value: e.id.toString(),
-                                  child: Text(
-                                    e.naziv ?? "",
-                                  ),
-                                ))
-                            .toList()
-                      ] ??
-                      [],
+                    DropdownMenuItem(
+                      value: null,
+                      child: Text("Odaberi"),
+                    ),
+                    ...gradoviResult!.result
+                        .map((e) => DropdownMenuItem(
+                              value: e.id.toString(),
+                              child: Text(
+                                e.naziv ?? "",
+                              ),
+                            ))
+                        .toList()
+                  ],
                 )),
                 SizedBox(
                   width: 10,
@@ -256,20 +255,19 @@ class _VoznjeDetailsScreenState extends State<VoznjeDetailsScreen> {
                       widget.voznja == null,
                   initialValue: widget.voznja?.gradDo?.id.toString(),
                   items: [
-                        DropdownMenuItem(
-                          value: null,
-                          child: Text("Odaberi"),
-                        ),
-                        ...gradoviResult!.result
-                            .map((e) => DropdownMenuItem(
-                                  value: e.id.toString(),
-                                  child: Text(
-                                    e.naziv ?? "",
-                                  ),
-                                ))
-                            .toList()
-                      ] ??
-                      [],
+                    DropdownMenuItem(
+                      value: null,
+                      child: Text("Odaberi"),
+                    ),
+                    ...gradoviResult!.result
+                        .map((e) => DropdownMenuItem(
+                              value: e.id.toString(),
+                              child: Text(
+                                e.naziv ?? "",
+                              ),
+                            ))
+                        .toList()
+                  ],
                 )),
                 SizedBox(
                   width: 10,

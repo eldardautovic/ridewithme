@@ -11,6 +11,7 @@ import 'package:ridewithme_admin/providers/obavjestenja_provider.dart';
 import 'package:ridewithme_admin/providers/recenzije_provider.dart';
 import 'package:ridewithme_admin/providers/reklame_provider.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
+import 'package:ridewithme_admin/providers/uloga_provider.dart';
 import 'package:ridewithme_admin/providers/voznje_provider.dart';
 import 'package:ridewithme_admin/providers/vrsta_zalbe_provider.dart';
 import 'package:ridewithme_admin/providers/zalbe_provider.dart';
@@ -34,6 +35,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => DogadjajiProvider()),
       ChangeNotifierProvider(create: (_) => FaqProvider()),
       ChangeNotifierProvider(create: (_) => RecenzijeProvider()),
+      ChangeNotifierProvider(create: (_) => UlogaProvider()),
     ],
     child: const MyApp(),
   ));
@@ -228,7 +230,8 @@ class LoginPage extends StatelessWidget {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         behavior: SnackBarBehavior.floating,
-                                        content: Text(e.toString()),
+                                        content:
+                                            Text("Neispravni kredencijali."),
                                         action: SnackBarAction(
                                             label: "U redu",
                                             onPressed: () =>

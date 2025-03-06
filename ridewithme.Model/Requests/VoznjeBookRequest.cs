@@ -9,5 +9,7 @@ namespace ridewithme.Model.Requests
         public int? KlijentId { get; set; }
 
         public string? Kod { get; set; }
+
+        public string Payment_Id { get; set; }
     }
 }

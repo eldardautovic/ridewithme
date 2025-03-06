@@ -50,7 +50,22 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              isLoading ? LoadingSpinnerWidget(height: 100) : _buildView()
+              isLoading
+                  ? LoadingSpinnerWidget(height: 100)
+                  : (result == null || result!.korisniciDostignuca!.isEmpty)
+                      ? Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            "Nemate niti jedno dostignuće.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        )
+                      : _buildView()
             ],
           ),
         ),
@@ -74,29 +89,40 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   Widget _buildAchievementRow(KorisniciDostignuca dostignuce) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Color(0xFF7463DE).withAlpha(40)),
+        borderRadius: BorderRadius.circular(15),
+        color: const Color(0xFF7463DE).withAlpha(40),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(dostignuce.dostignuce?.naziv ?? '',
-                    style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                Text(
-                  dostignuce.dostignuce?.opis ?? '',
-                  style: TextStyle(
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    dostignuce.dostignuce?.naziv ?? '',
+                    style: const TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  Text(
+                    dostignuce.dostignuce?.opis ?? '',
+                    style: const TextStyle(
                       fontFamily: "Inter",
                       fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                ),
-              ],
-            )
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

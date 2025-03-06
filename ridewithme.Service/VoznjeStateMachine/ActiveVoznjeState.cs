@@ -101,6 +101,14 @@ namespace ridewithme.Service.VoznjeStateMachine
 
                 _emailService.SendingObject(notifikacija);
 
+                Database.Payments payments = new Database.Payments() { 
+                   Payment_Id = request.Payment_Id,
+                   KorisnikId = klijent.Id,
+                   VoznjaId = entity.Id
+                };
+
+                Context.Add(payments);
+
                 Context.SaveChanges();
             }
 

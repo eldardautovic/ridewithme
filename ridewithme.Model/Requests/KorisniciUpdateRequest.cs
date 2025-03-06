@@ -17,6 +17,8 @@ namespace ridewithme.Model.Requests
         public string? LozinkaPotvrda { get; set; }
         public byte[]? Slika { get; set; }
 
+        public int? UlogaId { get; set; }
+
 
     }
 

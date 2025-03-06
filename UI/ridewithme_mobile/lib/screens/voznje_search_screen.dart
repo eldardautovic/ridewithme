@@ -12,7 +12,8 @@ import 'package:ridewithme_mobile/widgets/ride_widget.dart';
 import 'package:ridewithme_mobile/widgets/rides_filter_widget.dart';
 
 class VoznjeSearchScreen extends StatefulWidget {
-  const VoznjeSearchScreen({super.key});
+  Map<String, dynamic>? initialValue;
+  VoznjeSearchScreen({super.key, this.initialValue});
 
   @override
   State<VoznjeSearchScreen> createState() => _VoznjeSearchScreenState();
@@ -41,6 +42,15 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
 
     _voznjeProvider = context.read<VoznjeProvider>();
 
+    Map<String, dynamic> _formValue = {
+      'IsGradoviIncluded': true,
+      'IsKorisniciIncluded': true,
+      'GradOdId': widget.initialValue?['GradOdId'],
+      'GradDoId': widget.initialValue?['GradDoId'],
+      'OrderBy': 'DatumVrijemePocetka ASC',
+      'Status': 'active'
+    };
+
     initResults(_formValue);
   }
 
@@ -64,9 +74,13 @@ class _VoznjeSearchScreenState extends State<VoznjeSearchScreen> {
       header: "Vožnje",
       headerDescription: "Ovdje možete da pretražite vožnje",
       headerColor: Color(0xFF7463DE),
-      child: Column(
-        spacing: 15,
-        children: [_buildSearch(), _buildResults(), _buildSorryScreen()],
+      child: Flexible(
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 15,
+            children: [_buildSearch(), _buildResults(), _buildSorryScreen()],
+          ),
+        ),
       ),
     );
   }

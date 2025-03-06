@@ -8,6 +8,7 @@ import 'package:ridewithme_admin/providers/korisnik_provider.dart';
 import 'package:ridewithme_admin/screens/korisnici_details_screen.dart';
 import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
+import 'package:ridewithme_admin/utils/util.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
@@ -162,6 +163,20 @@ class _KorisniciScreenState extends State<KorisniciScreen> {
   }
 
   showAlertDialog(BuildContext context, int id) {
+    if (id == Authorization.id) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Ne možete obrisati samog sebe."),
+          action: SnackBarAction(
+            label: "U redu",
+            onPressed: () =>
+                ScaffoldMessenger.of(context)..removeCurrentSnackBar(),
+          ),
+        ),
+      );
+    }
+
     Widget cancelButton = TextButton(
       child: Text("Odustani"),
       onPressed: () {

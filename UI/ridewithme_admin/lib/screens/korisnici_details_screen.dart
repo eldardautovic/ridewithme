@@ -7,8 +7,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:ridewithme_admin/models/korisnik.dart';
+import 'package:ridewithme_admin/models/search_result.dart';
+import 'package:ridewithme_admin/models/uloga.dart';
 import 'package:ridewithme_admin/providers/korisnik_provider.dart';
+import 'package:ridewithme_admin/providers/uloga_provider.dart';
 import 'package:ridewithme_admin/screens/korisnici_screen.dart';
+import 'package:ridewithme_admin/utils/input_utils.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
 
@@ -21,8 +25,10 @@ class KorisniciDetailsScreen extends StatefulWidget {
 }
 
 class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
-  //TODO: Ne smije moc obirsat samog sebe!
   late KorisnikProvider _korisnikProvider;
+  late UlogaProvider _ulogaProvider;
+
+  SearchResult<Uloga>? ulogaResults;
 
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
@@ -38,6 +44,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
     // TODO: implement initState
     super.initState();
     _korisnikProvider = context.read<KorisnikProvider>();
+    _ulogaProvider = context.read<UlogaProvider>();
 
     _initialValue = {
       'ime': widget.korisnik?.ime,
@@ -48,8 +55,19 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
       'lozinkaPotvrda': null,
       "slika": widget.korisnik?.slika != null
           ? widget.korisnik?.slika.toString()
-          : _base64Placeholder
+          : _base64Placeholder,
+      "ulogaId": widget.korisnik?.korisniciUloge?[0].uloga?.naziv
     };
+
+    initUloges();
+  }
+
+  Future initUloges() async {
+    ulogaResults = await _ulogaProvider.get();
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -66,7 +84,7 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
       child: Flexible(
           child: SingleChildScrollView(
               child: Column(
-        children: [_buildForm(), _save()],
+        children: [isLoading ? Container() : _buildForm(), _save()],
       ))),
     );
   }
@@ -172,6 +190,9 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                     FormBuilderValidators.required(
                       errorText: 'Ovo polje je obavezno.',
                     ),
+                    FormBuilderValidators.email(
+                      errorText: 'Ovo polje mora biti validna e-mail adresa.',
+                    ),
                   ]),
                   initialValue: _initialValue['email'],
                   decoration: InputDecoration(
@@ -255,6 +276,38 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
                     ),
                   ),
                 ))
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              spacing: 20,
+              children: [
+                Expanded(
+                    child: buildDropdown(
+                  name: 'ulogaId',
+                  labelText: "Uloga",
+                  hintText: "Uloga",
+                  prefixIcon: Icon(Icons.admin_panel_settings_rounded),
+                  initialValue:
+                      widget.korisnik?.korisniciUloge?[0].uloga?.id.toString(),
+                  items: [
+                        DropdownMenuItem(
+                          value: null,
+                          child: Text("Odaberi"),
+                        ),
+                        ...ulogaResults!.result
+                            .map((e) => DropdownMenuItem(
+                                  value: e.id.toString(),
+                                  child: Text(
+                                    e.naziv ?? "",
+                                  ),
+                                ))
+                            .toList()
+                      ] ??
+                      [],
+                )),
               ],
             ),
             SizedBox(
@@ -352,6 +405,10 @@ class _KorisniciDetailsScreenState extends State<KorisniciDetailsScreen> {
           ),
         );
       } else {
+        if (request['slika'] == _base64Placeholder) {
+          request['slika'] = null;
+        }
+
         await _korisnikProvider.update(widget.korisnik!.id!, request);
         await showSnackBar("Uspješno ste izmjenili korisnika.");
         Navigator.of(context).push(
