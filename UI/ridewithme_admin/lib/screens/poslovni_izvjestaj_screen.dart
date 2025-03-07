@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -9,13 +8,15 @@ import 'package:ridewithme_admin/models/ukupna_statistika.dart';
 import 'package:ridewithme_admin/providers/statistika_provider.dart';
 import 'package:ridewithme_admin/screens/analitika_screen.dart';
 import 'package:ridewithme_admin/utils/chart_utils.dart';
-import 'package:ridewithme_admin/utils/file_utils.dart';
-import 'package:ridewithme_admin/utils/pdf_utils.dart';
 import 'package:ridewithme_admin/utils/table_utils.dart';
 import 'package:ridewithme_admin/widgets/custom_button_widget.dart';
 import 'package:ridewithme_admin/widgets/loading_spinner_widget.dart';
 import 'package:ridewithme_admin/widgets/master_screen.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
+
+import 'package:printing/printing.dart';
+import 'package:pdf/widgets.dart' as pw;
+
+import 'package:flutter/services.dart';
 
 class PoslovniIzvjestajScreen extends StatefulWidget {
   const PoslovniIzvjestajScreen({super.key});
@@ -36,8 +37,13 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
   int touchedIndex = -1;
   int usersCount = 0;
 
-  final Uint8List fontData =
-      File('./fonts/Inter-Regular.ttf').readAsBytesSync();
+  late Uint8List fontData;
+
+  Future<void> loadFont() async {
+    fontData = await rootBundle
+        .load('fonts/Inter-Regular.ttf')
+        .then((value) => value.buffer.asUint8List());
+  }
 
   final List<Map<String, dynamic>> columnData = [
     {"label": "Godina"},
@@ -60,6 +66,7 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
   }
 
   Future _initReport() async {
+    await loadFont();
     izvjestajResult = await _statistikaProvider.getBusinessReport();
     ukupnaStatistikaResult = await _statistikaProvider.monthly();
 
@@ -126,7 +133,7 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        CustomButtonWidget(buttonText: "Printaj", onPress: () => _buildReport())
+        CustomButtonWidget(buttonText: "Printaj", onPress: () => _printReport())
       ],
     );
   }
@@ -203,117 +210,53 @@ class _PoslovniIzvjestajScreenState extends State<PoslovniIzvjestajScreen> {
     );
   }
 
-  Future<void> _buildReport() async {
-    await _initReport();
+  Future<void> _printReport() async {
+    final pdf = pw.Document();
+    final ttf = pw.Font.ttf(fontData.buffer.asByteData());
 
-    final PdfDocument document = PdfDocument();
-    final PdfPage page = document.pages.add();
-    final Size pageSize = page.getClientSize();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Column(
+          children: [
+            pw.Text('Poslovni Izvještaj',
+                style: pw.TextStyle(
+                  fontSize: 24,
+                  fontWeight: pw.FontWeight.bold,
+                  font: ttf, // Apply the custom font
+                )),
+            pw.SizedBox(height: 20),
+            pw.TableHelper.fromTextArray(
+              headers: [
+                'Godina',
+                'Administratori',
+                'Korisnici',
+                'Kreirani kuponi',
+                'Iskorišteni kuponi',
+                'Vožnje',
+                'Prihodi'
+              ],
+              data: izvjestajResult
+                      ?.map((e) => [
+                            e.godina.toString(),
+                            e.brojAdministratora.toString(),
+                            e.brojKorisnika.toString(),
+                            e.brojKreiranihKupona.toString(),
+                            e.brojIskoristenihKupona.toString(),
+                            e.brojVoznji.toString(),
+                            '${e.prihodiVozaca} KM',
+                          ])
+                      .toList() ??
+                  [],
+              headerStyle: pw.TextStyle(
+                  font: ttf, fontSize: 12), // Apply font to the table
+              cellStyle: pw.TextStyle(
+                  font: ttf, fontSize: 12), // Apply font to the table
+            ),
+          ],
+        ),
+      ),
+    );
 
-    page.graphics.drawRectangle(
-        bounds: Rect.fromLTWH(0, 0, pageSize.width, pageSize.height),
-        pen: PdfPen(PdfColor(68, 114, 196)));
-
-    final PdfGrid grid = getGrid();
-
-    final PdfLayoutResult result = drawHeader(page, pageSize, grid, fontData);
-
-    drawGrid(page, grid, result);
-    drawFooter(page, pageSize);
-
-    final List<int> bytes = document.saveSync();
-
-    document.dispose();
-
-    await saveAndLaunchFile(bytes, 'ridewithme_poslovni_izvjestaj.pdf');
-  }
-
-  void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result) {
-    Rect? totalPriceCellBounds;
-    Rect? quantityCellBounds;
-
-    grid.beginCellLayout = (Object sender, PdfGridBeginCellLayoutArgs args) {
-      final PdfGrid grid = sender as PdfGrid;
-      if (args.cellIndex == grid.columns.count - 1) {
-        totalPriceCellBounds = args.bounds;
-      } else if (args.cellIndex == grid.columns.count - 2) {
-        quantityCellBounds = args.bounds;
-      }
-    };
-    result = grid.draw(
-        page: page, bounds: Rect.fromLTWH(0, result.bounds.bottom + 40, 0, 0))!;
-  }
-
-  void drawFooter(PdfPage page, Size pageSize) {
-    final PdfPen linePen =
-        PdfPen(PdfColor(68, 114, 196), dashStyle: PdfDashStyle.custom);
-    linePen.dashPattern = <double>[3, 3];
-
-    page.graphics.drawLine(linePen, Offset(0, pageSize.height - 100),
-        Offset(pageSize.width, pageSize.height - 100));
-
-    const String footerContent = '''Imate pitanje? support@ridewithme.com''';
-
-    page.graphics.drawString(footerContent, PdfTrueTypeFont(fontData, 9),
-        format: PdfStringFormat(alignment: PdfTextAlignment.right),
-        bounds: Rect.fromLTWH(pageSize.width - 30, pageSize.height - 70, 0, 0));
-  }
-
-  PdfGrid getGrid() {
-    final PdfGrid grid = PdfGrid();
-    grid.columns.add(count: 7);
-    final PdfGridRow headerRow = grid.headers.add(1)[0];
-
-    headerRow.style.backgroundBrush = PdfSolidBrush(PdfColor(68, 114, 196));
-    headerRow.style.textBrush = PdfBrushes.white;
-
-    headerRow.cells[0].style.font = PdfTrueTypeFont(fontData, 7);
-    headerRow.cells[1].style.font = PdfTrueTypeFont(fontData, 7);
-    headerRow.cells[2].style.font = PdfTrueTypeFont(fontData, 7);
-    headerRow.cells[3].style.font = PdfTrueTypeFont(fontData, 7);
-    headerRow.cells[4].style.font = PdfTrueTypeFont(fontData, 7);
-    headerRow.cells[5].style.font = PdfTrueTypeFont(fontData, 7);
-    headerRow.cells[6].style.font = PdfTrueTypeFont(fontData, 7);
-
-    headerRow.cells[0].value = 'Godina';
-    headerRow.cells[0].stringFormat.alignment = PdfTextAlignment.center;
-    headerRow.cells[1].value = 'Broj administratora';
-    headerRow.cells[2].value = 'Broj korisnika';
-    headerRow.cells[3].value = 'Broj kreiranih kupona';
-    headerRow.cells[4].value = 'Broj iskorištenih kupona';
-    headerRow.cells[5].value = 'Broj vožnji';
-    headerRow.cells[6].value = 'Prihod vozača';
-
-    if (izvjestajResult != null) {
-      for (var item in izvjestajResult!) {
-        final PdfGridRow row = grid.rows.add();
-        row.cells[0].value = item.godina.toString();
-        row.cells[1].value = item.brojAdministratora.toString();
-        row.cells[2].value = item.brojKorisnika.toString();
-        row.cells[3].value = item.brojKreiranihKupona.toString();
-        row.cells[4].value = item.brojIskoristenihKupona.toString();
-        row.cells[5].value = item.brojVoznji.toString();
-        row.cells[6].value = item.prihodiVozaca.toString() + " KM";
-      }
-    }
-
-    grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
-
-    for (int i = 0; i < headerRow.cells.count; i++) {
-      headerRow.cells[i].style.cellPadding =
-          PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
-    }
-    for (int i = 0; i < grid.rows.count; i++) {
-      final PdfGridRow row = grid.rows[i];
-      for (int j = 0; j < row.cells.count; j++) {
-        final PdfGridCell cell = row.cells[j];
-        if (j == 0) {
-          cell.stringFormat.alignment = PdfTextAlignment.center;
-        }
-        cell.style.cellPadding =
-            PdfPaddings(bottom: 5, left: 5, right: 5, top: 5);
-      }
-    }
-    return grid;
+    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
   }
 }

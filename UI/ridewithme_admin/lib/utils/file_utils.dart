@@ -1,18 +1,25 @@
 import 'dart:io';
-
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
   try {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final String filePath = '${directory.path}/$fileName';
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/$fileName';
+    final file = File(filePath);
 
-    final File file = File(filePath);
-    await file.writeAsBytes(bytes);
+    await file.writeAsBytes(bytes, flush: true);
+    print('File saved at: $filePath');
 
-    await OpenFile.open(filePath);
+    if (Platform.isWindows) {
+      await Process.start('explorer.exe', [filePath]);
+    } else if (Platform.isLinux) {
+      await Process.start('xdg-open', [filePath]);
+    } else if (Platform.isMacOS) {
+      await Process.start('open', [filePath]);
+    }
   } catch (e) {
-    print("Greška pri čuvanju i otvaranju fajla: $e");
+    // Umjesto printa, zapisujemo grešku u fajl
+    final logFile = File('${Directory.systemTemp.path}/error_log.txt');
+    await logFile.writeAsString('Error: $e\n', mode: FileMode.append);
   }
 }

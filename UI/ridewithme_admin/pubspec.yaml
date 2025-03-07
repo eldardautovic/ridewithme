@@ -49,6 +49,7 @@ dependencies:
   open_file: ^3.5.10
   cross_scroll: ^0.1.1
   custom_rating_bar: ^3.0.0
+  printing: ^5.14.2
 
 dev_dependencies:
   flutter_test:
