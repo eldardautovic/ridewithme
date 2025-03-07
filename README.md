@@ -34,6 +34,13 @@ Datum isteka: ```Bilo koji u budućnosti```
 
 Plaćanje je omogućeno kada se uđe u detalje vožnje koja je u statusu "Aktivan".
 
+## Putanja do mjesta u aplikaciji gdje se koristi RECOMMENDER sistem:
+1.	Ulogovati se na mobilnu aplikaciju kredencijalima: username: „test“ i password „string“;
+2.	Navigirati se do Početnog ekrana ili Vožnje ekrana.
+3.	Kliknuti na jednu od ponuđenih vožnji.
+4.	Skrolati na dno ekrana gdje ćemo vidjeti sekciju „Vožnje koje bi Vas mogle zanimati“. 
+
+
 
 ## RabbitMQ
 RabbitMQ korišten za:
